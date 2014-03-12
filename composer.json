@@ -3,7 +3,7 @@
     "description": "Framework behind sPi",
     "version": "1.0.0-alpha",
     "type": "library",
-    "homepage": "https://spi.tu-ilmenau.de",
+    "homepage": "http://spof.fem-net.de",
     "license": "proprietary",
     "autoload": {
         "psr-4": {"FeM\\sPof\\": "source/"}

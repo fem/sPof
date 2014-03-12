@@ -32,3 +32,12 @@ Die Version muss im composer.json angepasst werden, so dass -alpha, -beta, ... m
 Danach mit SVN Taggen.
 
 Release ist fertig.
+
+
+==== Pre-Release ====
+  * ''alpha'' kann jederzeit auf basis des aktuellen trunks released werden
+  * ''beta'' bedeutet feature freeze & API stabil -> nurnoch stabilisierende Änderungen
+  * ''RC'' als letzte Beta, wenn keine Änderungen mehr nötig -> letzte RC als release deklarieren
+  * jede Weitere Version dieser pre-releases bekommt eine Versiosnummer, dann beginnend bei 2 (die 1 ist stumm ;) )
+  * pre releases werden via svn getagged.
+  * nach dem Release der fertigen Version, werden die pre-release tags wieder entfernt und nur das tag des release bleibt vorhanden
