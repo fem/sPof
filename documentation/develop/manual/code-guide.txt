@@ -1,0 +1,47 @@
+Die folgenden Abschnitte beschreiben das allgemeine Format, in dem SQL- sowie PHP-Code und zugehörige Kommentarzeilen abgespeichert werden.
+==== PHP ====
+  * Basiert auf [[http://www.php-fig.org/psr/psr-2/|PSR-2]] (inklusive [[http://www.php-fig.org/psr/psr-1/|PSR-1]] und [[http://www.php-fig.org/psr/psr-0/|PSR-0]])
+  * Sprachkonstrukte wie echo und require werden ohne Klammern aufgerufen.
+  * Für Strings allgemein werden einfache statt doppelte Hochkommata verwendet.
+  * Bei eingebetteten Sprachen wie SQL und JavaScript werden doppelte Hochkommata verwendet.
+  * Bei Vergleichsoperatoren wird je ein Leerzeichen zu jeder Seite angegeben.
+  * Der Zeilenabstand zwischen zwei Methoden/Funktionen beträgt zwei Leerzeilen. Diese haben keinen Inhalt (auch keine Leerzeichen).
+  * Zur besseren Orientierung wird der Name der jeweiligen Funktion nochmal nach dem Ende deren Deklaration als Kommentar angegeben.
+  * Zuweisungen werden mit umliegenden Leerzeichen aufgeführt.
+  * Anweisungen sollten nach Möglichkeit zusammengehörig gruppiert werden. Eine Gruppierung wird ohne Leerzeilen zwischendurch und mit je einer Leerzeile oben und unter dem Block ausgezeichnet.
+  * Variablen werden mit dem Punkt-Operator in Strings eingebettet.
+
+==== SQL ====
+  * Immer Doppeltes-Hochkommata verwenden um SQL-Anweisungen einzuschließen.
+  * SQL-Code wird verschachtelt eingerückt, beginnend mit der ersten Anweisung in der neuen Zeile (diese ist bereits eingerückt). Sollte nach dem Sprachkonstrukt eine Auflistung aufgeführt werden, dann wird diese ebenfalls eingerückt, beginnend in einer neuen Zeile.
+  * Bei WHERE werden gegebenenfalls mehrere Bedingungen (z.B. OR, AND) jeweils durch einen Zeilenumbruch voneinander getrennt, wobei der logische Operator am Anfang jeder neuen Zeile steht.
+  * Gleichheitszeichen werden hier ohne umliegende Leerzeichen angegeben.
+
+z.B.
+  * SELECT
+    * id,
+    * name,
+    * creation
+  * FROM tbl_user
+  * WHERE modify > now()
+
+==== Kommentare ====
+  * Dokumentations-Kommentarblöcke vor Klassen, Methoden, Funktionen, Klassen-Variablen, Klassen-Konstanten schreiben.
+  * Die Kommentar-Syntax muss den [[http://www.phpdoc.org/docs/latest/for-users/anatomy-of-a-docblock.html|phpDocumentor-Format]] entsprechen.
+  * Nach dem PHP-Code von Klassen, Methoden und Funktionen mit doppel-Slash den öffnenden Typ angeben (z.B. <nowiki>} // class</nowiki>). Falls ein Sprachkonstrukt mehrfach in der Datei vorhanden ist, dann auch den Namen (z.B. <nowiki>} // function add</nowiki>;). Beim Konstruktor nur <nowiki>// constructor</nowiki> als Kommentar angeben
+  * Klasseneigenschaften (Variablen, Konstanten) ebenfalls Dokumentieren mit Kommentarblock, abstand jedoch nur eine Leerzeile(im Gegensatz zu den zwei Leerzeilen zwischen Methoden o.ä.)
+  * einen Abstand zwischen deklaration und Dokumentations-Kommentar gibt es nicht, direkt nach der letzten Kommentarzeile folgt eine Deklaration
+  * Kommentare innerhalb von Funktionen/Methoden werden immer mit doppelslash angeführt (in korrekter einrückung), vor kommentaren sollte eine leerzeile vorhanden sein
+  * längere Kontrollstrukturen (''if'', ''while'', ...) sollten nach der abschließenden geschweiften Klammer einen kommentar enthalten, in dem steht was sie geöffnet haben, z.B. (<nowiki>} // while</nowiki>) bei mehreren auftreten auch zusätzlich noch einen Hinweis auf den Inhalt der Prüfung (z.B. <nowiki>// while true</nowiki>)
+  * Kommentarblöcke sollen keinen Inhalt mit einer länge haben, wodurch in der zeile das 120. zeichen überschritten wird. (außnahme bildet hier temporäre anweisungen wie @todo, die ja sowieso wieder entfernt werden)
+  * potentiell undurchsichtige Operationen innerhalb einer Funktion sollen Kommentiert werden.
+
+==== Methodiken ====
+  * einrücken vermeiden wo möglich -> fehlerfall abfangen und abbrechen/exception werfen, statt großen block der nur bei Prüfung auf gültigkeit ausgeführt wird
+  * nach möglichkeit immer den typensicheren Vergleichsoperator verwenden '===' (3x)
+  * Namen von Funktionen, Variablen u.ä. sollten Stets sematisch sein, d.h. ausdrücken, welche Bedeutung sie haben
+
+==== Utils ====
+  * Utils nur anlegen, wenn funktionen über mehrere Views benötigt werden, ansonsten Hilfsfunktionen in der View selbst behalten
+  * methoden sind als static zu markieren
+  * kein $_POST, $_GET, $_REQUEST, sondern Request verwenden

@@ -1,0 +1,27 @@
+Diese Dokument soll eine Hilfestllungen geben, wie mit dem sPof Programmiert werden kann. Falls du hierzu noch
+Anmerkungen hast, was fehlt, dann schreib bitte kurz eine Mail an spi-develop@fem.tu-ilmenau.de, wir werden dann
+versuchen, den entsprechenden Aspekt zu ergänzen.
+
+==== Entwicklerdokumentation ====
+  * Generell:
+    * [[.develop.manual.wording|Begrifflichkeiten]]
+    * [[.develop.manual.folder|Verzeichnisstruktur]]
+    * [[.develop.manual.database|Datenbank]]
+    * [[.develop.manual.config|Konfiguration]]
+    * [[.develop.manual.stylesheet|Stylesheets]]
+  * [[Templating]]
+    * [[.template.html|HTML-Templates]]
+    * [[.template.form|Formulare]]
+    * [[.template.stylesheet|CSS-Templates]]
+  * Qualitätssicherung
+    * [[.develop.quality|verwendete Werkzeuge]]
+    * [[.develop.manual.code-guide|Coding Guidelines]]
+    * [[.develop.vcs|Versionsverwaltung]]
+  * Wiederkehrende Mechanismen/Implementierungen
+    * [[.develop.manual.auth|Autorisierung]]
+    * [[.develop.manual.routing|Routing]]
+    * [[.develop.manual.om|Object Model]]
+
+==== HowTo ====
+  * [[.develop.howto.branch|Wie arbeite ich mit Branches?]]
+  * [[.develop.howto.module|Wie schreibe ich eine neue Funktion?]]

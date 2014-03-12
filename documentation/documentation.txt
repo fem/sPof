@@ -1,0 +1,5 @@
+Für die Dokumentation sollen folgende Regeln gelten:
+  * Funktionen die verwendet werden können sollen, so genannte API, muss im Docblock mit @api markiert werden
+  * Funktionen/Methoden die als API verwendet werden können, müssen mindestens @param und ggf @return haben, welche jeweils die Datentypen angeben, welche sie annehmen bzw zurückgeben. im Fall von @return void kann dies auch weggelassen werden.
+  * Klassen sind mit @auth $committername, @since $version und @package $namespace zu markieren.
+  * Docblocks sollten immer mit nicht-trivialen Beschreibungen gefüllt sein.

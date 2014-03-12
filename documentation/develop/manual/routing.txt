@@ -1,0 +1,40 @@
+
+==== statische Angaben ====
+
+Es existieren eine Reihe von statischen Angaben, welche vor den dynamischen Regeln ausgeführt werden. Diese dienen z.B. dazu gewisse Dinge zu verbieten und sind unter ''config/htaccess'' zu finden. Geregelt werden unter anderem:
+  * auf externen Servern verlinkte Bilder verhindern.
+  * Google nur auf die Startseite zulassen, kein Zugriff auf unterinhalte.
+  * Screenshot von Snap.com verhindern (wird von einem unliebsamen Internetmenschen verwendet).
+  * Links von bestimmten Seiten aussperren
+  * Umbiegen von Links auf den Cache.
+  * Links nur Weiterleiten, sofern keine echte Datei verlinkt ist.
+  * Unterstützung von bis zu 5 Optionalen Parametern.
+
+
+==== dynamische Angaben ====
+
+Die Definition erfolgt mittels [[https://de.wikipedia.org/wiki/YAML|YAML]], wobei hiermit ein assoziatives Array erstellt wird. Um eine neue Route einzutragen, muss die Folgende Struktur angegeben werden
+
+<code>
+# Kommentar
+routen_name:
+  pattern: announce/tag/<tag>
+  optional: { suffix: /<title> }
+  defaults: { module: announce, show: tag }
+</code>
+
+==== Legende ====
+  * **routen_name** ist der name über den die Route z.B. im HtmlTemplate später angesprochen werden kann.
+  * **pattern** ist eine //eindeutige// identifizierung der Route über einen Pfad für die Webseite
+    * Mit <tag> kann ein parameter spezifiziert werden, welcher später durch einen Wert ersetzt wird, der z.B: im HtmlTemplate übergeben wird.
+  * **optional** enthält suffix oder prefix, es wird für alle möglichen kombinationen, die routen generiert
+    * **prefix** Optionaler Präfix, welcher einer
+    * **suffix** Wie Präfix
+  * **defaults** Gibt die Standardparameter an, die für die Route fest gesetzt sind, dies sind in der Regel das Modul, Action und Show, kann auch gerne irgendwas anderes dabei stehen
+    * **modul** gibt an, welches Modul angesprochen werden soll
+    * **action** gibt an, welche AbstractController-cmd-Methode aufgerufen werden soll (Wenn nicht angegeben, dann wird nur die View aufgerufen)
+    * **show** gibt an, welche View-show-Methode aufgerufen werden soll.
+
+==== internes Verhalten ====
+
+Intern werden alle regeln zu ''.htaccess'' Regeln konvertiert. Hierbei werden Weiterleitungen an die ''index.php'' erzeugt, die alle Parameter beinhalten.

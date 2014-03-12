@@ -1,0 +1,28 @@
+Die Ordnerstruktur des sπ-Projekts ist wie folgt aufgebaut:
+
+  * ''/'' - Der Basisordner des Projekts. Neben den folgenden Unterordnern befindet sich hier auch ein symbolischer Verweis ''spi'', welcher auf ein Hilfsscript für Entwickler zeigt. Um eine Auflistung der Parameter zu erhalten, welche dieses Skript unterstützt, kann dieses mit dem Parameter ''help'' aufgerufen werden.
+  * ''bin/'' - Dieser Ordner enthält PHP- und Shell-Skripte für gängige Aufgaben, welche z.B. als Cronjobs regelmäßig ausgeführt werden oder spezielle Aufgaben erledigen.
+  * ''config/'' - Konfigurationsdateien, Hauptsächlich im YAML-Format (weather.yml, local.yml, routes.yml, ...)
+  * ''controller/'' - AbstractController-Module
+  * ''core/'' - Core-Module vom sπ
+    * ''core/exception/'' - sπ eigene Exceptions
+    * ''core/smarty_plugins/'' - eigene Smarty-Plugins
+    * ''core/util/'' - nützliche Funktionen für Wiederverwendung
+    * ''core/vendor/'' - Third party software (z.B. Smarty, Composer)
+    * ''core/viewtype/'' - View-Basisklassen (für Base, Raw)
+  * ''cqa/'' - Code Quality Assurance (CheckStyle-Regeln, phpUnit-Tests, ...)
+  * ''documentation/'' - Diese Dokumentation
+  * ''javascript/'' - JavaScript dateien in HtmlTemplate-Form
+  * ''model/'' - Model-Module (Anbindung an Persistente Datenspeicher und/oder Cache)
+    * ''model/sql/'' - Definition der SQL-Datenstrukturen und Migrationscode
+  * ''public/'' - Web-Docroot vom sπ (index.php, Main-.htaccess, favicon, robots.txt)
+    * ''public/css/'' - (aus ''stylesheet/'' generierte CSS-Dateien)
+    * ''public/img/'' - Standardmäßig verwendete Grafiken
+    * ''public/js/'' - (aus ''javascript/'' generierte JS-Dateien)
+    * ''public/resource/'' - sonstige statische Resourcen (Flashplayer, JS-Bibliotheken, ...)
+  * ''rpc'' - für AJAX Zugriff generierende Inhalte, Filedownload, Thumbnailgenerierung, ...
+  * ''stylesheet/'' - CSS-Definitionen als SCSS-Dateien
+  * ''template/'' - Smarty Templatedateien (HTML)
+  * ''tests/'' - Unit-Tests
+  * ''traits/'' - Traits zum einfachen Einbinden zusätzlicher vertikaler Funktionalitäten
+  * ''view/'' - View-Module

@@ -1,0 +1,40 @@
+Branching dient zur Entwicklung eines oder mehrerer neuer Features ohne die aktuelle Entwicklungslinie, den Trunk zu
+beeinflussen.
+
+Beim Branching sind zwei Operationen wichtig, zum einen das Branching und zum anderen das Merging
+
+==== neuen Branch erstellen ====
+  * zuerstmal einen Namen für den Branch übelegen, ggf. noch als Prefix den Nutzernamen hinzufügen, damit es eindeutiger wird, z.B. ''user-new-featurename''
+  * ''svn copy ^/trunk ^/branches/$neuerBranchName''
+  * ''config/local.yml'' anlegen und mindestens die Datenbank-Konfiguration und dev-env anlegen.
+  * ''./spi update'' im Terminal ausführen (lädt abhängigkeiten, kümmert sich um permissions, ...)
+
+=== aktualisieren ===
+Da ein branch natürlich irgendwann wieder in den trunk zurückfließen soll, ist es hilfreich, wenn die restliche
+Codebasis aktuell bleibt. Dies muss manuell erledigt werden:
+  * Ggf. sollten vorhandene Änderungen in der Working Copy zuerst committed werden
+  * in der Branch Working Copy: ''svn merge ^/trunk''
+  * die Änderungen gegenüber den Trunk werden hierdurch in die aktuelle Working Copy eingespielt, so dass ggf vorhandene Konflikte behoben werden können
+  * nach dem Merge lohnt es sich, den Merge extra zu committen, so dass die Änderungen Inhaltlich separiert bleiben
+
+==== Änderungen des Branch in den Trunk übernehmen ====
+Nach Abschluss der Arbeiten im Branch sollten die Änderungen, sofern nötig, auch wieder in den Trunk zurück geschoben
+werden, so dass Alle Entwickler die gemeinsame Codebasis nutzen können.
+Vor der Re-Integration sollten ein paar sicherheitsmaßnahmen durchgeführt werden, um sicher zu gehen, dass die
+Entwicklung für andere Personen durch die Änderungen behindert wird:
+  * aktualisieren des branches auf den aktuellen Stand des Trunk, so können ggf existierende Konflikte im voraus beseitigt werden
+  * durchlaufen der Qualitässicherungswerkzeuge auf dem Branch um eventuelle Probleme nicht mit in den Trunk zu übernehmen
+
+Um die Änderungen entgültig zu übernehmen ist wieder ein ''svn merge'' nötig:
+
+Im Trunk: ''svn merge ^/branches/$neuerBranchName'', um Mögliche Probleme auszuschließen, sollte hier eine Working Copy
+verwendet werden, welche keine Lokalen Änderungen enthält. Auch ein zusätzlicher ''--dry-run'' Parameter kann
+potentielle Probleme erkennen, ohne die Änderungen in die Working Copy zu übernehmen.
+Nach dem Merge ist es auch hier nötig, dass die Änderungen committed werden.
+
+==== Die Arbeitskopie wechseln ====
+
+Um die aktuelle Codebasis-Grundlage zu wechseln kann z.B. mit ''svn switch ^/branch/$neuerBranchName'' der Pfad
+geändert werden, so dass update, commit, usw. dann auf dem branch basieren. Der Code wird dabei aktualisiert und auf
+den Stand des branches gebracht. Lokale Änderungen werden soweit wie Möglich beibehalten und sollten auch im neuen
+Branch noch vorhanden sein. Um wieder auf den Trunk zu wechseln kann mit ''svn switch ^/trunk'' gewechselt werden.

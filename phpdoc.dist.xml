@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title>sPof - PHP Framework</title>
+    <parser>
+        <markers>
+            <item>TODO</item>
+            <item>FIXME</item>
+        </markers>
+        <extensions>
+            <extension>php</extension>
+        </extensions>
+        <target>data/output</target>
+    </parser>
+    <transformer>
+        <target>data/output</target>
+    </transformer>
+    <files>
+        <directory>source</directory>
+        <directory>bin</directory>
+        <ignore>vendor/*</ignore>
+    </files>
+    <!--logging>
+        <level>warn</level>
+        <paths>
+            <default>./build/data/log/{DATE}.log</default>
+            <errors>./build/data/log/{DATE}.errors.log</errors>
+        </paths>
+    </logging-->
+</phpdoc>

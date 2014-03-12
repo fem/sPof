@@ -1,0 +1,21 @@
+Stylesheets werden nach [[http://sass-lang.com/|SCSS]]-Verarbeitet, dabei wird eine auf PHP-basierte Implementierung
+verwendet, statt der Original Ruby-Implementierung.
+
+==== Dateinamen ====
+Der Dateiname ist frei wählbar und wird so übernommen wie gegeben. Soll eine Datei nicht übernommen werden, weil sie
+zum Beispiel nur als import für eine andere Datei dient, so muss der Dateiname mit einem Unterstrich ''_'' beginnen,
+bei der erzeugung wird die Datei dann übersprungen.
+
+==== Internes Handling ====
+Gerendert wird das SCSS zu CSS via [[https://github.com/richthegeek/phpsass|phpsass]].
+
+Dabei wird bei jedem aufruf der index.php geprüft, ob es ein Update erfolgt ist und daraufhin werden alle CSS-Dateien
+neu erstellt.
+
+Ein Update ist erfolgt, wenn der Zeitstempel des ''stylesheet''-Ordners neuer ist, als der des gecachten Zeitstempel
+der letzten Änderung des Ordners.
+
+Das provizieren einer neugenerierung der Stylesheets kann z.B. auf der Konsole durch ein ''touch stylesheet'' erfolgen,
+alternativ kann der entsprechende Cache eintrag entfernt werden.
+
+Im Admin-Bereich gibt es eine schaltfläche, welches den Zeitstempel löscht und so das CSS neu generiert wird.

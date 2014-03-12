@@ -1,0 +1,25 @@
+Das Object-Model (OM) ist die zentrale Anlaufstelle um Daten zu Speichern / zu Lesen. Zum Beispiel werden hier die
+Datenbankaufrufe für eine bestimmte Tabelle gekapselt. Für wiederkehrende Funktionen wie zum Beispiel hinzufügen /
+löschen / abfragen von Datensätzen existieren Standardimplementierungen.
+
+  * $id = AbstractModelWithId::add(array $input)
+  * $success = AbstractModelWithId::updateByPk($primary_key, array $input)
+  * $success = AbstractModelWithId::deleteByPk($primary_key)
+  * $dataset = AbstractModelWithId::getByPk($primary_key)
+
+Bei ''$primary_key'' handelt es sich in der Regel um den Wert für das Tabellenfeld 'id'. Der Parameter $input ist ein
+assoziatives Array, welches als key den Feldnamen aus der Datenbank und den dazugehörigen Wert enthält. Damit diese
+Funktionen, wissen auf welche Tabelle sich bezogen wird, wird jeder konkreten OM-Klasse ein statisches Attribut mit
+''public static $TABLE = 'tbl_announce';'' zugeordnet.
+
+Um Invalide Parameter zu Prüfen, gibt es die Methoden ''AbstractModelWithId::validate(array $input)'', welche automatisch von
+add(), bzw updateByPk() aufgerufen werden. Tritt ein Invalider Parameter auf, so wird eine InvalidParameterException
+geworfen. Um eine Minimale OM-Klasse zu erstellen ist es also nur nötig diese Methode zu implementieren und dann mit
+den Create/Read/Update/Delete Operationen zu arbeiten.
+
+==== Hinweise ====
+
+  * SQL nur in OM-Klassen
+  * eine OM-Klasse leitet immer von der ''AbstractModelWithId''-Klasse ab (oder einer Klasse die bereits davon ableitet)
+  * OM-Klassen sollen keine Logik ausserhalb von SQL durchführen
+  * Methoden müssen static deklariert sein

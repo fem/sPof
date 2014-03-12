@@ -1,0 +1,35 @@
+Wir definieren hier ein paar Begrifflichkeiten, welche bei der Entwicklung des sπ verwendet werden:
+
+==== Model-View-Control (MVC) ====
+Ein Software-Design-Pattern um festzulegen, welche Funktionskomponenten miteinander interagieren können.
+
+==== Model ====
+(Persistente) Datenschicht, hier werden alle Daten gespeichert und von hier werden sie auch gelesen.
+
+=== Object Model (OM) ===
+Bezeichnung für unsere Klassen, welche ein Model repräsentieren.
+
+==== View ====
+Funktionskomponente, welche die Anzeige von Daten übernimmt. Die Daten werden in der Regel mithilfe eines AbstractModelWithId
+gelesen und in der View entsprechend aufbereitet.
+
+Die View übernimmt leglichlich die Aufgabe zu sagen, was angezeigt werden soll, nicht wie es angezeigt werden soll,
+darum kümmern sich die verschiedenen Templates
+
+In einer View sollten niemals schreibende Operationen des OM verwendet werden.
+
+=== HtmlTemplate ===
+Ein HtmlTemplate ist prinzipiell HTML, Teile des Templates übernehmen die Daten aus der View und bereiten sie entsprechend
+auf, so dass diese dynmisch im HTML eingebettet werden
+
+==== AbstractController ====
+Der AbstractController übernimmt die Aufgabe, die Daten zu verwalten, welche z.B. durch Formulare.
+
+Ein AbstractController zeigt keine Daten an, sondern ist lediglich für deren Verarbeitung zuständig, welche über das Model
+persistent gespeichert werden.
+
+Ein AbstractController wird immer vor einer View des selben Moduls aufgerufen.
+
+==== Modul ====
+Als Modul wird bei uns als Oberbegriff für AbstractController und View verwendet, wobei ein Modul, jeweils max. einen
+AbstractController und eine View haben kann.

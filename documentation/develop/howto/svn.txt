@@ -1,0 +1,3 @@
+Um mit Subversion (SVN) zu arbeiten sind ein paar Grundlegende Befehle notwendig, die hier erklärt werden soll.
+
+TODO

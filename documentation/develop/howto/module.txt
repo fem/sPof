@@ -1,0 +1,92 @@
+Unter Funktion wird hier alles Verstanden, um mit dem Nutzer zu interagieren. Bevor du hier weiterliest, mache dich
+bitte mit den gängigen [[.develop.manual.wording|Begrifflichkeiten]] vertraut.
+
+Zuerst sollte klar sein, welche Art von Funktionalität gewünscht ist. Der einfachheit beginnen wir eine Komplette neue
+Funktionalität, die am anfang nur statische Dinge anzeigt und später auch dynamische, sowie diese Schreiben kann.
+Die Funktionalität wird im weiteren einfach "Hello" genannt.
+
+==== Statische Anzeige ====
+Um ein "Hello" zu implementieren, welche lediglich statische Informationen anzeigt müssen die folgenden Schritte
+durchegführt werden:
+
+Erstellung einer [[.develop.manual.view|View]]. Dazu muss im Ordner ''view'' eine neue Datei angelegt werden, welche
+für unsere Beispiel ''HelloView.php'' heist. Wichtig ist, das Suffix der Datei ''View.php'', der entsprechende
+Modulname muss mit einem Großbuchstaben beginnen und mit Kleinbuchstaben fortgeführt werden. Wichtig ist hier darauf
+zu achten, dass der Webserver auch leserechte auf die Datei hat, damit diese später verwendet werden kann.
+
+Füllung der neuen Datei mit Inhalt. Eine einfachste View hat den Klassennamen HelloView (wichtig hier ist die
+äquivalenz zum Dateinamen). Als Oberklasse sollte diese in der Regel "AbstractHtmlView" haben. Und es sollte natürlich
+auch eine Methode vorhanden sein, welche sich um die Anzeige kümmert, diese nennen wir einfach "hello" und die
+Funktion liefert einfach den String "Hello" zurück.
+
+Wir sollten nun ungefähr den folgenden Dateiinhalt haben:
+''**HelloView.php**''
+<code>
+<?php
+
+namespace FeM\sPi\view;
+
+/**
+ * View-Class to manage a Hello.
+ *
+ * @package spi
+ * @subpackage view
+ */
+class HelloView extends \FeM\sPi\core\AbstractHtmlView
+{
+
+
+    /**
+     * show Hello World
+     */
+    public function world()
+    {
+        return 'Hello World';
+    }
+}
+
+</code>
+
+Nun haben wir unser erstes Modul mit einer View erstellt, aber wie kann ich nun die Inhalte anzeigen?
+
+Dazu fehlt noch eine entsprechende [[.develop.manual.routing|Route]], welche zu der HelloView zeigt. Wir öffnen dazu
+die Datei ''config/routes.yml'' und fügen einen neuen Eintrag hinzu, welche ungefähr wie folge aussehen könnte.
+''**routes.yml**''
+<code>
+hello_world:
+  pattern: /hello/world
+  defaults: { module: hello, show: world }
+</code>
+
+Theoretisch könnte nun im Browser via ''/hello/world'' die Webseite aufgerufen werden, aber eine kleinigkeit fehlt
+noch. Denn die Routen werden erst generiert, wenn ein entsprechend aufruf im sπ erfolgt ist. Also am einfachsten eine
+bereits FUnktionierende Seite aufrufen, dadurch werden die Regeln neu generiert und die neue Route sollte
+einsatzbereit sein.
+
+Glückwunsch zur ersten Ausgabe von Inhalt
+
+
+==== Anzeige mit HtmlTemplate ====
+
+Um dynamische Inhalte anzuzeigen, empfielt es sich, diese in ein [[.develop.manual.template|HtmlTemplate]] einzubetten.
+Den folgenden Code kann man dann unter ''template/hello/hello.tpl'' gespeichert werden:
+''**hello/hello.tpl**''
+<code>
+<div class="content">
+  Hello {$name}
+</div>
+</code>
+
+''{$name}'' wird dann dynamisch durch den ans template zugewiesenen Wert ersetzt. Um einen passenden Wert zuzuweisen,
+muss die Methode in der View entsprechend angepasst werden.
+''**HelpView.php**''
+<code>
+    public function hello()
+    {
+        $this->assign('name', 'World');
+    }
+</code>
+
+Via assign wird nun der HtmlTemplate Variable $name im HtmlTemplate der Wert 'World' zugewiesen. Das System versucht dann das
+HtmlTemplate modul/show.tpl zu rendern(^= variablen ersetzen und das generierte HTML anzeigen). also in unserem Fall die
+bereits angelegte Datei ''template/hello/hello.tpl''.

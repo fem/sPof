@@ -1,0 +1,24 @@
+==== Qualitätssicherung ====
+
+Um eine hohe Wartbarkeit und Zuverlässigkeit des sPi-Quellcodes zu gewährleisten, ist der helfende Einsatz automatisierter Verfahren unumgänglich. Daher werden im Folgenden die derzeit verwendeten Techniken vorgestellt.
+
+=== Continuous Integration ===
+
+Als Werkzeug zur kontinuierlichen Integration wird [[http://phpundercontrol.org/index.html|phpUnderControl]] verwendet. Dabei handelt es sich um eine Erweiterung der Continuous Integration-Software [[http://cruisecontrol.sourceforge.net/|CruiseControl]], welche die Einbindung zahlreicher PHP-Werkzeuge ermöglicht.
+
+Die phpUnderControl-Instanz des sPi ist unter der URL [[http://spionat.fem.tu-ilmenau.de/cruisecontrol/]] erreichbar.
+
+== Verwendete Werkzeuge ==
+
+Dazu werden verschiedene Werkzeuge Regelmäßig ausgeführt dazu Zählen:
+  * [[http://www.phpdoc.org/|phpDocumentor]]
+  * [[http://phpmd.org/|PHPMD]]
+  * [[https://github.com/sebastianbergmann/phpcpd|PHP-CPD]]
+  * [[https://github.com/squizlabs/PHP_CodeSniffer|PHP CodeSniffer]]
+  * [[http://pdepend.org/|PHP Depend]]
+  * [[https://github.com/sebastianbergmann/phpunit/|PHPUnit]]
+
+
+=== Code Review ===
+
+Um die Qualität größerer Veränderungen am PHP-Code oder der Datenbankstruktur zu verbessern, wird [[http://www.atlassian.com/software/crucible/overview|Atlassian Crucible]] zur Unterstützung von Reviews benutzt. Die von der Crucible-Installation des sPi ist unter der URL [[http://spionat.fem.tu-ilmenau.de/crucible/project/SPI]] erreichbar.

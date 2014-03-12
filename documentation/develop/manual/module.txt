@@ -1,0 +1,25 @@
+Ein Modul im sπ besteht aus mehreren Komponenten, so müssen Views, AbstractController definiert werden, sowie Routen und
+Konfigurationen hinterlegt werden.
+
+==== View ====
+Views sind zum Anzeigen von Inhalten vorgesehen und werden automatisch aufgerufen. Diese führen keine Änderungen an
+der Datenbasis durch.
+
+Eine View Klasse wird im Ordner ''view'' hinterlegt und hat den Namen ''ModulView.php'', in der //ModulView//-Klasse
+werden verschiedene Methoden definiert, wobei abhängig von einem //show// Parameter in der URL automatisch eine
+entsprechende //example// methode aufgerufen. Das zu rendernde HtmlTemplate befindet sich in template/module/show.tpl,
+wobei 'modul' durch den entsprechenden Modulnamen ersetzt wird und 'show' durch den entsprechenden Wert des
+show-Parameters. Alternativ kann die show-Methode einen Inhalt zurückgeben, welcher verwendet wird.
+
+==== AbstractController ====
+Eine AbstractController Klasse wird im Ordner ''controller'' hinterlegt und hat den Namen ''ModulController.php'', in der
+//ModulController//-Klasse werden verschiedene Methoden definiert, wobei abhängig von einem action Parameter in der
+URL automatisch eine //example// methode aufgerufen wird. Die Methoden kümmern sich darum die Aktionen auszuwerten
+und sind unabhängig von den angezeigten Inhalten. Wichtig ist, dass beide Klassen den selben Namen besitzen.
+Ausgeführte Aktionen müssen mit einer Statusnachricht beendet werden, dazu kann mit
+''<nowiki>$this->success()</nowiki>'' bzw. ''<nowiki>$this->error</nowiki>'' eine entsprechende Nachricht inklusive
+automatischer Logmeldung erzeugt werden.
+
+==== sonstige Abhängigkeiten ====
+Desweiteren müssen in ''config/routes.yml'' entsprechende Routen festgelegt werden und in ''config/*.yml'' die
+Standardeinstellungen definiert werden. Magische Konstanten o.ä. sollten in die ''*.yml'' Config wandern.

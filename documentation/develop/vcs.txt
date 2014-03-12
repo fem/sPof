@@ -1,0 +1,31 @@
+Die Verwaltung eines (umfangreichen) Software-Projekts wie das sπ erfordert eine besondere Aufmerksamkeit.
+Änderungen und Erweiterungen am Projekt werden in der Regel in kleinen Schritten vorgenommen.
+Um zur Fehlersuche eine alte Version wiederherstellen zu können, muss man immer wieder Sicherungskopien des Projektes erstellen und diese sinnvoll verwalten.
+Ohne ein dediziertes Tool ist diese Versionsverwaltung umständlich und benötigt unnötig viel Speicherplatz.
+
+==== Versionsverwaltung mit Subversion ====
+
+Subversion (SVN) ist ein frei verfügbares und weit verbreitetes Versionskontrollsystem.
+Es ermöglicht die Verwaltung von Quelltexten und anderen Dateien, sowie deren Änderungen und hält diese in einer Versionshistorie fest.
+Ein oder mehrere Autoren können parallel an einem Quelltext arbeiten und erhalten die getätigten Änderungen der anderen Autoren durch das Versionskontrollsystem.
+
+=== Installation ===
+== Gentoo ==
+''emerge subversion''
+
+== Windows ==
+  * Für Windows existiert ein [[http://subversion.tigris.org/getting.html#windows|Kommandozeilentool]], dass man einfach auspackt und verwenden kann.
+  * Alternativ kann man die grafische Oberfläche [[http://tortoisesvn.net/downloads|TortoiseSVN]] verwenden. Nachdem man das Programm mit dem Installer installiert hat, sollte man das deutsche Sprachpaket darüber installieren.
+
+== Eclipse ==
+  * Für Eclipse existiert ein Subversion-Plugin namens [[http://subclipse.tigris.org/|Subclipse]] (Installation wird im Eclipse Dokuwiki Eintrag erklärt.) Wenn dieses Plugin installiert ist, muss man nicht zwingend das Kommandozeilentool oder TortoiseSVN installiert haben; bei manchen Entwicklungszenarien macht sich das aber schöner.
+
+=== Verwendung ===
+Man unterscheidet im allgemeinen Subversion-Sprachgebrauch die Begriffe "Repository" und "Arbeitskopie/Working Copy". Das Repository beinhaltet den Quelltext des Projektes, sowie dessen Änderungen und liegt auf einem Subversion-Server. Die Arbeitskopie hingegen befindet sich nach dem "Auschecken" auf dem Arbeitsrechner des Entwicklers. Der Entwickler kann nun Änderungen an seiner lokalen Kopie machen und die Auswirkungen testen. Sind die Änderungen zufriedenstellend, kann er seine Änderungen am Quelltext in das Repository "Einchecken" und stellt es somit den anderen Entwicklern zur Verfügung. Alternativ dazu kann man die Änderungen bis zur letzten Revision (anderes Wort für "eingecheckte Version") rückgängig machen.
+
+Die wichtigsten Befehle im Überblick:
+  * initiales Auschecken: ''svn co https://subversion.fem.tu-ilmenau.de/repository/spi-v1/trunk spi''
+  * aktualisieren seiner Arbeitskopie: ''svn update''
+  * einchecken seiner lokalen Änderungen in das Repository: ''svn commit dateiname1 dateiname2 dateiname3''
+
+Ausfühlich ist Subversion im [[http://svnbook.red-bean.com/|SVN Book]] beschrieben.

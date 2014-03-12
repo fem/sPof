@@ -1,0 +1,127 @@
+<?php
+/**
+ * This file is part of sPof.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @copyright 2003-2014 Forschungsgemeinschaft elektronische Medien e.V. (http://fem.tu-ilmenau.de)
+ * @lincense  http://www.apache.org/licenses/LICENSE-2.0  Apache License 2.0
+ * @link      http://spof.fem-net.de
+ *
+ * @package FeM\sPof\bin
+ * @author dangerground
+ * @since 1.0
+ */
+
+// project config
+$vendor = 'FeM';
+$project = 'example';
+$basedir = __DIR__;
+
+
+// define directory structure
+$folders = [
+    'bin',
+    'config',
+    'controller',
+    'form',
+    'model',
+    'public',
+    'public/css',
+    'public/js',
+    'stylseheet',
+    'template',
+    'tmp',
+    'vendor',
+    'view'
+];
+
+// define default files
+$files = [];
+
+// project config
+$files['composer.json']=<<<CONFIG
+## required
+#############
+
+server:
+  url: http://example.org   # without /
+  path: /            # path below the url, with leading and trailing /
+
+database:
+  user: username    # username to connect to the database
+  pass: "*******"   # password for the user, the quote marks are not part of the password
+  name: database    # to which database to connect
+  namespace: public # which namespace aka schema
+  debug: Yes        # debug logging of DB operations
+
+## optional
+#############
+
+email:
+  subject_prefix:               # prefixes all mails send by the mail system
+  support: support@example.org  # used to send mails, where you can reply to
+  noreply: noreply@example.org  # used for mails where nobody is used to reply
+
+## values:  auth, dump, debug, info, notice, warning, error, critical, alert, emergency
+#log_level: [warning, error, critical, alert, emergency] # which levels to log
+
+CONFIG;
+
+// composer config
+$files['composer.json']=<<<COMPOSER
+{
+    "name": "$vendor/$project",
+    "type": "project",
+    "autoload": {
+        "psr-4": {"$vendor\\\\$project\\\\": ""}
+    },
+    "require": {
+        "FeM/sPof": "1.*@dev",
+    }
+}
+
+COMPOSER;
+
+// dispatcher file
+$files['public/index.php']=<<<INDEX
+<?php
+
+require_once dirname(__DIR__)."/vendor/autoload.php";
+
+// Run the application!
+\$app = new FeM\sPof\Application('\\\\$vendor\\\\$project\\\\');
+\$app->dispatch();
+
+INDEX;
+
+
+
+
+// create structure
+$mask = umask(0);
+foreach ($folders as $folder) {
+    if (!file_exists($basedir.'/'.$folder)) {
+        mkdir($basedir.'/'.$folder);
+    }
+}
+
+// create default files
+foreach ($files as $file => $content) {
+    file_put_contents($basedir.'/'.$file, $content);
+}
+
+// reset mask
+umask($mask);
+
+echo "done\n";

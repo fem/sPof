@@ -1,0 +1,31 @@
+Das Hauptaugenmerk des Entwurfes der Datenstruktur liegt darauf, dass Daten nicht doppelt gespeichert werden (wie es
+in der Datenbank der Version 1.0 der Fall war) und die Datenbank selbst über die referentielle Integrität der Daten
+wacht.
+
+==== Gemeinsame Attribute ====
+Die Datentabellen besitzen einheitlich jeweils einige Attribute.
+
+Jeder Datensatz besitzt die Attribute "creation", "modify", "disabled" und "visible", die hier erläutert werden:
+
+  * ''creation'' - //Das Datum und die Uhrzeit der Erstellung des Datensatzes.// Um die Datensätze zeitlich nach der Erstellung zu sortieren oder dem Nutzer das Erstellungsdatum z.B. eines Foreneintrages anzuzeigen, wird dieses in diesem Attribut gespeichert.
+  * ''modify'' - //Der Zeitpunkt der letzten Änderung am Datensatz.// Dem Nutzer wird in einigen Fällen die Möglichkeit geboten, den Datensatz (z.B. Tagebucheintrag) nachträglich nochmals zu editieren. Ist dies der Fall, wird hier der Zeitpunkt der letzten Bearbeitung festgehalten.
+  * ''disabled'' - //Die Benutzbarkeit des Datensatzes.// Ein Datensatz kann administrativ deaktiviert werden, falls dieser z.B. gegen die Nutzungsbedingungen oder geltendes Recht verstoßen hat. Ist dieser deaktiviert, kann er vom Autor nicht mehr editiert oder gelöscht werden und wird auch keinem anderen Nutzer angezeigt.
+  * ''visible'' - //Die Sichtbarkeit des Datensatzes.// Ist ein Datensatz unsichtbar geschaltet, so taucht dieser in keiner öffentlichen Auflistung, sowie der Suche mehr auf. Er kann aber vom Ersteller und Besitzer noch betrachtet und bearbeitet werden.
+
+==== Namensschema ====
+=== Tabellen ===
+Bei der Benennung wird zwischen Datentabellen und Relationentabellen unterschieden. Auch wenn diese Unterteilung
+datenbanktechnisch nicht existiert, wird diese Klassifizierung zur besseren Übersicht vorgenommen.
+
+  * Datentabellen in unserem Sinne sind Tabellen, die größtenteils Daten, wie z.B. Nutzer oder Gruppen, beinhalten.
+  * Relationentabellen beherbergen die Beziehungen zwischen Datensätzen und keine weiteren Daten.
+
+Datentabellen werden nach eigener Festlegung mit dem Prefix "tbl_", Relationentabellen mit dem Prefix "rel_"
+gekennzeichnet.
+
+==== Verwendete Konzepte ====
+Eininge verwendete Konzepte, die in der Datenstruktur verwendet werden, sollen hier näher erklärt werden.
+
+  * [[http://de.wikipedia.org/wiki/Stored_Procedure|Stored Procedures]]
+  * [[http://de.wikipedia.org/wiki/Nested_Sets|Nested Trees]]
+  * [[http://de.wikipedia.org/wiki/Binary_Large_Object|Large Objects]]

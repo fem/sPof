@@ -1,0 +1,32 @@
+{
+    "name": "fem/spof",
+    "description": "Framework behind sPi",
+    "version": "1.0.0-alpha",
+    "type": "library",
+    "homepage": "https://spi.tu-ilmenau.de",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {"FeM\\sPof\\": "source/"}
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "squizlabs/php_codesniffer": "1.*",
+        "phpmd/phpmd": "1.*",
+        "sebastian/phpcpd": "2.0.*@dev",
+        "sebastian/phpdcd": "1.0.*@dev"
+    },
+    "require": {
+      "psr/log": "1.0.*@dev",
+      "smarty/smarty": "3.1.*",
+      "richthegeek/phpsass": "dev-master#5d254c7f2a485c5bcddb5ee5305c4ac0678ea8a5",
+      "leafo/scssphp": "dev-master",
+      "maximebf/debugbar": "1.*",
+      "components/jquery": "1.11.*@dev"
+    },
+    "suggest": {
+        "tedivm/jshrink": "dev-master",
+        "abhinavsingh/jaxl": "3.*@dev",
+        "sabre/dav": "1.8.x-dev"
+    },
+    "bin": ["./bin/spi"]
+}

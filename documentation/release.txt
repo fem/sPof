@@ -1,0 +1,34 @@
+==== Versionsschema ====
+
+Versionen werden nach dem x.y.z Schema benannt. Bei bedarf kann zusätzlich -dev oder -alpha, -beta, -RC mit optionaler
+Nummer angegeben werden. z.B. ''1.2.3-alpha2''
+
+Wenn die x-Nummer erhöht wird, bedeutet dies größere Änderungen am Framework selbst. Die Entscheidung wann eine x- und
+wann eine y-Nummer erhöht wird liegt im Auge des Betrachters, bei Zweifeln immer die y-Nummer.
+
+Die y-Nummer bedeutet in jedem Fall neue API-Features bzw. Deprecation von Teilen der API.
+
+Die z-Nummer zeigt lediglich an, dass es sich um Bugfixes handelt, welche die API nicht beeinflussen, d.h. di Signatur
+der API sich nicht ändert.
+
+
+==== Deprecation-Strategie ====
+
+Wenn eine API nichtmehr verwendet werden soll bzw durch eine neue ersetzt wurde, dann darf diese nicht sofort entfernt
+werden. Die Implementierung muss vorerst weiterhin vorgehalten werden. Es muss im Doctag mit @deprecated festgehalten
+werden, wie stattdessen die Funktionalität zu erreichen ist und seit welcher Version, die API deprecated ist.
+
+Eine als @deprecated markierte API kann, wenn sie in Version x.y.* markiert wurde, in der Version x+1.* bzw x.y+2.*
+entfernt werden.
+
+
+==== Prozess ====
+
+Der Code muss im Continuous Integration ohne Fehler laufen. Es dürfen keine "todo" Markierungen vorhanden sein. Diese
+sind vor einem release zu beheben bzw. im Zweifelsfall ins JIRA zu übertragen.
+
+Die Version muss im composer.json angepasst werden, so dass -alpha, -beta, ... markierungen entfernt sind.
+
+Danach mit SVN Taggen.
+
+Release ist fertig.

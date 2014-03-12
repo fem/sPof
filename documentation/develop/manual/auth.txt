@@ -1,0 +1,40 @@
+Zur Authentifizierung einer bestimmten Aktion wird die Authorization klasse verwendet. Dabei kann die Klasse mit einem lokalen sowie einem globalen Kontext verwendet werden.
+
+==== Verwendung ====
+
+Zur lokalen einmaligen verwenden kann eine Aktion mit ''bool Authorization::hasPermission($umgebung, $context)'' abgefragt werden. Als Rückgabe wird //true// oder //false// geliefert.
+
+Zur Verwendung des globalen Kontextes wird mit ''$instanz = Authorization::getInstance($umgebung, $context)'' eine Instanz erzeugt welche den Kontext enthält, auf dieser Instanz lässt sich dann mit ''bool $instanz->hasPermission($umgebung, $context)''.
+
+Um einfach zu überprüfen, ob ein bestimmter Bereich betreten werden darf, gibt es die Methode Authorization::requires($umgebung, $context). Diese Methode prüft ob das entsprechende Recht vorhanden ist und wird im Fehlerfall eine NotAuthorizesException. Eine Einbettung in eine if-Abfrage ist hierbei nicht nötig.
+
+=== Parameter ===
+== $umgebung ==
+
+Hier wird angegeben, in welchem Kontext die Datei ausgeführt wird, so kann z.B. für Antworten in einem Forum die Umgebung "Forum.Thread.Reply" angegeben werden. Als globalen Kontext könnte man hier "Forum.Thread" verwenden, wobei bei der Abfrage dann "Reply" angegeben wird (Der globale Kontext und der lokale werden kombiniert.)
+
+== $context ==
+
+Hier werden Parameter angegeben, welche zur Auswertung der Funktionsweise benötigt werden, z.B. die thread-id, die board-id, die owner-id, ... die Angabe erfolgt als array also z.B. ''['board_id' => 5]''.
+
+Besondere bedeutung haben, die Parameter:
+  * 'owner_user_id' ist für die Rechteprüfung der Besitzer des Eintrages
+  * 'group_user_id' ist die Gruppe, zu welcher der Eintrag gehört.
+
+==== Funktionsweise ====
+
+Es erfolgt eine Abfrage, ob das entsprechende Recht für den Nutzer gesetzt ist (z.B. über dessen Rollen oder auch direkt). Wenn das Recht vorhanden ist, bzw. durch die spezielle Auswertung gegeben wird, dann wird die Aktion gewährt. Sollte jedoch keine entsprechende Berechtigung vorhanden sein, so erfolgt eine Auswertung der Privacy Einstellungen.
+
+Die Privacy Einstellungen werden linear in der Reihenfolge 'Jeder' -> 'Eingeloggte' -> 'Gruppenmitglied' -> 'selbe Primary Gruppe' -> 'selber Gruppenbaum' -> 'Buddies' -> 'nur ich', sobald eine der Einstellungen für den Betrachter hinterlegt ist, wird der Zugang gewährt (wobei Jede für jede Einstellmöglichkeit gilt, dass die Einstellmöglichkeiten rechts des Pfeils implizit gelten).
+
+Die Privacy Einstellungen lassen sich für jede Umgebung seperat definieren, also für jeden Benutzer selbst. Sollte eine Benutzerspezifische Konfiguration nicht vorliegen wird eine Default aktion durchgeführt.
+
+
+==== Beispiele ====
+
+guard für Views
+
+<code>
+$board = Board::getByPk(Request::getIntParam('board-id'));
+Authorization::getInstance()->requires('sPi.Forum.Read', ['owner_group_id' => $board['group_id']);
+</code>

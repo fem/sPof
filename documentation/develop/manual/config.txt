@@ -1,0 +1,7 @@
+Konfigurationsdateien befinden sich im Ordner ''config'', dort werden sie in der Regel im
+[[http://de.wikipedia.org/wiki/YAML|YAML]]-Format abgelegt.
+
+Im Code kann dann mittels ''Config::get('bereich', 'setting')'' ausgelesen werden, für Optionen in Bereich der
+misc.yml funktioniert auch die Methode: ''Config::get('setting')''.
+
+Die Konfigurationsdateien sind geCached, der Cache wird spätestens alle 5-Minuten aktualisiert.
