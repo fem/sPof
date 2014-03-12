@@ -20,7 +20,7 @@
       "smarty/smarty": "3.1.*",
       "richthegeek/phpsass": "dev-master#5d254c7f2a485c5bcddb5ee5305c4ac0678ea8a5",
       "leafo/scssphp": "dev-master",
-      "maximebf/debugbar": "1.*",
+      "maximebf/debugbar": "1.*"
     },
     "suggest": {
         "tedivm/jshrink": "dev-master",
