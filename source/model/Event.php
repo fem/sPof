@@ -241,7 +241,9 @@ abstract class Event extends AbstractModelWithId implements Rating
         $stmt->assignInt('end', $end);
         $stmt->assign('tzone', date('T'));
         foreach ($group_ids as $i => $group_id) {
-            $stmt->assignId('group_id'.$i, $group_id);
+            if (Group::isUserMember($user_id, $group_id, false)) {
+                $stmt->assignId('group_id'.$i, $group_id);
+            }
         } // foreach group_ids
 
         return $stmt->fetchAll();
