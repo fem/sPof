@@ -418,7 +418,7 @@ abstract class AbstractHtmlView extends AbstractView
     {
         $this->useJquery();
 
-        $path = dirname(dirname(__DIR__)).'/vendor/maximebf/debugbar/src/DebugBar/Resources/';
+        $path = dirname(dirname(dirname(dirname(__DIR__)))).'/maximebf/debugbar/src/DebugBar/Resources/';
 
         $this->addJavascript($path.'debugbar.js');
         $this->addJavascript($path.'openhandler.js');

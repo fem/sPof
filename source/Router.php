@@ -293,7 +293,7 @@ class Router
         // check for remaining unresolved params
         if (strpos($pattern, '<')) {
             Logger::getInstance()->error(
-                'Could not resolve all params in: "'.$pattern.'". Arguments='.var_export($arguments, true)
+                'Could not resolve all params in "'.$name.'": "'.$pattern.'". Arguments='.var_export($arguments, true)
             );
         }
 
