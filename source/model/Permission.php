@@ -332,7 +332,7 @@ abstract class Permission extends AbstractModelWithId
             WHERE p.name=:permission
             "
         );
-        $stmt->assignId('user_id', $user_id);
+        $stmt->assign('user_id', $user_id); // may be no real id
         $stmt->assign('permission', $permission);
 
         $privacy = $stmt->fetchColumn();
