@@ -119,7 +119,11 @@ class Application
         self::$NAMESPACE = $namespace;
 
         if ($file_root === null) {
-            self::$FILE_ROOT = dirname(dirname(__DIR__));
+
+            // guess for default composer installation
+            self::$FILE_ROOT = dirname(dirname(dirname(dirname(__DIR__))));
+        } else {
+            self::$FILE_ROOT = $file_root;
         }
         self::$FILE_ROOT = rtrim(self::$FILE_ROOT, '/').'/';
         self::$WEB_ROOT = self::$FILE_ROOT.'public/';
