@@ -1,5 +1,5 @@
 Diese Dokument soll eine Hilfestllungen geben, wie mit dem sPof Programmiert werden kann. Falls du hierzu noch
-Anmerkungen hast, was fehlt, dann schreib bitte kurz eine Mail an spi-develop@fem.tu-ilmenau.de, wir werden dann
+Anmerkungen hast, was fehlt, dann schreib bitte kurz eine Mail an spof@fem.tu-ilmenau.de, wir werden dann
 versuchen, den entsprechenden Aspekt zu ergänzen.
 
 ==== Entwicklerdokumentation ====
