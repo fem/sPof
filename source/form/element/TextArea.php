@@ -39,6 +39,12 @@ class TextArea extends \FeM\sPof\form\AbstractFormElement
      */
     public static $TAG = 'div';
 
+    /**
+     * Name of the internal textarea.
+     *
+     * @var string
+     */
+    private $field;
 
     /**
      * Create new instance.
@@ -52,5 +58,16 @@ class TextArea extends \FeM\sPof\form\AbstractFormElement
         $this->innerHtml = (new TextAreaInternal($field, $required, $maxlength))->render();
         $this->escapeInnerHtml = false;
         $this->addAttribute('class', 'fillLabel');
+        $this->field = $field;
     } // constructor
+
+
+    /**
+     * Return field name.
+     *
+     * @return string
+     */
+    public function getName() {
+        return $this->field;
+    }
 }// class
