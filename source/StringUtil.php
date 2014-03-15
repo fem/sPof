@@ -108,7 +108,8 @@ abstract class StringUtil
         $tohtml = true,
         $convertmarkup = true,
         $nl2br = true,
-        $marklinks = true
+        $marklinks = true,
+        $hstart = 4
     ) {
         $out = $string;
 
@@ -154,9 +155,9 @@ abstract class StringUtil
                 '<del>$1</del>',
                 '<a href="$1">$2</a>',
                 '<a href="$1">$1</a>',
-                '<h4>$1</h4>',
-                '<h5>$1</h5>',
-                '<h6>$1</h6>',
+                '<h'.($hstart+0).'>$1</h'.($hstart+0).'>',
+                '<h'.($hstart+1).'>$1</h'.($hstart+1).'>',
+                '<h'.($hstart+2).'>$1</h'.($hstart+2).'>',
                 ];
 
             $out = preg_replace($search, $replace, $out);
@@ -233,8 +234,9 @@ abstract class StringUtil
         if ($nl2br === true) {
             $out = nl2br($out);
         } elseif ($nl2br === 2) {
-            $out = preg_replace('#(^|[\n\r])(.+)([\n\r]|$)#', '<p>$2</p>', $out);
+            $out = preg_replace('#(^|[\n\r])(.*)(?=([\n\r]{2,}))#', '$1<p>$2</p>$3', $out);
         }
+        $out = str_replace('<p></p>', '', $out);
 
         return $out;
     } // function

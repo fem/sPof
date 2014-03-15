@@ -33,10 +33,11 @@
  * @param bool $convertmarkup (optional)
  * @param bool $nl2br (optional)
  * @param bool $marklinks (optional)
+ * @param int $hstart (optional) headline to start with
  *
  * @return string
  */
-function smarty_modifier_markup2html($string, $tohtml = true, $convertmarkup = true, $nl2br = true, $marklinks = true)
+function smarty_modifier_markup2html($string, $tohtml = true, $convertmarkup = true, $nl2br = true, $marklinks = true, $hstart = 4)
 {
     $out = $string;
 
@@ -72,7 +73,7 @@ function smarty_modifier_markup2html($string, $tohtml = true, $convertmarkup = t
 
         // format text
         if ($usemarkup) {
-            $code = \FeM\sPof\StringUtil::markup2html($code, $tohtml, $convertmarkup, $nl2br, $marklinks);
+            $code = \FeM\sPof\StringUtil::markup2html($code, $tohtml, $convertmarkup, $nl2br, $marklinks, $hstart);
         } else {
             $code = \FeM\sPof\StringUtil::markup2html($code, true, false, false);
         }
