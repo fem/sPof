@@ -23,6 +23,19 @@
  * @since 1.0
  */
 
+echo "Are you sure you want to do this?  Type 'yes' to continue: ";
+$handle = fopen ("php://stdin","r");
+$line = fgets($handle);
+if(trim($line) != 'yes'){
+    echo "ABORTING!\n";
+    exit;
+}
+echo "\n";
+echo "Thank you, continuing...\n";
+
+exit;
+
+
 // project config
 $vendor = 'FeM';
 $project = 'example';
@@ -39,8 +52,9 @@ $folders = [
     'public',
     'public/css',
     'public/js',
-    'stylseheet',
+    'stylesheet',
     'template',
+    'template/index',
     'tmp',
     'vendor',
     'view'
@@ -50,7 +64,7 @@ $folders = [
 $files = [];
 
 // project config
-$files['composer.json']=<<<CONFIG
+$files['config/default.yml']=<<<CONFIG
 ## required
 #############
 
@@ -63,6 +77,7 @@ database:
   pass: "*******"   # password for the user, the quote marks are not part of the password
   name: database    # to which database to connect
   namespace: public # which namespace aka schema
+  port: 5432        # where the database listens
   debug: Yes        # debug logging of DB operations
 
 ## optional
@@ -83,11 +98,19 @@ $files['composer.json']=<<<COMPOSER
 {
     "name": "$vendor/$project",
     "type": "project",
+    "license": "proprietary",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {"$vendor\\\\$project\\\\": ""}
     },
+    "repositories": [
+        {
+            "type": "svn",
+            "url": "https://subversion.fem.tu-ilmenau.de/repository/spof"
+        }
+    ],
     "require": {
-        "FeM/sPof": "1.*@dev",
+        "FeM/sPof": "@dev"
     }
 }
 
@@ -106,22 +129,94 @@ require_once dirname(__DIR__)."/vendor/autoload.php";
 INDEX;
 
 
+$files['config/routes.yml']=<<<ROUTES
+index:
+  pattern:
+  module: index
+  show: hello
 
+ROUTES;
 
-// create structure
-$mask = umask(0);
-foreach ($folders as $folder) {
-    if (!file_exists($basedir.'/'.$folder)) {
-        mkdir($basedir.'/'.$folder);
+$files['view/IndexView.php']=<<<INDEX
+<?php
+
+namespace $vendor\\$project\\view;
+
+class IndexView extends \\FeM\\sPof\\view\\AbstractHtmlView
+{
+    public function hello()
+    {
+        \$this->assign('hello', 'world');
     }
 }
 
-// create default files
-foreach ($files as $file => $content) {
-    file_put_contents($basedir.'/'.$file, $content);
-}
+INDEX;
 
+$files['template/index/hello.tpl']=<<<TPL
+<h2>Hello</h2>
+{\$hello|escape}
+
+TPL;
+
+$files['template/layout.tpl']=<<<TPL
+<!DOCTYPE html>
+<html>
+<head>
+<title>sPof demo page</title>
+</head>
+<body>
+<h1>It work's</h1>
+If you're seeing this page, you probably got your own sPof site to work.
+<hr />
+{\$content}
+</body>
+</html>
+
+TPL;
+
+
+$files['config/htaccess']=<<<HTACCESS
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule .* - [L]
+
+RewriteRule (.*) index.php/$1 [L,QSA]
+
+HTACCESS;
+
+
+
+// create structure
+$mask = umask(0022);
+echo "\n\n***** Create folders *****\n";
+foreach ($folders as $folder) {
+    if (!file_exists($basedir.'/'.$folder)) {
+        mkdir($basedir.'/'.$folder);
+        echo " * ".$folder." created\n";
+    }
+}
 // reset mask
 umask($mask);
 
-echo "done\n";
+// create default files
+echo "\n\n***** Create files *****\n";
+foreach ($files as $file => $content) {
+    file_put_contents($basedir.'/'.$file, $content);
+    echo " * ".$file." created\n";
+}
+
+echo "\n\n***** Install and run composer *****\n";
+echo shell_exec("curl -sS https://getcomposer.org/installer | php");
+echo shell_exec("chmod +x composer.phar");
+echo shell_exec("./composer.phar install");
+
+echo "\n\n***** Fix folder permissions *****\n";
+echo shell_exec("chmod g+w public");
+echo " * public set to g+w\n";
+echo shell_exec("chmod g+w tmp");
+echo " * tmp set to g+w\n";
+
+echo "\n\n***** Next steps *****\n";
+echo " * adjust default.yml database settings\n";
