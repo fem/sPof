@@ -185,4 +185,97 @@ class CssTemplate
         }
         return $parser;
     } // function
+
+
+    /**
+     * This function generates a new .css file from the existing files (if anything new happen to them or does not
+     * exist). The name of the new file will be returned.
+     *
+     * @api
+     *
+     * @param array $files
+     *
+     * @return string|false false on error or nothing
+     */
+    public static function combine(array $files)
+    {
+        if (empty($files)) {
+            return false;
+        }
+
+        $target = self::getTargetPath();
+        $source = self::getSourcePath();
+
+        // identify file combinations by hash
+        $cssHash = md5(serialize($files));
+        $targetfile = $target.$cssHash.'.css';
+
+        // check if any source file was modified
+        $needUpdate = false;
+        if (file_exists($targetfile)) {
+            $hashtime = filemtime($targetfile);
+            foreach ($files as $file) {
+                if ($hashtime < filemtime($file['name'])) {
+                    $needUpdate = true;
+                    break;
+                }
+            }
+        } else {
+
+            // file does not exist, so we need an update anyway
+            $needUpdate = true;
+        }
+
+        // we can abort if no update is required
+        if ($needUpdate === false) {
+            return $cssHash;
+        }
+
+        // combine file contents
+        $handle = fopen($targetfile, 'w+');
+        foreach ($files as $file) {
+            $content = file_get_contents($file['name']);
+            if ($file['fixpaths']) {
+                preg_match_all('/url\(([^)]+)\)/', $content, $matches, PREG_SET_ORDER);
+                $replaces = [];
+                $copy = [];
+                foreach ($matches as $match) {
+                    $filename = md5($file['name'].'-'.$match[1]).preg_replace('/^[^.]+\.(.+)$/', '.$1', $match[1]);
+                    $replaces[$match[0]] = 'url(../img/'.$filename.')';
+                    $copy[dirname($file['name']).'/'.$match[1]] = Application::$WEB_ROOT.'img/'.$filename;
+                }
+
+                // replace usage in stylesheet and copy file to be accessible via web
+                $content = str_replace(array_keys($replaces), $replaces, $content);
+                foreach ($copy as $source => $target) {
+                    copy($source, $target);
+                }
+            }
+            fwrite($handle, self::minify($content));
+        } // foreach file
+        foreach ($replaces as $replace) {
+
+        }
+        fclose($handle);
+
+        // adjust file permissions for webserver
+        #chmod($targetfile, 0644);
+
+        return $cssHash;
+    } // function
+
+
+    /**
+     * Minify a CSS String.
+     *
+     * @param string $content
+     * @return string
+     */
+    public static function minify($content) {
+        // remove comments
+        $content = preg_replace('#/\*.+\*/#sU', '', $content);
+
+        // remove whitespace
+        return preg_replace('#\s+#', ' ', $content);
+    } // function
 }// class

@@ -324,7 +324,11 @@ abstract class AbstractHtmlView extends AbstractView
      */
     final protected function addStylesheet($file)
     {
-        $this->cssFiles[] = $file;
+        if (strpos($file, '.css') === false) {
+            $this->cssFiles[] = ['name' => \FeM\sPof\Application::$WEB_ROOT.'css/'.$file.'.css', 'fixpaths' => false];
+        } else {
+            $this->cssFiles[] = ['name' => $file, 'fixpaths' => true];
+        }
     } // function
 
 
@@ -440,13 +444,21 @@ abstract class AbstractHtmlView extends AbstractView
      */
     public function display()
     {
+        // minify js
         $jsFile = template\JavascriptTemplate::combine($this->jsFiles);
         if ($jsFile !== false) {
             $this->assign('customjsfile', [$jsFile]);
         } else {
             $this->assign('customjsfile', []);
         }
-        $this->assign('customcssfile', $this->cssFiles);
+
+        // minify css
+        $cssFile = template\CssTemplate::combine($this->cssFiles);
+        if ($jsFile !== false) {
+            $this->assign('customcssfile', [$cssFile]);
+        } else {
+            $this->assign('customcssfile', []);
+        }
 
         // this code is not safe for use in different tabs
         foreach (Session::getErrorMsg() as $error) {
