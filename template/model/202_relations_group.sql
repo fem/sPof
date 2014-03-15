@@ -30,6 +30,12 @@ CREATE TABLE tbl_group (
     fti tsvector,
     managed_extern bigint,
 
+    appearance_color varchar(32) check(appearance_color ~* '^[a-z0-9]+$'),
+    show_members boolean default false,
+    show_features boolean default false,
+    joinable boolean default false,
+    subgroups_allowed boolean default false,
+
     CONSTRAINT tbl_group_pkey PRIMARY KEY (id),
     CONSTRAINT tbl_group_parent_name_uq UNIQUE (parent, name),
     CONSTRAINT tbl_group_creationmodify_check CHECK ((creation <= modify)),

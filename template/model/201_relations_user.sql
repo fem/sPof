@@ -43,7 +43,7 @@ CREATE TABLE tbl_user (
     CONSTRAINT tbl_user_old_id_uq UNIQUE (old_id),
     CONSTRAINT tbl_user_token_uq UNIQUE (token),
     CONSTRAINT tbl_user_creationmodify_check CHECK ((creation <= modify)),
-    CONSTRAINT tbl_user_email_check CHECK (((email)::text ~* '^([a-z0-9_\\-\\.]+)@([a-z0-9_\\-\\.]+)\\.([a-z]{2,5})$'::text)),
+    CONSTRAINT tbl_user_email_check CHECK (((email)::text ~* '^([a-z0-9_\\-\\.]+)@([a-z0-9_\\-\\.]+)\\.([a-z]{2,5})$'::text))
 );
 
 -- indexes
