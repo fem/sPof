@@ -446,7 +446,7 @@ abstract class AbstractHtmlView extends AbstractView
         } else {
             $this->assign('customjsfile', []);
         }
-        $this->assign('customcssfile', []);
+        $this->assign('customcssfile', $this->cssFiles);
 
         // this code is not safe for use in different tabs
         foreach (Session::getErrorMsg() as $error) {

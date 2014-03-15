@@ -155,7 +155,7 @@ class CssTemplate
   //              file_put_contents($savefile, $scss->compile('@import "'.$filename.'"'));
 
 
-                file_put_contents($savefile, self::getParser()->toCss(file_get_contents($sourcePath.$filename), 0));
+                file_put_contents($savefile, self::getParser()->toCss(file_get_contents($sourcePath.$filename), false));
                 chmod($savefile, 0644);
             } catch (\Exception $exception) {
                 Logger::getInstance()->exception($exception);
@@ -179,7 +179,6 @@ class CssTemplate
         static $parser;
         if (!isset($parser)) {
             $options = Config::get('stylesheet', self::$defaultConfig);
-            $options['syntax'] = \SassFile::SASS;
             $options['load_paths'] = [self::getSourcePath()];
 
             $parser = new \SassParser($options);

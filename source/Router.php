@@ -41,7 +41,7 @@ class Router
      */
     private static function getTargetFile()
     {
-        return Application::$WEB_ROOT.'/.htaccess';
+        return Application::$WEB_ROOT.'.htaccess';
     } // function
 
 
@@ -86,13 +86,6 @@ class Router
             if (filemtime($preset) < $target_time && filemtime(__FILE__) < $target_time) {
                 return;
             }
-        }
-
-        $routes = self::getRoutes();
-
-        // if parse error occurred, stop here
-        if (empty($routes)) {
-            return;
         }
 
         $rules = fopen($target, 'w+');
