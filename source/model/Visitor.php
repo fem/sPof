@@ -180,7 +180,6 @@ abstract class Visitor extends AbstractModel
         $stmt->assign('ipAddress', $input['ip']);
         $stmt->execute();
         DBConnection::getInstance()->commit();
-        DBConnection::getInstance()->rollBack();
     } // function
 
 
