@@ -236,18 +236,35 @@ class DBStatement extends \PDOStatement
 
 
     /**
-     * Assignes a new integer statement variable to the statement. You may use other assign*() methods to pass the
+     * Try to assign a valid type.
+     *
+     * @api
+     *
+     * @param string $name statement placeholder name
+     * @param string $value
+     */
+    public function assignGuessType($name, $value)
+    {
+        if (is_bool($value)) {
+            $this->assignBool($name, $value);
+        } else {
+            $this->assign($name, $value);
+        }
+    } // function
+
+
+    /**
+     * Assignes a new string statement variable to the statement. You may use other assign*() methods to pass the
      * data.
      *
      * @api
      *
      * @param string $name statement placeholder name
      * @param string $value
-     * @param int $value_type
      */
-    public function assign($name, $value, $value_type = \PDO::PARAM_STR)
+    public function assign($name, $value)
     {
-        $this->bindValue($name, $value, $value_type);
+        $this->bindValue($name, $value, \PDO::PARAM_STR);
     } // function
 
 

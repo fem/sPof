@@ -105,7 +105,7 @@ abstract class AbstractModel
                 "RETURNING id" : '')
         );
         foreach ($input as $key => &$value) {
-                $stmt->assign($key, $value);
+            $stmt->assignGuessType($key, $value);
         }
 
         return $stmt->fetchInt();
@@ -142,7 +142,7 @@ abstract class AbstractModel
 
         $stmt = DBConnection::getInstance()->prepare($sql.$condition['sql']);
         foreach ($condition['params'] as $key => &$value) {
-            $stmt->bindParam($key, $value);
+            $stmt->assignGuessType($key, $value);
         }
 
         return $stmt->fetch();
@@ -171,7 +171,7 @@ abstract class AbstractModel
         $condition = static::buildConditionByPk($primary_key);
         $stmt = self::createStatement($sql.$condition['sql']);
         foreach ($condition['params'] as $key => $value) {
-            $stmt->assign($key, $value);
+            $stmt->assignGuessType($key, $value);
         }
 
         return $stmt->affected();
@@ -206,12 +206,12 @@ abstract class AbstractModel
 
         // bind where condition
         foreach ($condition['params'] as $key => &$value) {
-            $stmt->assign($key, $value);
+            $stmt->assignGuessType($key, $value);
         }
 
         // bind update values
         foreach ($input as $key => &$value) {
-                $stmt->assign($key, $value);
+            $stmt->assignGuessType($key, $value);
         }
 
         return $stmt->affected();
