@@ -240,6 +240,10 @@ class CssTemplate
                 $replaces = [];
                 $copy = [];
                 foreach ($matches as $match) {
+                    if (strpos($match[1], 'data') === 0) {
+                        continue;
+                    }
+
                     $filename = md5($file['name'].'-'.$match[1]).preg_replace('/^[^.]+\.(.+)$/', '.$1', $match[1]);
                     $replaces[$match[0]] = 'url(../img/'.$filename.')';
                     $copy[dirname($file['name']).'/'.$match[1]] = Application::$WEB_ROOT.'img/'.$filename;

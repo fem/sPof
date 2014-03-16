@@ -369,9 +369,10 @@ abstract class AbstractHtmlView extends AbstractView
         $this->addInternalJavascript('jquery.timepicker.js');
         $this->addInternalJavascript('useJqueryUi.js');
 
-        $this->addStylesheet('../resource/jquery-ui-theme/jquery-ui.min');
-        $this->addStylesheet('../resource/jquery-ui-theme/jquery.ui.theme');
-        $this->addStylesheet('../resource/jquery-ui-theme/jquery-ui-timepicker-addon');
+        $path = dirname(dirname(__DIR__)).'/template/vendor/';
+        $this->addStylesheet($path.'jquery-ui-1.10.4.custom/css/le-frog/jquery-ui-1.10.4.custom.css');
+        $this->addStylesheet($path.'jquery-timepicker-master/jquery.timepicker.css');
+        #$this->addStylesheet($path.'../resource/jquery-ui-theme/jquery-ui-timepicker-addon');
     } // function
 
 
@@ -398,6 +399,8 @@ abstract class AbstractHtmlView extends AbstractView
         $this->useJquery();
         $this->addInternalJavascript('jquery.fancybox.js');
         $this->addInternalJavascript('fancybox.js');
+
+        $this->addStylesheet(dirname(dirname(__DIR__)).'/template/vendor/fancyBox-master/source/jquery.fancybox.css');
     } // function
 
     /**
