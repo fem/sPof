@@ -257,13 +257,10 @@ class CssTemplate
             }
             fwrite($handle, self::minify($content));
         } // foreach file
-        foreach ($replaces as $replace) {
-
-        }
         fclose($handle);
 
         // adjust file permissions for webserver
-        #chmod($targetfile, 0644);
+        chmod($targetfile, 0644);
 
         return $cssHash;
     } // function
