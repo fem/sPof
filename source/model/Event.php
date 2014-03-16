@@ -200,10 +200,11 @@ abstract class Event extends AbstractModelWithId implements Rating
      * @param int $user_id
      * @param array $group_ids (optional) An array containing the ID's of all groups, from which events shall be
      *        returned.
+     * @param bool $public include all public events, otherwise only the matched groups are shown
      *
      * @return array
      */
-    public static function getUserSpecificByTimespan($start, $end, $user_id, $group_ids = [])
+    public static function getUserSpecificByTimespan($start, $end, $user_id, $group_ids = [], $public = true)
     {
         // initiate sql query
         $sql = "
@@ -225,7 +226,7 @@ abstract class Event extends AbstractModelWithId implements Rating
             LEFT JOIN tbl_group g ON e.group_id=g.id
             WHERE
               (e.beginning BETWEEN to_timestamp(:start) AND to_timestamp(:end))
-              AND (e.public IS TRUE";
+              AND (".($public ? "e.public IS TRUE" : "FALSE");
 
         // run through all subscribed group_id's but the last one
         foreach ($group_ids as $i => $group_id) {
