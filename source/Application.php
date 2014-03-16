@@ -285,7 +285,12 @@ class Application
             }
         }
 
-        die("Could not find a suitable view component.");
+        // this code is not safe for use in different tabs
+        foreach (Session::getErrorMsg() as $error) {
+            echo $error['content']."\n";
+        }
+
+        die("\nCould not find a suitable view component.".$viewName);
     } // function
 
 
