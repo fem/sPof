@@ -159,7 +159,11 @@ class JavascriptTemplate extends HtmlTemplate
 
             try {
                 if (substr($file['name'], 0, 1) === '/') {
-                    $nextcontent = file_get_contents($file['name']);
+                    if (strpos($file['name'], '.tpl') > 0) {
+                        $nextcontent = JavascriptTemplate::getInstance()->fetch($file['name']);
+                    } else {
+                        $nextcontent = file_get_contents($file['name']);
+                    }
                 } elseif ($file['relative']) {
                     $nextcontent = file_get_contents($target.$file['name'].'.js');
                 } else {

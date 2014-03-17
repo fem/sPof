@@ -412,7 +412,7 @@ abstract class AbstractHtmlView extends AbstractView
     {
         $this->addInternalJavascript('desktop-notify.js');
         $this->addInternalJavascript('eventsource.js');
-        $this->addInternalJavascript('notification.js');
+        $this->addInternalJavascript('notification.js.tpl');
     } // function
 
 
