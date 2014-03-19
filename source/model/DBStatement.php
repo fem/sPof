@@ -190,7 +190,12 @@ class DBStatement extends \PDOStatement
             return false;
         }
 
-        return (int)parent::fetchColumn($column_number);
+        $value = parent::fetchColumn($column_number);
+        if ($value === false) {
+            return false;
+        }
+
+        return (int)$value;
     } // function
 
 
