@@ -172,6 +172,17 @@ class Application
 
 
     /**
+     * Prepare non-application code to run with the framework code.
+     *
+     * @api
+     */
+    public static function bootstrap()
+    {
+        new self();
+    }
+
+
+    /**
      * Start a new notification dispatcher bot.
      *
      * @api
