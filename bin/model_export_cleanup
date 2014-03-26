@@ -1,0 +1,77 @@
+<?php
+
+$content = file_get_contents('spi2_stable_struct.sql');
+
+# migrate to serials
+preg_match_all('#ALTER TABLE ONLY ([a-z0-9_]+) ALTER COLUMN ([a-z0-9_]+) SET DEFAULT nextval.*;#', $content, $matches, PREG_SET_ORDER);
+foreach ($matches as $match) {
+        preg_match('#CREATE TABLE '.$match[1].' \((.+)\);#sU', $content, $table);
+
+        $content = str_replace($table[0], str_replace("    ".$match[2].' bigint NOT NULL,', '    '.$match[2].' bigserial NOT NULL,', $table[0]), $content);
+        $content = str_replace($match[0], '', $content);
+}
+
+# migrate defaults
+preg_match_all('#ALTER TABLE ONLY ([a-z0-9_]+) ALTER COLUMN ([a-z0-9_]+) SET DEFAULT (.*);#', $content, $matches, PREG_SET_ORDER);
+foreach ($matches as $match) {
+        preg_match('#CREATE TABLE '.$match[1].' \((.+)\);#sU', $content, $table);
+
+        $content = str_replace($match[0], '', $content);
+        $content = str_replace($table[0], preg_replace("#(    ".$match[2].' .*),#', '$1 '.$match[3].',', $table[0]), $content);
+}
+
+# migrate constraints
+preg_match_all("#ALTER TABLE ONLY ([a-z0-9_]+)\n    ADD (CONSTRAINT .*);#", $content, $matches, PREG_SET_ORDER);
+foreach ($matches as $match) {
+        preg_match('#CREATE TABLE '.$match[1].' \((.+)\);#sU', $content, $table);
+
+        $content = str_replace($match[0], '', $content);
+        $content = str_replace($table[0], str_replace("\n);", ",\n    ".$match[2]."\n);", $table[0]), $content);
+}
+
+# move indexes
+preg_match_all('#CREATE (UNIQUE )?INDEX .* ON (.*) USING .*;#', $content, $matches, PREG_SET_ORDER);
+foreach ($matches as $match) {
+        preg_match('#CREATE TABLE '.$match[2].' \(.+\);#sU', $content, $table);
+
+        $content = str_replace($match[0], '', $content);
+        $content = str_replace($table[0], str_replace(");", ");\n\n".$match[0], $table[0]), $content);
+}
+
+# move triggers
+preg_match_all('#CREATE TRIGGER .* (AFTER|BEFORE) .* ON ([a-z0-9_]+) .*;#', $content, $matches, PREG_SET_ORDER);
+foreach ($matches as $match) {
+        preg_match('#CREATE TABLE '.$match[2].' \(.+\);#sU', $content, $table);
+
+        $content = str_replace($match[0], '', $content);
+        $content = str_replace($table[0], str_replace(");", ");\n\n".$match[0], $table[0]), $content);
+}
+
+
+# move rules
+preg_match_all('#CREATE RULE ([a-z0-9_]+) AS .* TO ([a-z0-9_]+) .*;#', $content, $matches, PREG_SET_ORDER);
+foreach ($matches as $match) {
+        preg_match('#CREATE TABLE '.$match[2].' \(.+\);#sU', $content, $table);
+
+        $content = str_replace($match[0], '', $content);
+        $content = str_replace($table[0], str_replace(");", ");\n\n".$match[0], $table[0]), $content);
+}
+
+
+# cleanup unnecessary queries
+$content = preg_replace('/CREATE SEQUENCE .*ALTER SEQUENCE .* OWNED BY .*;/sU', '', $content);
+$content = preg_replace('/ALTER .* OWNER TO .*;/', '', $content);
+$content = preg_replace('/(REVOKE|GRANT).*;/', '', $content);
+
+# cleanup comments and empty lines
+$content = preg_replace("/--\n--.*\n--\n/", '', $content);
+
+# readd some comments
+$content = preg_replace('#CREATE (TABLE|FUNCTION|VIEW|TYPE) ([a-z0-9_]+)#', "\n\n--\n-- $2 \n--\n\nCREATE TABLE $2 ", $content);
+
+$content = preg_replace("/[\n]{2,}/", "\n\n\n", $content);
+
+
+# write back
+#echo $content;
+file_put_contents('spi2_stable_struct.sql', $content);
