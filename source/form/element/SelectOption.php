@@ -52,6 +52,14 @@ class SelectOption extends \FeM\sPof\form\AbstractFormElement
      */
     public function __construct($value, $key = null, $selected = false)
     {
+        if (is_array($value) && isset($value['attributes'])) {
+            foreach ($value['attributes'] as $attribute_key => $attribute_value) {
+                $this->addAttribute($attribute_key, $attribute_value);
+            }
+            $value = $value[''];
+            $this->escapeInnerHtml = false;
+        }
+
         $this->setValue($value);
         if ($key !== null) {
             $this->addAttribute('value', $key);
