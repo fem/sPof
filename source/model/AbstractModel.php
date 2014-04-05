@@ -108,7 +108,11 @@ abstract class AbstractModel
             $stmt->assignGuessType($key, $value);
         }
 
-        return $stmt->fetchInt();
+        if (static::$RETURN_PRIMARY_KEY) {
+            return $stmt->fetchInt();
+        } else {
+            return $stmt->execute();
+        }
     } // function
 
 
