@@ -17,7 +17,7 @@
                     {strip}
                     <li class="labelWrapper">
                         {foreach from=$set.buttons item=button}
-                            {include file='form/form_button.tpl' type=$button.type label=$button.label}
+                            {include file='form/form_button.tpl' button=$button}
                         {/foreach}
                     </li>
                     {/strip}
