@@ -12,18 +12,18 @@ $(function() {
   });
 
   $("input.time").timepicker({
-    timeFormat: 'HH:mm',
+    timeFormat: 'H:i',
     currentText: 'Jetzt',
     closeText: 'Fertig',
     timeOnlyTitle: 'Uhrzeit auswählen',
     timeText: 'Zeit',
     hourText: 'Stunde',
     minuteText: 'Minute',
-    stepMinute: 5
+    step: 15
   });
 
   $(".username-suggest").autocomplete({
-    source: "<!--{route _name='suggest' type='user'}-->",
+    source: "<!--{route _name='suggest' show='user'}-->",
     minLength: 2
   });
 
