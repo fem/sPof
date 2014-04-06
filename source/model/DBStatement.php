@@ -252,6 +252,8 @@ class DBStatement extends \PDOStatement
     {
         if (is_bool($value)) {
             $this->assignBool($name, $value);
+        } elseif ($value instanceof \DateTime) {
+            $this->assignDate($name, $value);
         } else {
             $this->assign($name, $value);
         }
