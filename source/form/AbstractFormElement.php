@@ -248,8 +248,7 @@ abstract class AbstractFormElement implements Renderable
         unset($this->attributes['required']);
 
         if (!empty($this->attributes['name'])) {
-            $val = $this->default;
-            $this->setValue($val);
+            $this->setValue($this->getValue());
         }
 
         $template = HtmlTemplate::getInstance();
