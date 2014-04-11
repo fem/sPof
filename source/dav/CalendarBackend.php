@@ -259,10 +259,21 @@ class CalendarBackend extends AbstractBackend
             'UID:'.self::eventToUid($event),
             'CREATED:'.date('Ymd\THis\Z', strtotime($event['creation'])),
             'DTSTART:'.date('Ymd\THis\Z', strtotime($event['beginning'])),
-            'DTEND:'.date('Ymd\THis\Z', strtotime($event['ending'])),
             'SUMMARY:'.IcalUtil::escape($event['title']),
             'CLASS:'.($event['public'] ? 'PUBLIC' : 'PRIVATE'),
         ];
+
+        if (isset($event['ending'])) {
+            $calendarData[] = 'DTEND:'.date('Ymd\THis\Z', strtotime($event['ending']));
+        } elseif ($event['length'] !== '00:00:00') {
+            $calendarData[] = 'DURATION:'.\DateInterval::createFromDateString('P'
+                    .($interval[0] != '00' ? $interval[0].'H' : '')
+                    .($interval[1] != '00' ? $interval[1].'M' : '')
+                    .($interval[2] != '00' ? $interval[2].'S' : '')
+                );
+        }
+
+
         if (!empty($event['repeat'])) {
             $calendarData[] = 'RRULE:'.$event['repeat'];
         }
@@ -279,7 +290,6 @@ class CalendarBackend extends AbstractBackend
 
         $event['calendardata'] = implode("\n", $calendarData);
 
-        //var_dump($calendarId);
         return [
             'id'            => 'event:'.$event['id'],
             'uri'           => 'event.'.$event['id'].'.ics',//self::eventToUid($event).'.ics',

@@ -24,7 +24,7 @@ namespace FeM\sPof\view;
 use FeM\sPof\dav\AuthBackend;
 use FeM\sPof\dav\CalendarBackend;
 use FeM\sPof\dav\PrincipalBackend;
-use Sabre\DAV\Server;
+
 
 /**
  * Handle all CalDAV requests.
@@ -38,7 +38,7 @@ class CaldavView extends AbstractRawView
     /**
      * Show everything we have to show...
      */
-    public function showDefault()
+    public function show()
     {
         // Backends
         $authBackend = new AuthBackend();
@@ -53,7 +53,7 @@ class CaldavView extends AbstractRawView
 
         $config = \FeM\sPof\Config::get('server');
 
-        $server = new Server($tree);
+        $server = new \Sabre\DAV\Server($tree);
         $server->setBaseUri($config['path'].'dav/');
 
         /* Server Plugins */
@@ -71,5 +71,6 @@ class CaldavView extends AbstractRawView
 
         // And off we go!
         $server->exec();
+        exit;
     } // function
 }// class
