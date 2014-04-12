@@ -75,7 +75,7 @@ class CssTemplate
      */
     private static function getSourcePath()
     {
-        return Application::$FILE_ROOT.'stylesheet/';
+        return dirname(Application::$WEB_ROOT).'/stylesheet/';
     } // function
 
 

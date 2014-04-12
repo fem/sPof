@@ -73,7 +73,7 @@ class HtmlTemplate extends \Smarty
         $config = Config::get('smarty', self::$defaultConfig);
 
         $this->setTemplateDir(dirname(dirname(__DIR__)).'/template/html');
-        $this->addTemplateDir(Application::$FILE_ROOT.'template');
+        $this->addTemplateDir(dirname(Application::$WEB_ROOT).'/template');
 
         $this->addPluginsDir(__DIR__.'/smarty_plugins/');
         $this->error_reporting = (E_ALL & ~E_NOTICE);

@@ -56,7 +56,7 @@ class JavascriptTemplate extends HtmlTemplate
      */
     private static function getSourcePath()
     {
-        return Application::$FILE_ROOT.'javascript/';
+        return dirname(Application::$WEB_ROOT).'/javascript/';
     } // function
 
 
@@ -83,9 +83,8 @@ class JavascriptTemplate extends HtmlTemplate
     public function __construct()
     {
         parent::__construct();
-
         $this->setTemplateDir(self::getSourcePath());
-        $this->addTemplateDir(Application::$FILE_ROOT.'javascript');
+
         $this->left_delimiter = '<!--{';
         $this->right_delimiter = '}-->';
     } // constructor
