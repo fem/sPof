@@ -54,7 +54,7 @@ function smarty_function_route($params, &$smarty)
 
     try {
         $server = FeM\sPof\Config::get('server');
-        $basedir = $server['url'].$server['path'];
+        $basedir = '//'.$_SERVER['SERVER_NAME'].$server['path'];
         return (
             $fullurl
             ? ($https ? $basedir : preg_replace('#^https#', 'http', $basedir))

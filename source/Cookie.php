@@ -158,7 +158,6 @@ class Cookie
      */
     private static function getCookiePath()
     {
-        $server = Config::get('server');
-        return parse_url($server['url'].$server['path'], PHP_URL_PATH);
+        return Config::get('server', 'path');
     } // function
 }// class

@@ -54,7 +54,7 @@ class Router
      */
     private static function getSourceFile()
     {
-        return Application::$FILE_ROOT.'config/routes.yml';
+        return dirname(Application::$WEB_ROOT).'/routes.yml';
     } // function
 
 
@@ -65,7 +65,7 @@ class Router
      */
     private static function getPresetFile()
     {
-        return Application::$FILE_ROOT.'config/htaccess';
+        return dirname(Application::$WEB_ROOT).'/htaccess_template';
     } // function
 
 
@@ -372,7 +372,7 @@ class Router
         try {
             $ret = yaml_parse_file(self::getSourceFile());
         } catch (\ErrorException $e) {
-            Logger::getInstance()->error('Syntax error in file "config/routes.yml": '.$e->getMessage());
+            Logger::getInstance()->error('Syntax error in file "'.self::getSourceFile().'": '.$e->getMessage());
             $ret = [];
         }
 
@@ -502,7 +502,7 @@ class Router
     public static function redirect($route, array $arguments)
     {
         $server = Config::get('server');
-        self::urlRedirect($server['url'] . $server['path'] . self::reverse($route, $arguments));
+        self::urlRedirect('//'.$_SERVER['SERVER_NAME'].$server['path'].self::reverse($route, $arguments));
     } // function
 
 

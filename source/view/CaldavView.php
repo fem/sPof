@@ -54,7 +54,7 @@ class CaldavView extends AbstractRawView
         $config = \FeM\sPof\Config::get('server');
 
         $server = new \Sabre\DAV\Server($tree);
-        $server->setBaseUri($config['path'].'dav/');
+#        $server->setBaseUri();
 
         /* Server Plugins */
         $authPlugin = new \Sabre\DAV\Auth\Plugin($authBackend, 'SabreDAV');

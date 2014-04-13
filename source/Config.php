@@ -67,7 +67,7 @@ class Config
     {
         $dir = Application::$FILE_ROOT.'config/';
 
-        // load application local file
+        // load installation global file
         if (file_exists($dir.'default.yml')) {
             $this->config = yaml_parse_file($dir.'default.yml');
         }

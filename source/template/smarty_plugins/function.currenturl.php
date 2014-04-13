@@ -75,5 +75,5 @@ function smarty_function_currenturl($params, &$smarty)
     }
 
     // return route including new optional params
-    return $server['url'].$server['path'].ltrim(implode(($rawUrl ? '&' : '/'), $new), '/');
+    return '//'.$_SERVER['SERVER_NAME'].$server['path'].ltrim(implode(($rawUrl ? '&' : '/'), $new), '/');
 } // function

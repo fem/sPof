@@ -68,7 +68,7 @@ abstract class NotificationSend
         $user = User::getByPk($user_id);
         $template = HtmlTemplate::getInstance();
         $template->assign('firstname', $user['firstname']);
-        $template->assign('basedir', $server['url'].$server['path']);
+        $template->assign('basedir', '//'.$_SERVER['SERVER_NAME'].$server['path']);
         $template->assign('content', $message);
 
         return MailUtil::send(

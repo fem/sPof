@@ -84,6 +84,7 @@ class CalendarBackend extends AbstractBackend
             'id' => 'user:'.$user['id'],
             'uri' => $user['name'],
             '{DAV:}displayname' => $user['name'],
+            '{urn:ietf:params:xml:ns:caldav}calendar-description' => 'Privater Kalender',
             'principaluri' => $principalUri,
             '{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set' => $componentSet,
         ];
@@ -96,6 +97,7 @@ class CalendarBackend extends AbstractBackend
                 'id' => 'group:'.$group['id'],
                 'uri' => $group['shortname'],
                 '{DAV:}displayname' => $group['shortname'],
+                '{urn:ietf:params:xml:ns:caldav}calendar-description' => 'Kalender für '.$group['name'],
                 'principaluri' => $principalUri,
                 '{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set' => $componentSet,
             ];
@@ -570,8 +572,7 @@ class CalendarBackend extends AbstractBackend
         }
 
         // otherwise construct a globally unique id
-        $server = \FeM\sPof\Config::get('server');
-        return $event['creation'].'-'.$event['id'].'@'.$server['url'];
+        return $event['creation'].'-'.$event['id'].'@'.$_SERVER['SERVER_NAME'];
     } // function
 
 
