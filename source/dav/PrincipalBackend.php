@@ -58,6 +58,14 @@ class PrincipalBackend extends AbstractBackend
      */
     public function getPrincipalsByPrefix($prefixPath)
     {
+        $user = User::getByName($_SERVER['PHP_AUTH_USER']);
+        return [
+            [
+                'uri' => 'principals/'.strtolower($user['name']),
+                '{DAV:}displayname' => $user['name'],
+                '{http://sabredav.org/ns}email-address' => $user['email'],
+            ]
+        ];
         // do not show a list of all principals (you have to know them)
         Logger::getInstance()->debug('Skipped', ['prefixPath' => $prefixPath]);
         return [];
@@ -75,11 +83,17 @@ class PrincipalBackend extends AbstractBackend
     public function getPrincipalByPath($path)
     {
         $principal = str_replace('principals/', '', $path);
+        #$user = User::getByName($principal);
         $user = User::getByName($principal);
         if ($user !== false) {
-            return ['uri' => $user['name']];
+            return [
+                'id' => $user['id'],
+                'uri' => 'principals/'.strtolower($user['name']),
+                '{DAV:}displayname' => $user['name'],
+                '{http://sabredav.org/ns}email-address' => $user['email'],
+            ];
         } else {
-            return false;
+            return [];
         }
     } // function
 
@@ -200,6 +214,7 @@ class PrincipalBackend extends AbstractBackend
     public function getGroupMembership($principal)
     {
         Logger::getInstance()->debug('Skipped', ['principal' => $principal]);
+        return [];
         throw new ReportNotSupported('read-only support');
     } // function
 

@@ -67,7 +67,8 @@ class CalendarBackend extends AbstractBackend
      */
     public function getCalendarsForUser($principalUri)
     {
-        $user = User::getByName($principalUri);
+        $username = str_replace('principals/', '', $principalUri);
+        $user = User::getByName($username);
 
         $componentSet = new SupportedCalendarComponentSet(['VEVENT']);
 
@@ -79,12 +80,13 @@ class CalendarBackend extends AbstractBackend
         // build some calendars :)
         $calendars = [];
 
+
+
         // add private user calendar
         $calendars[] = [
-            'id' => 'user:'.$user['id'],
-            'uri' => $user['name'],
+            'id' => 'user_'.$user['id'],
+            'uri' => 'user_'.$user['id'],
             '{DAV:}displayname' => $user['name'],
-            '{urn:ietf:params:xml:ns:caldav}calendar-description' => 'Privater Kalender',
             'principaluri' => $principalUri,
             '{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set' => $componentSet,
         ];
@@ -94,13 +96,12 @@ class CalendarBackend extends AbstractBackend
         foreach ($groups as $group) {
             // TODO: split by tags
             $calendars[] = [
-                'id' => 'group:'.$group['id'],
-                'uri' => $group['shortname'],
+                'id' => 'group_'.$group['id'],
+                'uri' => 'group_'.$group['id'],
                 '{DAV:}displayname' => $group['shortname'],
-                '{urn:ietf:params:xml:ns:caldav}calendar-description' => 'Kalender für '.$group['name'],
                 'principaluri' => $principalUri,
                 '{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set' => $componentSet,
-            ];
+             ];
         }
 
         $handlers = Application::getCalendarHandlers();
@@ -190,7 +191,7 @@ class CalendarBackend extends AbstractBackend
      */
     public function getCalendarObjects($calendarId)
     {
-        $source = explode(':', $calendarId);
+        $source = explode('_', $calendarId);
         $result = [];
         switch ($source[0]) {
 
@@ -198,7 +199,7 @@ class CalendarBackend extends AbstractBackend
             case 'group':
                 $events = Event::getByGroupId($source[1]);
                 foreach ($events as $event) {
-                    $tmp = $this->getCalendarObject($calendarId, 'event.'.$event['id'].'.ics');
+                    $tmp = $this->getCalendarObject($calendarId, 'event_'.$event['id'].'.ics');
                     if ($tmp !== false) {
                         $result[] = $tmp;
                     }
@@ -209,7 +210,7 @@ class CalendarBackend extends AbstractBackend
             case 'user':
                 $events = Event::getByUserId($source[1]);
                 foreach ($events as $event) {
-                    $tmp = $this->getCalendarObject($calendarId, 'event.'.$event['id'].'.ics');
+                    $tmp = $this->getCalendarObject($calendarId, 'event_'.$event['id'].'.ics');
                     if ($tmp !== false) {
                         $result[] = $tmp;
                     }
@@ -221,7 +222,7 @@ class CalendarBackend extends AbstractBackend
                 foreach ($handlers as $handler) {
                     $events = $handler->getEventsByCalendarId($calendarId);
                     foreach ($events as $event) {
-                        $tmp = $this->getCalendarObject($calendarId, 'event.'.$event['id'].'.ics');
+                        $tmp = $this->getCalendarObject($calendarId, 'event_'.$event['id'].'.ics');
                         if ($tmp !== false) {
                             $result[] = $tmp;
                         }
@@ -293,8 +294,8 @@ class CalendarBackend extends AbstractBackend
         $event['calendardata'] = implode("\n", $calendarData);
 
         return [
-            'id'            => 'event:'.$event['id'],
-            'uri'           => 'event.'.$event['id'].'.ics',//self::eventToUid($event).'.ics',
+            'id'            => 'event_'.$event['id'],
+            'uri'           => 'event_'.$event['id'].'.ics',//self::eventToUid($event).'.ics',
             'lastmodified'  => $event['modify'],
             'etag'          => '"'.md5($event['calendardata']).'"',
             'calendarid'    => $calendarId,
@@ -328,7 +329,7 @@ class CalendarBackend extends AbstractBackend
         Logger::getInstance()->debug('Skipped', ['objectUri' => $objectUri]);
         DBConnection::getInstance()->beginTransaction();
 
-        $source = explode(':', $calendarId);
+        $source = explode('_', $calendarId);
         $group_id = 0;
         switch ($source[0]) {
             case 'group':
@@ -422,7 +423,7 @@ class CalendarBackend extends AbstractBackend
 
         DBConnection::getInstance()->beginTransaction();
 
-        $source = explode(':', $calendarId);
+        $source = explode('_', $calendarId);
         switch ($source[0]) {
             case 'user':
             case 'group':
@@ -502,7 +503,7 @@ class CalendarBackend extends AbstractBackend
     {
         DBConnection::getInstance()->beginTransaction();
 
-        $source = explode(':', $calendarId);
+        $source = explode('_', $calendarId);
         switch ($source[0]) {
             case 'user':
             case 'group':
@@ -588,8 +589,8 @@ class CalendarBackend extends AbstractBackend
      */
     public static function getEventFromObjectUri($objectUri, $throwing = false)
     {
-        if (strpos($objectUri, 'event.') === 0) {
-            $event = Event::getByPk(str_replace(['event.', '.ics'], '', $objectUri));
+        if (strpos($objectUri, 'event_') === 0) {
+            $event = Event::getByPk(str_replace(['event_', '.ics'], '', $objectUri));
         } else {
             $event = Event::getByOriginalUid(str_replace('.ics', '', $objectUri));
         }
