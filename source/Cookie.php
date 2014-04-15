@@ -158,6 +158,6 @@ class Cookie
      */
     private static function getCookiePath()
     {
-        return Config::get('server', 'path');
+        return Config::getDetail('server', 'path');
     } // function
 }// class
