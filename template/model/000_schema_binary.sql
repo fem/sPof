@@ -44,6 +44,8 @@ CREATE TABLE tbl_file_oid (
     CONSTRAINT tbl_file_oid_pkey PRIMARY KEY (id)
 );
 
+CREATE INDEX tbl_file_oid_hash_idx ON tbl_file_oid USING btree(hash);
+
 REVOKE ALL ON SCHEMA "binary" FROM PUBLIC;
 
 COMMIT;
