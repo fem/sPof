@@ -47,4 +47,14 @@ class FileInput extends \FeM\sPof\form\AbstractInputElement
             $this->addAttribute('multiple', 'multiple');
         }
     } // constructor
+
+
+    /**
+     * Not available for file input.
+     *
+     * @internal
+     */
+    public function setValue($text)
+    {
+    } // function
 }// class
