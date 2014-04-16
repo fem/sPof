@@ -200,7 +200,7 @@ abstract class AbstractHtmlView extends AbstractView
             $templateFile = lcfirst(Router::getModule()).'/'.$show.'.tpl';
             try {
                 $content = template\HtmlTemplate::getInstance()->fetch($templateFile);
-            } catch (\Exception $e) {
+            } catch (\ErrorException $e) {
                 Logger::getInstance()->info('Could not find template, next trying form. ('.$e->getMessage().')');
             }
         }
