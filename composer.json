@@ -1,7 +1,7 @@
 {
     "name": "fem/spof",
     "description": "Framework behind sPi",
-    "version": "1.0.0-alpha3",
+    "version": "1.0.0-alpha4",
     "type": "library",
     "homepage": "http://spof.fem-net.de",
     "license": "proprietary",
