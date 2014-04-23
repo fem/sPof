@@ -62,6 +62,15 @@ class Application
     public static $WEB_ROOT;
 
     /**
+     * Reference to the global cache root folder
+     *
+     * @api
+     *
+     * @var string
+     */
+    public static $CACHE_ROOT;
+
+    /**
      * Reference to thec currently used Application class instance.
      *
      * @api
@@ -127,6 +136,7 @@ class Application
         }
         self::$FILE_ROOT = rtrim(self::$FILE_ROOT, '/').'/';
         self::$WEB_ROOT = self::$FILE_ROOT.'public/';
+        self::$CACHE_ROOT = self::$FILE_ROOT.'tmp/';
 
         self::$INSTANCE = $this;
     } // function

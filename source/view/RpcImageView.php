@@ -76,7 +76,7 @@ class RpcImageView extends RpcFileView
         $this->processing = true;
         $this->stats_disable = true;
         $this->path_sendfile = sprintf(
-            Application::$FILE_ROOT.'tmp/thumb/%s/%s_%sx%s.thumb',
+            Application::$CACHE_ROOT.'thumb/%s/%s_%sx%s.thumb',
             $this->sid[0],
             $this->sid,
             $this->width,

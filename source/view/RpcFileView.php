@@ -124,7 +124,7 @@ class RpcFileView extends \FeM\sPof\view\AbstractRawView
         $file = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         // set path to unprocessed cache file
-        $path_cachefile = sprintf(Application::$FILE_ROOT.'tmp/files/%s/%s.file', $this->sid[0], $this->sid);
+        $path_cachefile = sprintf(Application::$CACHE_ROOT.'files/%s/%s.file', $this->sid[0], $this->sid);
 
 
         // load file from database if cache file doesn't exist
