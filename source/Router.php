@@ -33,6 +33,18 @@ namespace FeM\sPof;
 class Router
 {
     /**
+     * Default config.
+     *
+     * @api
+     *
+     * @var array
+     */
+    private static $defaultConfig = [
+        'file_perms' => 0644,
+    ];
+
+
+    /**
      * Get target location file.
      *
      * @internal
@@ -96,8 +108,9 @@ class Router
         require $preset;
         fwrite($rules, ob_get_clean());
         fclose($rules);
+error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
-        chmod($target, 0644);
+        chmod($target, Config::getDetail('router', 'file_perms', self::$defaultConfig));
     } // function
 
 
@@ -156,8 +169,9 @@ class Router
             .'index.php?module=errors&show=show404&%{QUERY_STRING} [L,QSA]'."\n"
         );
         fclose($rules);
+error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
-        chmod($target, 0644);
+        chmod($target, Config::getDetail('router', 'file_perms', self::$defaultConfig));
     } // function
 
 

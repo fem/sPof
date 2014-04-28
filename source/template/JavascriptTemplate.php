@@ -22,6 +22,7 @@
 namespace FeM\sPof\template;
 
 use FeM\sPof\Application;
+use FeM\sPof\Config;
 use FeM\sPof\Logger;
 use FeM\sPof\FileUtil;
 
@@ -188,7 +189,7 @@ class JavascriptTemplate extends HtmlTemplate
 
         // adjust file permissions for webserver
         if ($success) {
-            chmod($targetfile, 0644);
+            chmod($targetfile, Config::getDetail('smarty', 'file_perms', self::$defaultConfig));
         } // foreach scssFiles
 
         return $jsHash;

@@ -35,9 +35,11 @@ class HtmlTemplate extends \Smarty
      *
      * @var array
      */
-    private static $defaultConfig = [
+    protected static $defaultConfig = [
         'compile_dir' => '/tmp/smarty_compile', // will get prepended by App file root in constructor
         'cache_dir' => '/tmp/smarty_cache',
+        'file_perms' => 0644,
+        'dir_perms' => 0755
     ];
 
 
@@ -77,14 +79,15 @@ class HtmlTemplate extends \Smarty
 
         $this->addPluginsDir(__DIR__.'/smarty_plugins/');
         $this->error_reporting = (E_ALL & ~E_NOTICE);
-        $this->_file_perms = 0664;
+        $this->_file_perms = $config['file_perms'];
+        $this->_dir_perms = $config['dir_perms'];
 
         // cache dir
-        FileUtil::makedir($config['cache_dir'], 0755);
+        FileUtil::makedir($config['cache_dir'], $config['dir_perms']);
         $this->setCacheDir($config['cache_dir']);
 
         // compile dir
-        FileUtil::makedir($config['compile_dir'], 0755);
+        FileUtil::makedir($config['compile_dir'], $config['dir_perms']);
         $this->setCompileDir($config['compile_dir']);
 
         // add classes for usage in templates

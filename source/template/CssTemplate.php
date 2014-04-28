@@ -50,6 +50,7 @@ class CssTemplate
         'syntax' => \SassFile::SCSS,
         'cache' => false,
         'debug' => true,
+        'file_perms' => 0644
     ];
 
 
@@ -156,7 +157,7 @@ class CssTemplate
 
 
                 file_put_contents($savefile, self::getParser()->toCss(file_get_contents($sourcePath.$filename), false));
-                chmod($savefile, 0644);
+                chmod($savefile, Config::getDetail('stylesheet', 'file_perms', self::$defaultConfig));
             } catch (\Exception $exception) {
                 Logger::getInstance()->exception($exception);
             }
@@ -260,7 +261,7 @@ class CssTemplate
         fclose($handle);
 
         // adjust file permissions for webserver
-        chmod($targetfile, 0644);
+        chmod($targetfile, Config::getDetail('stylesheet', 'file_perms', self::$defaultConfig));
 
         return $cssHash;
     } // function
