@@ -117,13 +117,21 @@ class Config
      *
      * @return mixed
      */
-    public static function getDetail($name, $detail)
+    public static function getDetail($name, $detail, $default = false)
     {
         $me = self::getInstance();
 
         if (isset($me->config[$name][$detail])) {
             //Logger::getInstance()->warning('Config option does not exist: '.$name);
             return $me->config[$name][$detail];
+        }
+
+        if (!is_array($default)) {
+            return $default;
+        }
+
+        if (isset($default[$detail])) {
+            return $default[$detail];
         }
 
         return false;
