@@ -52,7 +52,7 @@ class Label extends \FeM\sPof\form\AbstractFormElement
     {
         $this->innerHtml = $title;
         if ($required) {
-            $this->innerHtml .= new Plain('*');
+            $this->innerHtml .= (new Plain('*'))->render();
         }
         $this->escapeInnerHtml = false;
         $this->addAttribute('class', $class);

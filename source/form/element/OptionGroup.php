@@ -22,15 +22,14 @@
 namespace FeM\sPof\form\element;
 
 /**
- * Represents a single-select-input-element.
+ * This class represents a group of options.
  *
  * @package FeM\sPof\form\element
  * @author dangerground
  * @since 1.0
  */
-class Select extends \FeM\sPof\form\AbstractFormElement
+class OptionGroup extends \FeM\sPof\form\AbstractFormElement
 {
-
     /**
      * Referenced element.
      *
@@ -38,7 +37,7 @@ class Select extends \FeM\sPof\form\AbstractFormElement
      *
      * @var string
      */
-    public static $TAG = 'select';
+    public static $TAG = 'span';
 
     /**
      * Selectable options.
@@ -112,10 +111,12 @@ class Select extends \FeM\sPof\form\AbstractFormElement
      */
     public function render()
     {
-        parent::renderPrepare();
+        //parent::renderPrepare();
         foreach ($this->options as $key => $value) {
-            $this->innerHtml .= (new SelectOption($value, $key, $key == $this->selectedValue))->render();
+            $this->innerHtml .= (new OptionInput($this->attributes['name'], $this->attributes['name'].'_'.$key, $key, $key == $this->selectedValue))->render();
+            $this->innerHtml .= ' '. (new Label($this->attributes['name'].'_'.$key, $value, false))->render().' ';
         }
         return parent::render();
+
     } // function
-}// class
+} 

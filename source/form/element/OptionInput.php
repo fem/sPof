@@ -19,15 +19,38 @@
  * @link      http://spof.fem-net.de
  */
 
-namespace FeM\sPof;
+namespace FeM\sPof\form\element;
+
 
 /**
- * Implementing this class will enable to render the implementing class to HTML.
+ * This class represents a single option inside a group of options.
  *
- * @package FeM\sPof
+ * @internal
+ *
+ * @package FeM\sPof\form\element
  * @author dangerground
  * @since 1.0
  */
-interface Renderable
+class OptionInput extends \FeM\sPof\form\AbstractInputElement
 {
-}// interface
+    /**
+     * Create new instance.
+     *
+     * @param string $value
+     * @param string $key (optional)
+     * @param bool $selected (optional)
+     */
+    public function __construct($field, $id, $value, $selected)
+    {
+        parent::__construct('radio', $field, false);
+        $this->addAttribute('id', $id);
+
+        $this->setValue($value);
+        if ($value !== null) {
+            $this->addAttribute('value', $value);
+        }
+        if ($selected) {
+            $this->addAttribute('selected', 'selected');
+        }
+    } // function
+} 

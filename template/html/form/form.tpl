@@ -7,7 +7,7 @@
                     {$class=$row->getClass()}
                     <li{if not empty($class)} class="{$class}"{/if}>
                         {foreach from=$row->getElements() item=element}
-                            {$element}
+                            {$element->render()}
                         {/foreach}
                     </li>
                 {/foreach}
