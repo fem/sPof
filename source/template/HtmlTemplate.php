@@ -77,6 +77,7 @@ class HtmlTemplate extends \Smarty
 
         $this->addPluginsDir(__DIR__.'/smarty_plugins/');
         $this->error_reporting = (E_ALL & ~E_NOTICE);
+        $this->_file_perms = 0664;
 
         // cache dir
         FileUtil::makedir($config['cache_dir'], 0755);
