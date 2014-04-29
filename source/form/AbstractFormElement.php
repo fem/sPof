@@ -101,7 +101,7 @@ abstract class AbstractFormElement implements Renderable
      * @param $attribute
      * @param $value
      */
-    protected function addAttribute($attribute, $value)
+    public function addAttribute($attribute, $value)
     {
         $this->attributes[$attribute] = $value;
 
@@ -150,9 +150,11 @@ abstract class AbstractFormElement implements Renderable
      *
      * @throws \InvalidArgumentException if the attribute name is missing (and the element is no "field").
      *
+     * @param string $type (optional) type which is returned, e.g. bool, int, array
+     *
      * @return mixed
      */
-    public function getValue()
+    public function getValue($type = null)
     {
         if (!isset($this->attributes['name'])) {
             throw new \InvalidArgumentException('Could not find a named form element: '.var_export($this, true));
@@ -162,8 +164,8 @@ abstract class AbstractFormElement implements Renderable
         $method = 'getStrParam';
 
         // if set, use another type
-        if (isset($this->attributes['type'])) {
-            switch ($this->attributes['type']) {
+        if ($type !== null) {
+            switch ($type) {
 
                 case 'array':
                     $method = 'getArrayParam';

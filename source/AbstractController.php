@@ -179,6 +179,25 @@ abstract class AbstractController extends AbstractModule
 
 
     /**
+     * Get the form object for the current action.
+     *
+     * @api
+     *
+     * @return form\Form
+     */
+    final protected function getForm()
+    {
+        $class = str_replace('\\controller\\', '\\form\\', str_replace('Controller', 'Form', get_called_class()));
+        $action = Router::getAction();
+
+        $form = new $class();
+        $form->$action();
+
+        return $form;
+    } // function
+
+
+    /**
      * Uses the cmdRedirect class property and redirects to it. If nothing is set we try to go back to the referrer,
      * but this default behaviour is error prone, as that value it set by the browser and can not be trusted. Should
      * be changed in future versions.

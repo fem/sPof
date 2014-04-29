@@ -195,6 +195,7 @@ class Form extends AbstractFormGroup implements Renderable
             $this->set++;
         }
         $this->fieldset[$this->set]['name'] = $title;
+        $this->fieldset[$this->set]['rows'] = [];
     } // function
 
 
@@ -287,11 +288,30 @@ class Form extends AbstractFormGroup implements Renderable
      * @api
      *
      * @param string $field name
+     * @param string $type (optional) type which is returned, e.g. bool, int, array
+     *
      * @return mixed
      */
-    final public function getValue($field)
+    final public function getValue($field, $type = null)
     {
-        return $this->getElement($field)->getValue();
+        return $this->getElement($field)->getValue($type);
+    } // function
+
+
+    /**
+     * Get all values of the form.
+     *
+     * @api
+     *
+     * @return mixed
+     */
+    final public function getValues()
+    {
+        $values = [];
+        foreach ($this->field as $name => $field) {
+            $values[$name] = $this->getElement($name)->getValue();
+        }
+        return $values;
     } // function
 
 

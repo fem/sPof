@@ -269,7 +269,8 @@ abstract class AbstractFormGroup
      */
     final public function addSelect($field, $label, $required = true, array $options = [])
     {
-        $this->addLabeled($label, new element\Select($field, $required))
-             ->setOptions($options);
+        $select = new element\Select($field, $required);
+        $this->addLabeled($label, $select)->setOptions($options);
+        return $select;
     } // function
 }// class

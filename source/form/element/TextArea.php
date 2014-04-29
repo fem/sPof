@@ -47,6 +47,13 @@ class TextArea extends \FeM\sPof\form\AbstractFormElement
     private $field;
 
     /**
+     * Internal reference to the real textarea.
+     *
+     * @var TextAreaInternal
+     */
+    private $internal;
+
+    /**
      * Create new instance.
      *
      * @param string $field
@@ -55,7 +62,8 @@ class TextArea extends \FeM\sPof\form\AbstractFormElement
      */
     public function __construct($field, $required = true, $maxlength = 65535)
     {
-        $this->innerHtml = (new TextAreaInternal($field, $required, $maxlength))->render();
+        $this->internal = new TextAreaInternal($field, $required, $maxlength);
+        $this->innerHtml = $this->internal->render();
         $this->escapeInnerHtml = false;
         $this->addAttribute('class', 'fillLabel');
         $this->field = $field;
@@ -69,5 +77,15 @@ class TextArea extends \FeM\sPof\form\AbstractFormElement
      */
     public function getName() {
         return $this->field;
+    }
+
+
+    /**
+     * Wrapper for internal getValue.
+     *
+     * @param string $type (optional) ignored for this wrapper
+     */
+    public function getValue($type = null) {
+        return $this->internal->getValue();
     }
 }// class
