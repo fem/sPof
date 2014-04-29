@@ -99,10 +99,10 @@ abstract class AbstractModel
         // Prepare statement and bind values
         $stmt = self::createStatement(
             "
-            INSERT INTO ".static::getTable($input)." (".implode(',', array_keys($input)).")
+            INSERT INTO ".static::getTable($input)." (\"".implode('","', array_keys($input))."\")
             VALUES (
                 :".implode(',:', array_keys($input)).")".(static::$RETURN_PRIMARY_KEY ?
-                "RETURNING id" : '')
+                "RETURNING \"id\"" : '')
         );
         foreach ($input as $key => &$value) {
             $stmt->assignGuessType($key, $value);
@@ -137,8 +137,8 @@ abstract class AbstractModel
             SELECT *
             FROM ".static::getTable()."
             WHERE
-                disabled IS FALSE
-                ".($visible_only ? "AND visible IS TRUE" : '').
+                \"disabled\" IS FALSE
+                ".($visible_only ? "AND \"visible\" IS TRUE" : '').
                 " AND ";
 
         // build query and add values from all primary key columns
@@ -262,7 +262,7 @@ abstract class AbstractModel
                 if ($i > 0) {
                     $sql .= " AND ";
                 }
-                $sql .= $key." = :".$key;
+                $sql .= "\"".$key."\" = :".$key;
             }
             $sql .= ") ";
             return [
