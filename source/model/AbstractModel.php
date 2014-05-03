@@ -12,6 +12,7 @@ namespace FeM\sPof\model;
 
 use FeM\sPof\exception\NotImplementedException;
 use FeM\sPof\exception\AbstractMethodException;
+use FeM\sPof\exception\InvalidParameterException;
 use FeM\sPof\Logger;
 
 /**
