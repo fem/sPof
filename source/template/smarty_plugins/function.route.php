@@ -49,12 +49,12 @@ function smarty_function_route($params, &$smarty)
     unset($arguments['_name']);
     $fullurl = (isset($arguments['_fullurl']) ? $arguments['_fullurl'] : false);
     unset($arguments['_fullurl']);
-    $https = (isset($arguments['_https']) ? $arguments['_https'] : true);
+    $https = ((isset($arguments['_https']) || $_SERVER['HTTPS'] != 'on') ? $arguments['_https'] : true);
     unset($arguments['_https']);
 
     try {
         $server = FeM\sPof\Config::get('server');
-        $basedir = '//'.$_SERVER['SERVER_NAME'].$server['path'];
+        $basedir = 'https://'.$_SERVER['SERVER_NAME'].$server['path'];
         return (
             $fullurl
             ? ($https ? $basedir : preg_replace('#^https#', 'http', $basedir))
