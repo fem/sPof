@@ -254,26 +254,27 @@ abstract class AbstractModel
      */
     protected static function buildConditionByPk($primary_key)
     {
-        if (is_array($primary_key)) {
-            $sql = " (";
-
-            // add each column to query
-            foreach (array_keys($primary_key) as $i => $key) {
-                if ($i > 0) {
-                    $sql .= " AND ";
-                }
-                $sql .= "\"".$key."\" = :".$key;
-            }
-            $sql .= ") ";
-            return [
-                'sql' => $sql,
-                'params' => $primary_key
-                ];
-
+        if (!is_array($primary_key)) {
+            throw new InvalidParameterException(
+                "Primary Key is no array, maybe you wanted to use AbstractModelWithId instead?"
+            );
         }
 
-        // return empty
-        return ['sql' => '', 'params' => []];
+        $sql = " (";
+
+        // add each column to query
+        foreach (array_keys($primary_key) as $i => $key) {
+            if ($i > 0) {
+                $sql .= " AND ";
+            }
+            $sql .= "\"".$key."\" = :".$key;
+        }
+        $sql .= ") ";
+
+        return [
+            'sql' => $sql,
+            'params' => $primary_key
+            ];
     } // function
 
 
