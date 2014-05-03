@@ -221,7 +221,7 @@ abstract class Event extends AbstractModelWithId implements Rating
                 u.id AS author_id,
                 g.name AS group_name,
                 g.id AS group_id
-            FROM view_event_all e
+            FROM view_event_only e
             JOIN tbl_user u ON u.id=e.user_id
             LEFT JOIN tbl_group g ON e.group_id=g.id
             WHERE
