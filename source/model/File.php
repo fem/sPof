@@ -10,6 +10,8 @@
 
 namespace FeM\sPof\model;
 
+use FeM\sPof\Cache;
+
 /**
  * File repository.
  *
@@ -40,6 +42,11 @@ abstract class File extends AbstractModelWithId
      */
     public static function getAccessCount($file_id)
     {
+        $count = Cache::fetch('file_access_count.'.$file_id);
+        if ($count !== false) {
+            return $count;
+        }
+
         $stmt = self::createStatement(
             "
             SELECT SUM(accesscount)
@@ -49,7 +56,10 @@ abstract class File extends AbstractModelWithId
         );
         $stmt->assignId('file_id', $file_id);
 
-        return $stmt->fetchColumn();
+        $count = $stmt->fetchInt();
+        Cache::store('file_access_count.'.$file_id, $count, 300);
+
+        return $count;
     } // function
 
 
@@ -63,6 +73,11 @@ abstract class File extends AbstractModelWithId
      */
     public static function getUserCount($file_id)
     {
+        $count = Cache::fetch('file_user_count.'.$file_id);
+        if ($count !== false) {
+            return $count;
+        }
+
         $stmt = self::createStatement(
             "
             SELECT count(DISTINCT user_id)
@@ -72,7 +87,10 @@ abstract class File extends AbstractModelWithId
         );
         $stmt->assignId('file_id', $file_id);
 
-        return $stmt->fetchColumn();
+        $count = $stmt->fetchInt();
+        Cache::store('file_user_count.'.$file_id, $count, 300);
+
+        return $count;
     } // function
 
 
