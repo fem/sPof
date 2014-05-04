@@ -1,7 +1,7 @@
 <form action="{route _name=$route arguments=$routeContext}" method="post" enctype="multipart/form-data">
     {foreach from=$fieldsets item=set}
         <fieldset class="block">
-            <legend><span>{$set.name|escape}</span></legend>
+            {if isset($set.name)}<legend><span>{$set.name|escape}</span></legend>{/if}
             <ul>
                 {foreach from=$set.rows item=row}
                     {$class=$row->getClass()}

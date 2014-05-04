@@ -191,11 +191,14 @@ class Form extends AbstractFormGroup implements Renderable
      */
     final public function addFieldset($title)
     {
+        if (!isset($this->fieldset[$this->set]['rows'])) {
+            $this->fieldset[$this->set]['rows'] = [];
+        }
+
         if (isset($this->fieldset[$this->set]['name'])) {
             $this->set++;
         }
         $this->fieldset[$this->set]['name'] = $title;
-        $this->fieldset[$this->set]['rows'] = [];
     } // function
 
 
