@@ -111,6 +111,13 @@ class Application
      */
     private $calendarHandler = [];
 
+    /**
+     * Name of the default module Name.
+     *
+     * @var string
+     */
+    private $defaultModule = '';
+
 
     /**
      * Create a new Application instance.
@@ -150,9 +157,13 @@ class Application
     public function dispatch()
     {
         # get current context from URL
-        Router::resolve(isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
-        Router::updateHtaccess();
-        #Router::updateRules();
+        try {
+            Router::resolve(isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
+            Router::updateHtaccess();
+            #Router::updateRules();
+        } catch (\Exception $e) {
+            Session::addErrorMsg($e->getMessage());
+        }
 
         // from here we'll capture every output
         ob_start();
@@ -244,6 +255,9 @@ class Application
      */
     private function getClassByModule($module)
     {
+       // if (empty($module)) {
+       //     $module = $this->defaultModule;
+       // }
         return self::$NAMESPACE.'view\\'.$module.'View';
     } // function
 
@@ -292,6 +306,11 @@ class Application
             // use local fallback
             if (method_exists($viewName, 'handleException')) {
                 $viewName::handleException($e);
+            } else {
+                $viewName = $this->getClassByModule($this->defaultModule);
+                if (method_exists($viewName, 'handleException')) {
+                    $viewName::handleException($e);
+                }
             }
         }
 
@@ -303,6 +322,11 @@ class Application
             // use local fallback
             if (method_exists($viewName, 'handleNoViewFound')) {
                 return $viewName::handleNoViewFound();
+            } else {
+                $viewName = $this->getClassByModule($this->defaultModule);
+                if (method_exists($viewName, 'handleNoViewFound')) {
+                    return $viewName::handleNoViewFound();
+                }
             }
         }
 
@@ -312,6 +336,19 @@ class Application
         }
 
         die("\nCould not find a suitable view component.".$viewName);
+    } // function
+
+
+    /**
+     * Set default Module name, which will be used if no or empty module name is used.
+     *
+     * @api
+     *
+     * @param string $name
+     */
+    public function setDefaultModule($name)
+    {
+        $this->defaultModule = $name;
     } // function
 
 

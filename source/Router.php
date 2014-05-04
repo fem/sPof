@@ -364,7 +364,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
         }
 
         Cache::delete('unfolded_routes');
-        return false;
+        Logger::getInstance()->error('Could not find route with pattern "'.$path.'"');
     } // function
 
 
