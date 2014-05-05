@@ -146,6 +146,11 @@ class Application
         self::$CACHE_ROOT = self::$FILE_ROOT.'tmp/';
 
         self::$INSTANCE = $this;
+
+        //var_dump(\FeM\sPof\model\DBConnection::getInstance());
+        if (!\FeM\sPof\model\DBConnection::isOnline()) {
+            die('No Datebase connection.');
+        }
     } // function
 
 
