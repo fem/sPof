@@ -249,6 +249,13 @@ class Authorization
                 // @codingStandardsIgnoreEnd
                 // no break
 
+            case 'in group':
+                // Checks if the requesting user and the owner user are sharing groups
+                if (model\Group::isUserMember($context['request_user_id'], $context['owner_group_id'], false)) {
+                    return true;
+                }
+                // no break
+
             case 'sharing groups':
                 // Checks if the requesting user and the owner user are sharing groups
                 $groups = model\Group::getByUserId($context['owner_user_id']);
