@@ -93,6 +93,17 @@ abstract class AbstractFormElement implements Renderable
      */
     protected $default;
 
+
+    /**
+     * Wether or not try to overwrite the value with itself (may not always work, at least in elements where the actual
+     * value is in other elements).
+     *
+     * @internal
+     *
+     * @var bool
+     */
+    protected $resetValueBeforeRender = true;
+
     /**
      * Add a new tag attribute.
      *
@@ -249,7 +260,7 @@ abstract class AbstractFormElement implements Renderable
         // TODO testing only
         unset($this->attributes['required']);
 
-        if (!empty($this->attributes['name'])) {
+        if (!empty($this->attributes['name']) && $this->resetValueBeforeRender) {
             $this->setValue($this->getValue());
         }
 

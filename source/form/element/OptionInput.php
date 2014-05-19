@@ -46,11 +46,9 @@ class OptionInput extends \FeM\sPof\form\AbstractInputElement
         $this->addAttribute('id', $id);
 
         $this->setValue($value);
-        if ($value !== null) {
-            $this->addAttribute('value', $value);
-        }
         if ($selected) {
-            $this->addAttribute('selected', 'selected');
+            $this->addAttribute('checked', 'checked');
         }
+        $this->resetValueBeforeRender = false;
     } // function
 } 

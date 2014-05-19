@@ -111,7 +111,7 @@ class OptionGroup extends \FeM\sPof\form\AbstractFormElement
      */
     public function render()
     {
-        //parent::renderPrepare();
+        parent::renderPrepare();
         foreach ($this->options as $key => $value) {
             $this->innerHtml .= (new OptionInput($this->attributes['name'], $this->attributes['name'].'_'.$key, $key, $key == $this->selectedValue))->render();
             $this->innerHtml .= ' '. (new Label($this->attributes['name'].'_'.$key, $value, false))->render().' ';
