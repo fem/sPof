@@ -56,7 +56,7 @@ function smarty_function_currenturl($params, &$smarty)
             if ($param === null) {
                 continue;
             }
-            $route = preg_replace('/'.($rawUrl ? ('&'.$key.'=') : ('\/?\/?[a-z0-9]+:')).'[a-z0-9]+/i', '', $route);
+            $route = preg_replace('/'.($rawUrl ? ('&'.$key.'=') : ('\/?\/?[a-z0-9_]+:')).'[a-z0-9_]+/i', '', $route);
         }
     }
 
