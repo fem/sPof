@@ -253,8 +253,12 @@ class CssTemplate
                 // replace usage in stylesheet and copy file to be accessible via web
                 $content = str_replace(array_keys($replaces), $replaces, $content);
                 foreach ($copy as $source => $target) {
-                    copy($source, $target);
-                }
+                    try {
+                        copy($source, $target);
+                    } catch(\ErrorException $e) {
+                        Logger::getInstance()->exception($e);
+                    }
+               }
             }
             fwrite($handle, self::minify($content));
         } // foreach file
