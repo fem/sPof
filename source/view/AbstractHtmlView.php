@@ -197,7 +197,13 @@ abstract class AbstractHtmlView extends AbstractView
 
         // if still empty, guess there is a template
         if ($content === null) {
-            $templateFile = lcfirst(Router::getModule()).'/'.$show.'.tpl';
+            $templateFile = '';
+            if (isset(static::$TEMPLATE_DIR)) {
+                $templateFile = static::$TEMPLATE_DIR.'/';
+            } else {
+                lcfirst(Router::getModule()).'/';
+            }
+            $templateFile = $templateFile.$show.'.tpl';
             try {
                 $content = template\HtmlTemplate::getInstance()->fetch($templateFile);
             } catch (\SmartyException $e) {
