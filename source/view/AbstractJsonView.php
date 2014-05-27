@@ -102,7 +102,7 @@ abstract class AbstractJsonView extends AbstractView
         if ($this->resultSet !== null) {
             echo json_encode($this->resultSet);
         }
-        echo ob_end_flush();
+        ob_end_flush();
         flush();
         exit;
     } // function
