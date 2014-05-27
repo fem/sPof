@@ -36,9 +36,34 @@ abstract class AbstractJsonView extends AbstractView
      *
      * @api
      *
-     * @var array
+     * @var mixed
      */
-    protected $resultSet = [];
+    protected $resultSet = null;
+
+
+
+    /**
+     * Wrapper for calling the self::$show-method. This wrapper is necessary to call
+     *
+     * @internal
+     *
+     * @param string $show
+     * @throws \FeM\sPof\exception\NotImplementedException
+     * @return mixed content
+     */
+    protected function executeShow($show = null)
+    {
+        // call show met
+        if ($show === null) {
+            $show = \FeM\sPof\Router::getShow($show);
+        }
+        if (!method_exists(get_called_class(), $show)) {
+            throw new \FeM\sPof\exception\NotImplementedException(
+                'Could not find the show method. "'.get_called_class().'::'.$show.'"'
+            );
+        }
+        return $this->$show();
+    } // function
 
 
     /**
@@ -52,8 +77,16 @@ abstract class AbstractJsonView extends AbstractView
     {
         if ($exception instanceof \FeM\sPof\exception\NotAuthorizedException) {
             static::sendForbidden();
+        } elseif ($exception instanceof \FeM\sPof\exception\UnsupportedRequestMethod) {
+            static::sendMethodNotAllowed($exception->getAllowed());
+        } elseif ($exception instanceof \FeM\sPof\exception\BadRequestException) {
+            header('Content-type: application/json');
+            echo json_encode(['error' => $exception->getMessage()]);
+            static::sendBadRequest();
         }
 
+        header('Content-type: application/json');
+        echo json_encode(['exception' => $exception]);
         static::sendInternalError();
     } // function
 
@@ -66,9 +99,11 @@ abstract class AbstractJsonView extends AbstractView
     public function display()
     {
         header('Content-type: application/json');
-        ob_flush();
+        if ($this->resultSet !== null) {
+            echo json_encode($this->resultSet);
+        }
+        echo ob_end_flush();
         flush();
-        echo json_encode($this->resultSet);
         exit;
     } // function
 }// class

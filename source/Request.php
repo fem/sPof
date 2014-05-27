@@ -161,4 +161,139 @@ abstract class Request
 
         return filter_var($ipAddress, FILTER_VALIDATE_IP) ? $ipAddress : '';
     } // function
+
+
+    /**
+     * Returns true if the current request is of the given $method, returns false otherwise
+     *
+     * @internal
+     *
+     * @param string $method POST, GET, DELETE, PUT
+     */
+    private static function isMethod($method)
+    {
+        return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === $method;
+    } // function
+
+
+    /**
+     * Ensure that the request if of type $method. Throws an Exception if not.
+     *
+     * @internal
+     *
+     * @param string $method POST, GET, DELETE, PUT
+     */
+    private static function requires($method)
+    {
+        if (!self::isMethod($method)) {
+            if (isset($_SERVER['REQUEST_METHOD'])) {
+                throw new exception\UnsupportedRequestMethod(
+                    'A '.$method.' request is required, but got a "'.$_SERVER['REQUEST_METHOD'].'" request instead'
+                );
+            } else {
+                throw new exception\UnsupportedRequestMethod(
+                    'A '.$method.' request is required, but got something undefined instead.'
+                );
+            }
+        }
+    } // function
+
+
+    /**
+     * Returns true if the current request is GET, returns false otherwise
+     *
+     * @api
+     */
+    public static function isGet()
+    {
+        return self::isMethod('GET');
+    } // function
+
+
+    /**
+     * Ensure that the request if of type GET. Throws an Exception if not.
+     *
+     * @api
+     */
+    public static function requiresGet()
+    {
+        self::requires('GET');
+    } // function
+
+
+    /**
+     * Returns true if the current request is POST, returns false otherwise
+     *
+     * @api
+     */
+    public static function isPost()
+    {
+        return self::isMethod('POST');
+    } // function
+
+
+    /**
+     * Ensure that the request if of type POST. Throws an Exception if not.
+     *
+     * @api
+     */
+    public static function requiresPost()
+    {
+         self::requires('POST');
+    } // function
+
+
+    /**
+     * Returns true if the current request is PUT, returns false otherwise
+     *
+     * @api
+     */
+    public static function isPut()
+    {
+        return self::isMethod('PUT');
+    } // function
+
+
+    /**
+     * Ensure that the request if of type PUT. Throws an Exception if not.
+     *
+     * @api
+     */
+    public static function requiresPut()
+    {
+        self::requires('PUT');
+    } // function
+
+
+    /**
+     * Returns true if the current request is DELETE, returns false otherwise
+     *
+     * @api
+     */
+    public static function isDelete()
+    {
+        return self::isMethod('DELETE');
+    } // function
+
+
+    /**
+     * Ensure that the request if of type DELETE. Throws an Exception if not.
+     *
+     * @api
+     */
+    public static function requiresDelete()
+    {
+        self::requires('DELETE');
+    } // function
+
+
+    /**
+     * Get Result from JSON-data which.
+     *
+     * @return mixed
+     */
+    public static function getJson()
+    {
+        return json_decode(file_get_contents("php://input"), true);
+    } // function
 }// class

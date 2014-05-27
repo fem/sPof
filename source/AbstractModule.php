@@ -48,6 +48,18 @@ abstract class AbstractModule
 
 
     /**
+     * Answers the current request with a HTTP Status Code 400: "Bad Request" and stops further execution.
+     *
+     * @api
+     */
+    public static function sendBadRequest()
+    {
+        http_response_code(400);
+        exit;
+    } // function
+
+
+    /**
      * Answers the current request with a HTTP Status Code 403: "Forbidden" and stops further execution. This method
      * should be used, when a user is lacking of permission to handle a specific operation.
      *
@@ -73,12 +85,29 @@ abstract class AbstractModule
 
 
     /**
+     * Answers the current request with a HTTP Status Code 405: "Method Not Allowed" and stops further execution.
+     *
+     * @api
+     *
+     * @param array $allowed allowed HTTP Methods
+     */
+    public static function sendMethodNotAllowed(array $allowed = [])
+    {
+        header('Allow: '.implode(', ', $allowed));
+        http_response_code(405);
+        exit;
+    } // function
+
+
+    /**
      * Answers the current request with a HTTP Status Code 500: "Internal Server Error" and stops further execution.
      *
      * @api
      */
     public static function sendInternalError()
     {
+        ob_flush();
+        //flush();
         http_response_code(500);
         exit;
     } // function
