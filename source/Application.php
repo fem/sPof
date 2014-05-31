@@ -179,12 +179,8 @@ class Application
         $module = Router::getModule();
         $action = Router::getAction();
 
-        // for an action, there is a controller to handle it
-        if ($action) {
-            AbstractController::createAndRunAction($module, $action);
-        }
 
-        $view = $this->getView($module);
+        $view = $this->handleRequest($module, $action);
 
         // threat all unwanted output as error output
         $errors = ob_get_clean();
@@ -276,14 +272,21 @@ class Application
      * @throws \Exception
      *
      * @param string $module module name
+     * @param string $action
      *
      * @return view\AbstractView
      */
-    private function getView($module)
+    private function handleRequest($module, $action)
     {
         // there will always be something to view (otherwise we should get a nice error message)
         $viewName = $this->getClassByModule($module);
         try {
+
+            // for an action, there is a controller to handle it
+            if ($action) {
+                AbstractController::createAndRunAction($module, $action);
+            }
+
             if (!class_exists($viewName)) {
 
                 // if file exists -> the class name does not match the filename
