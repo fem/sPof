@@ -201,9 +201,9 @@ abstract class AbstractHtmlView extends AbstractView
             if (isset(static::$TEMPLATE_DIR)) {
                 $templateFile = static::$TEMPLATE_DIR.'/';
             } else {
-                lcfirst(Router::getModule()).'/';
+                $templateFile = lcfirst(Router::getModule()).'/';
             }
-            $templateFile = $templateFile.$show.'.tpl';
+            $templateFile .= $show.'.tpl';
             try {
                 $content = template\HtmlTemplate::getInstance()->fetch($templateFile);
             } catch (\SmartyException $e) {
