@@ -71,7 +71,6 @@ class Authorization
      */
     private function __construct($environment = '', array $context = [])
     {
-        $this->isLoggedIn = Session::isLoggedIn();
         $this->setEnvironment($environment, $context);
 
         $this->handlers = Application::getAuthorizationHandlers();
@@ -82,6 +81,9 @@ class Authorization
         // make sure, we always have user and group id of the owner
         if (!isset($this->context['request_user_id'])) {
             $this->context['request_user_id'] = Session::getUserId();
+        }
+        if (isset($this->context['request_user_id'])) {
+            $this->isLoggedIn = $this->context['request_user_id'] > 0;
         }
         if (!isset($this->context['owner_user_id'])) {
             $this->context['owner_user_id'] = -1;
@@ -131,6 +133,10 @@ class Authorization
             $this->environment = trim($environment, '.').'.';
         }
         $this->context = $context;
+
+        if (isset($this->context['request_user_id'])) {
+            $this->isLoggedIn = $this->context['request_user_id'] > 0;
+        }
     } // function
 
 
@@ -147,6 +153,10 @@ class Authorization
      */
     public function requires($permission, array $context = [])
     {
+        if (isset($context['request_user_id'])) {
+            $this->isLoggedIn = $context['request_user_id'] > 0;
+        }
+
         if (!$this->hasPermission($permission, $context, true)) {
             throw new exception\NotAuthorizedException(
                 'Du hast nicht die benötigten Rechte, um die Funktion nutzen zu können.'
@@ -173,6 +183,10 @@ class Authorization
      */
     public function hasPermission($permission, array $context = [], $throwing = false)
     {
+        if (isset($context['request_user_id'])) {
+            $this->isLoggedIn = $context['request_user_id'] > 0;
+        }
+
         // mix local and environmental context
         $context = array_merge($this->context, $context);
 
@@ -199,7 +213,7 @@ class Authorization
         Logger::getInstance()->auth($debug_msg);
 
         // handle per account permissions
-        if ($result === false && Session::isLoggedIn()) {
+        if ($result === false && $this->isLoggedIn) {
             $result = model\Permission::isApplied($context['request_user_id'], $context['owner_group_id'], $permission);
             $debug_msg = $permission.'" '.($result == true ? '' : 'not ').'granted explicitly';
             Logger::getInstance()->auth($debug_msg);

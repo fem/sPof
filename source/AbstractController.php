@@ -71,7 +71,7 @@ abstract class AbstractController extends AbstractModule
      *
      * @var bool
      */
-    private $isJSON = false;
+    protected $isJSON = false;
 
 
     /**
@@ -97,14 +97,10 @@ abstract class AbstractController extends AbstractModule
      */
     final public static function createAndRunAction($module, $action)
     {
-        try {
-            $ctrlName = Application::$NAMESPACE.'controller\\'.$module.'Controller';
-            /** @var AbstractController $ctrl */
-            $ctrl = new $ctrlName(Request::getBoolParam('resultAsJSON'));
-            $ctrl->executeCommand($action);
-        } catch (\Exception $e) {
-            Logger::getInstance()->exception($e);
-        }
+        $ctrlName = Application::$NAMESPACE.'controller\\'.$module.'Controller';
+        /** @var AbstractController $ctrl */
+        $ctrl = new $ctrlName(Request::getBoolParam('resultAsJSON'));
+        $ctrl->executeCommand($action);
     } // function
 
 
