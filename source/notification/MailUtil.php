@@ -48,6 +48,8 @@ abstract class MailUtil
     /**
      * Send mails.
      *
+     * @api
+     *
      * @param string $email
      * @param string $title email subject
      * @param string $message email content
@@ -87,7 +89,7 @@ abstract class MailUtil
         array_walk(
             $header,
             function (&$value, $key) {
-                $value = $key.': '. ($key != 'Content-type' ? mb_encode_mimeheader($value) : $value);
+                $value = $key.': '. ($key != 'Content-type' ? self::encodeMailAdress($value) : $value);
             }
         );
 
@@ -95,7 +97,28 @@ abstract class MailUtil
             'email an: "'.$email.'" mit titel: "'.$title.'" und nachricht "'.$message.'" wurde mit "'
             .var_export($header, true).'" als headern gesendet'
         );
-        return mail(mb_encode_mimeheader($email), mb_encode_mimeheader($title), $message, implode("\n", $header));
+
+        return mail(self::encodeMailAdress($email), mb_encode_mimeheader($title), $message, implode("\n", $header));
         //return true;
+    } // function
+
+
+    /**
+     * Encode a email-adress name (not the mail itself, just the name).
+     *
+     * @api
+     *
+     * @param $adress
+     *
+     * @return string
+     */
+    public static function encodeMailAdress($adress)
+    {
+        $to = explode('<', $adress);
+        for ($i = 0; $i < count($to); $i += 2) {
+            $to[$i] = mb_encode_mimeheader($to[$i]);
+        }
+        $adress = implode('<', $to);
+        return $adress;
     } // function
 }// class
