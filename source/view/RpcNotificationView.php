@@ -33,6 +33,10 @@ use FeM\sPof\model\NotificationBrowser;
  */
 class RpcNotificationView extends \FeM\sPof\view\AbstractRawView
 {
+    private static $RETRY = 10; // seconds
+    private static $TIMEOUT = 10; // seconds
+    private static $KEEP_ALIVE = 300; // seconds
+
     /**
      * Get an update for the current user.
      */
@@ -51,24 +55,41 @@ class RpcNotificationView extends \FeM\sPof\view\AbstractRawView
             $lastEventId = floatval(isset($_GET['lastEventId']) ? $_GET['lastEventId'] : 0);
         }
 
+
+        // 2kB padding for IE
+        // @codingStandardsIgnoreStart
+#        echo ':'.str_repeat(' ', 2048)."\n";
+        echo 'retry: '.(self::$RETRY * 1000). PHP_EOL;
+
         // event-stream
-        $notification = NotificationBrowser::getNextByUserId(Session::getUserId());
-        if ($notification !== false) {
-            $data = [
-                'type' => 'notification',
-                'title' => $notification['title'],
-                'payload' => $notification['content']
-            ];
-            NotificationBrowser::deleteByPK($notification['id']);
+        $started = time();
+        //while (true) {
+            $notification = NotificationBrowser::getNextByUserId(Session::getUserId());
+            if ($notification !== false) {
+                $data = [
+                    'type' => 'notification',
+                    'title' => $notification['title'],
+                    'payload' => $notification['content']
+                ];
+                NotificationBrowser::deleteByPK($notification['id']);
 
-            // 2kB padding for IE
-            // @codingStandardsIgnoreStart
-            echo ':'.str_repeat(' ', 2048)."\n";
-            echo 'retry: 2000'."\n";
+                $lastEventId++;
+                echo 'id: '.$lastEventId . PHP_EOL;
+                echo 'data: '.str_replace("\n", "\ndata: ", json_encode($data)) . PHP_EOL.PHP_EOL;
 
-            echo 'id: '.($lastEventId + 1)."\n";
-            echo 'data: '.json_encode($data)."\n\n";
-            // @codingStandardsIgnoreEnd
-        }
+                ob_flush();
+                flush();
+                // @codingStandardsIgnoreEnd
+//            } elseif ((time() - $started) % self::$KEEP_ALIVE == 0) {
+//                // send keep alive comment
+//                echo ': '.sha1(mt_rand())."\n\n";
+            }
+
+//            if (time() - $started > self::$TIMEOUT) {
+//                break;
+//            }
+        //    usleep(self::$RETRY * 1000000);
+        //}
+        exit;
     } // function
 }// class
