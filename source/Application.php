@@ -280,6 +280,7 @@ class Application
     {
         // there will always be something to view (otherwise we should get a nice error message)
         $viewName = $this->getClassByModule($module);
+        $view = null;
         try {
 
             // for an action, there is a controller to handle it
@@ -306,7 +307,8 @@ class Application
             }
 
             // class does exist, so get us a instance of it
-            return new $viewName();
+            $view = new $viewName();
+            $view->executeShow();
         } catch (\Exception $e) {
 
             // try to call the static implementation, we need this workaround, because this method is called staticly,
@@ -322,19 +324,20 @@ class Application
             }
         }
 
-        // on failure load default view for errors
-        if (!isset($view)) {
+        // we got a view we can proceed
+        if ($view instanceof view\AbstractView) {
+            return $view;
+        }
 
-            // try to call the static implementation, we need this workaround, because this method is called staticly,
-            // directly on this class, so no late state binding, try to workaround by directly calling it and otherwise
-            // use local fallback
+        // try to call the static implementation, we need this workaround, because this method is called staticly,
+        // directly on this class, so no late state binding, try to workaround by directly calling it and otherwise
+        // use local fallback
+        if (method_exists($viewName, 'handleNoViewFound')) {
+            return $viewName::handleNoViewFound();
+        } else {
+            $viewName = $this->getClassByModule($this->defaultModule);
             if (method_exists($viewName, 'handleNoViewFound')) {
                 return $viewName::handleNoViewFound();
-            } else {
-                $viewName = $this->getClassByModule($this->defaultModule);
-                if (method_exists($viewName, 'handleNoViewFound')) {
-                    return $viewName::handleNoViewFound();
-                }
             }
         }
 

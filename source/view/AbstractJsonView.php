@@ -51,7 +51,7 @@ abstract class AbstractJsonView extends AbstractView
      * @throws \FeM\sPof\exception\NotImplementedException
      * @return mixed content
      */
-    protected function executeShow($show = null)
+    public function executeShow($show = null)
     {
         // call show met
         if ($show === null) {

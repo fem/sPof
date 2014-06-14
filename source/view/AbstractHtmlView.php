@@ -160,9 +160,6 @@ abstract class AbstractHtmlView extends AbstractView
         if (method_exists($this, 'initializeForm')) {
             $this->initializeForm();
         }
-
-        // call show method
-        $this->assign('content', $this->executeShow());
     } // constructor
 
 
@@ -186,7 +183,7 @@ abstract class AbstractHtmlView extends AbstractView
      * @param string $show
      * @return string
      */
-    protected function executeShow($show = null)
+    public function executeShow($show = null)
     {
         if ($show === null) {
             $show = Router::getShow();
@@ -215,6 +212,8 @@ abstract class AbstractHtmlView extends AbstractView
         if (isset($this->form) && $this->form->isActive()) {
             $content .= $this->form->render();
         }
+        // call show method
+        $this->assign('content', $content);
 
         return $content;
     } // function

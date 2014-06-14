@@ -42,7 +42,7 @@ abstract class AbstractView extends AbstractModule
      */
     public function __construct()
     {
-        $this->executeShow();
+//        $this->executeShow();
     } // function
 
 
@@ -55,7 +55,7 @@ abstract class AbstractView extends AbstractModule
      * @throws \FeM\sPof\exception\NotImplementedException
      * @return mixed content
      */
-    protected function executeShow($show = null)
+    public function executeShow($show = null)
     {
         // call show method
         if ($show === null) {

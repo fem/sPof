@@ -49,7 +49,6 @@ abstract class AbstractRawView extends AbstractView
     {
         $this->trackStandardSession();
         $this->auth = Authorization::getInstance();
-        parent::executeShow();
     } // constructor
 
 
