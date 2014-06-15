@@ -21,10 +21,4 @@ $(function() {
     minuteText: 'Minute',
     step: 15
   });
-
-  $(".username-suggest").autocomplete({
-    source: "<!--{route _name='suggest' show='user'}-->",
-    minLength: 2
-  });
-
 });
