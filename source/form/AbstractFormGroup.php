@@ -170,7 +170,7 @@ abstract class AbstractFormGroup
     {
         $row = $this->addRow();
         $row->addElement(new element\Label($field, $label));
-        $row->addElement(new element\Checkbox($field, $value));
+        $row->addElement(new element\Checkbox($field, $value, false));
         $row->addElement(new element\Plain($description));
     } // function
 

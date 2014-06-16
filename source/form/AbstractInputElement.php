@@ -53,7 +53,9 @@ abstract class AbstractInputElement extends AbstractStandaloneFormElement
         $this->addAttribute('type', $type);
         $this->addAttribute('class', $type);
         $this->addAttribute('name', $field);
-        $this->addAttribute('required', $required);
+        if ($required) {
+            $this->addAttribute('required', 'required');
+        }
     } // constructor
 
 
