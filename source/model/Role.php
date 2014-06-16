@@ -114,37 +114,26 @@ class Role extends AbstractModelWithId
      */
     public static function getAssignableForGroup($group_id)
     {
-        if ($group_id <= 0) {
-            return [];
-        }
+        // order should be the same as in self::getAll(), edit script currently needs it that way
+        $stmt = self::createStatement(
+            "
+            SELECT
+                r.id,
+                r.name
+            FROM tbl_role r
+            JOIN tbl_group g ON g.id=r.assignable_in_subtree
+            JOIN tbl_group g2 ON g2.n_root=g.n_root
+            WHERE
+                r.assignable_in_subtree IS NOT NULL
+                AND g2.id=:group_id
+                AND g2.n_left <= g.n_left
+                AND g2.n_right >= g.n_right
+            ORDER BY r.name ASC
+            "
+        );
+        $stmt->assignId('group_id', $group_id);
 
-        try {
-            // order should be the same as in self::getAll(), edit script currently needs it that way
-            $stmt = DBConnection::getInstance()->prepare(
-                "
-                SELECT
-                    r.id,
-                    r.name
-                FROM tbl_role r
-                JOIN tbl_group g ON g.id=r.assignable_in_subtree
-                JOIN tbl_group g2 ON g2.n_root=g.n_root
-                WHERE
-                    r.assignable_in_subtree IS NOT NULL
-                    AND g2.id=:group_id
-                    AND g2.n_left <= g.n_left
-                    AND g2.n_right >= g.n_right
-                ORDER BY r.name ASC
-                "
-            );
-            $stmt->bindParam('group_id', $group_id, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return $stmt->fetchAll(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
-            DebugUtil::getInstance()->exception($e);
-        }
-
-        return [];
+        return $stmt->fetchAll();
     } // function getByUserAndGroupId
 
 
@@ -160,36 +149,25 @@ class Role extends AbstractModelWithId
      */
     public static function getByUserAndGroupId($user_id, $group_id)
     {
-        if ($user_id <= 0 || $group_id <= 0) {
-            return [];
-        }
+        // order should be the same as in self::getAll(), edit script currently needs it that way
+        $stmt = self::createStatement(
+            "
+            SELECT
+                r.id,
+                r.name,
+                r.description
+            FROM tbl_role r
+            JOIN rel_group_user_role rel ON rel.role_id=r.id
+            WHERE
+                rel.user_id=:user_id
+                AND rel.group_id=:group_id
+            ORDER BY r.name ASC
+            "
+        );
+        $stmt->assignId('user_id', $user_id);
+        $stmt->assignId('group_id', $group_id);
 
-        try {
-            // order should be the same as in self::getAll(), edit script currently needs it that way
-            $stmt = DBConnection::getInstance()->prepare(
-                "
-                SELECT
-                    r.id,
-                    r.name,
-                    r.description
-                FROM tbl_role r
-                JOIN rel_group_user_role rel ON rel.role_id=r.id
-                WHERE
-                    rel.user_id=:user_id
-                    AND rel.group_id=:group_id
-                ORDER BY r.name ASC
-                "
-            );
-            $stmt->bindParam('user_id', $user_id, PDO::PARAM_INT);
-            $stmt->bindParam('group_id', $group_id, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                return $stmt->fetchAll(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
-            DebugUtil::getInstance()->exception($e);
-        }
-
-        return [];
+        return $stmt->fetchAll();
     } // function getByUserAndGroupId
 
 
