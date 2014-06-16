@@ -383,7 +383,7 @@ abstract class Event extends AbstractModelWithId implements Rating
                 f.description AS flyer_description,
                 f.name AS flyer_name,
                 (SELECT count(id) FROM tbl_comment_event WHERE event_id=a.id) AS comments
-            FROM view_event_all a
+            FROM view_event_only a
             LEFT JOIN tbl_user u ON u.id=a.user_id
             LEFT JOIN tbl_file_event f ON f.event_id=a.id
             WHERE a.beginning > now()
