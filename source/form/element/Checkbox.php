@@ -58,6 +58,7 @@ class Checkbox extends \FeM\sPof\form\AbstractInputElement
     {
         if ($this->attributes['value'] == $text) {
             $this->addAttribute('checked', 'checked');
+            $this->addAttribute('placeholder', $text);
         }
     } // function
 }// class

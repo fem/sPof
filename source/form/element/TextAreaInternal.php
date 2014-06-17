@@ -54,7 +54,9 @@ class TextAreaInternal extends \FeM\sPof\form\AbstractFormElement
     public function __construct($field, $required = true, $maxlength = 65535, $class = '')
     {
         $this->addAttribute('name', $field);
-        $this->addAttribute('required', $required);
+        if ($required) {
+            $this->addAttribute('required', $required);
+        }
         $this->addAttribute('maxlength', $maxlength);
         $this->addAttribute('class', 'textarea');
         if (!empty($class)) {

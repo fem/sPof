@@ -68,7 +68,9 @@ class OptionGroup extends \FeM\sPof\form\AbstractFormElement
     public function __construct($field, $required = true, $options = [])
     {
         $this->addAttribute('name', $field);
-        $this->addAttribute('required', $required);
+        if ($required) {
+            $this->addAttribute('required', $required);
+        }
         if (!empty($options)) {
             $this->setOptions($options);
         }
