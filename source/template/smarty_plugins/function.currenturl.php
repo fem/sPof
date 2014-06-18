@@ -45,7 +45,11 @@ function smarty_function_currenturl($params, &$smarty)
 
     // get pattern route
     if (isset($_SERVER['REQUEST_URI'])) {
-        $route = str_replace($server['path'], '', $_SERVER['REQUEST_URI']);
+        if ($server['path'] === '/') {
+            $route = $_SERVER['REQUEST_URI'];
+        } else {
+            $route = str_replace($server['path'], '', $_SERVER['REQUEST_URI']);
+        }
 
         if (strpos($_SERVER['REQUEST_URI'], '?') > 0) {
             $rawUrl = true;
