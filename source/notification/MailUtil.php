@@ -78,6 +78,11 @@ abstract class MailUtil
         $config = Config::get('email', self::$defaultConfig);
         $title = $config['subject_prefix'].$title;
 
+        // From header
+        if (empty($header['From']) && isset($config['support'])) {
+            $header['From'] = $config['support'];
+        }
+
         // trim line length and remove spaces around line breaks
         $message = wordwrap($message, 76);
         $msgs = explode("\n", $message);
