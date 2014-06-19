@@ -337,6 +337,23 @@ abstract class AbstractHtmlView extends AbstractView
     } // function
 
 
+    /**
+     * Append another CSS file.
+     *
+     * @api
+     *
+     * @param string $file filename without css based on the public/css folder and without '.css' suffix.
+     */
+    final protected function removeStylesheet($name)
+    {
+        foreach ($this->cssFiles as $key => $file) {
+            if ($file['name'] === $name || $file['name'] === \FeM\sPof\Application::$WEB_ROOT.'css/'.$name.'.css') {
+                unset($this->cssFiles[$key]);
+            }
+        }
+    } // function
+
+
 
     /**
      * adds <meta property="og:$property" content="$content" /> to current page
