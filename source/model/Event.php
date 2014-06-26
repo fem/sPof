@@ -374,6 +374,7 @@ abstract class Event extends AbstractModelWithId implements Rating
                 a.title,
                 a.description,
                 a.creation,
+                a.group_id,
                 u.name AS author,
                 a.user_id,
                 a.locality,
