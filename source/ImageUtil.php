@@ -52,8 +52,11 @@ abstract class ImageUtil
         try {
             $image = imagecreatefromgif($in_filename);
         } catch (\ErrorException $e) {
-            Logger::getInstance()->dump($e);
-            return false;
+            try {
+                $image = imagecreatefromjpeg($in_filename);
+            } catch (\ErrorException $e) {
+                throw $e;
+            }
         }
 
         // Ausgabe-Bild in Ausgabe-Datei schreiben
