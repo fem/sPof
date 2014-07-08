@@ -52,7 +52,7 @@ abstract class Event extends AbstractModelWithId implements Rating
     protected static function validate(array $input)
     {
         self::getValidator($input)
-            ->isLengthGt('locality', 64, 'Der Ort ist zu lang.')
+            ->isLengthGt('locality', 128, 'Der Ort ist zu lang.')
             ->isLengthGt('title', 8192, 'Der Beschreibungstext ist zu lang.')
             ->isLengthGt('description', 8192, 'Der Titel ist zu lang.')
             ->isEmpty('title', 'Es wurde kein Titel angegeben.')
