@@ -233,7 +233,7 @@ abstract class Event extends AbstractModelWithId implements Rating
                 g.name AS group_name,
                 g.id AS group_id
             FROM view_event_only e
-            JOIN tbl_user u ON u.id=e.user_id
+            LEFT JOIN tbl_user u ON u.id=e.user_id
             LEFT JOIN tbl_group g ON e.group_id=g.id
             WHERE
               (e.beginning BETWEEN to_timestamp(:start) AND to_timestamp(:end))
@@ -342,7 +342,7 @@ abstract class Event extends AbstractModelWithId implements Rating
                     (SELECT count(id) FROM tbl_comment_event WHERE event_id=a.id) AS comments
                 FROM ".self::$TABLE." a
                 JOIN tbl_event_announce o ON o.event_id=a.id
-                JOIN tbl_user u ON u.id=a.user_id
+                LEFT JOIN tbl_user u ON u.id=a.user_id
                 WHERE NOW() BETWEEN o.beginning AND o.ending
                 ORDER BY RANDOM()
                 LIMIT :limit) x
