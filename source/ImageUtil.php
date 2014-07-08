@@ -39,6 +39,39 @@ abstract class ImageUtil
      *
      * @param string $in_filename
      * @param string $out_filename
+     *
+     * @return string new filename
+     */
+    public static function gif2png($in_filename, $out_filename)
+    {
+        if (!file_exists($in_filename) || filesize($in_filename) <= 0) {
+            return false;
+        }
+
+        // try to load as jpeg first
+        try {
+            $image = imagecreatefromgif($in_filename);
+        } catch (\ErrorException $e) {
+            Logger::getInstance()->dump($e);
+            return false;
+        }
+
+        // Ausgabe-Bild in Ausgabe-Datei schreiben
+        imagepng($image, $out_filename);
+
+        // Speicher wieder frei machen
+        imagedestroy($image);
+        return true;
+    }
+
+
+    /**
+     * Resize a Image file.
+     *
+     * @api
+     *
+     * @param string $in_filename
+     * @param string $out_filename
      * @param int $maxW (optional)
      * @param int $maxH (optional)
      * @param bool $cropimage (optional)
