@@ -364,6 +364,8 @@ class Role extends AbstractModelWithId
             "
             SELECT
                 u.name AS user_name,
+                u.firstname,
+                u.lastname,
                 r.user_id,
                 g.name AS group_name,
                 r.group_id
