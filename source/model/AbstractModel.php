@@ -66,7 +66,7 @@ abstract class AbstractModel
      */
     public static function isValid(array $input)
     {
-        self::validate($input);
+        static::validate($input);
     } // function
 
 
