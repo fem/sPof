@@ -64,6 +64,21 @@ abstract class AbstractModel
 
      * @param array $input
      */
+    public static function isValid(array $input)
+    {
+        self::validate($input);
+    } // function
+
+
+    /**
+     * Checks the given array for valid key-value-combinations.
+     *
+     * @api
+     *
+     * @throws \FeM\sPof\exception\AbstractMethodException if implementation of this method is missing in the model
+
+     * @param array $input
+     */
     protected static function validate(array $input)
     {
         // php forbids abstract static functions, so throw an exception instead
