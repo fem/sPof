@@ -86,7 +86,7 @@ abstract class AbstractJsonView extends AbstractView
         }
 
         header('Content-type: application/json');
-        echo json_encode(['exception' => $exception]);
+        echo json_encode(['msg' => $exception->getMessage(), 'exception' => $exception]);
         static::sendInternalError();
     } // function
 
