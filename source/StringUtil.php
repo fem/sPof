@@ -68,6 +68,7 @@ abstract class StringUtil
         $string = str_replace('Ä', 'Ae', $string);
         $string = str_replace('Ü', 'Ue', $string);
         $string = str_replace('Ö', 'Oe', $string);
+        $string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
         $string = preg_replace('/[^a-zA-Z0-9_\\-.=\\+]/', '_', $string);
         $string = preg_replace('/_+/', '_', $string);
         return trim($string, '_');
