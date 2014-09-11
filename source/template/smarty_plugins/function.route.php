@@ -49,7 +49,7 @@ function smarty_function_route($params, &$smarty)
     unset($arguments['_name']);
     $fullurl = (isset($arguments['_fullurl']) ? $arguments['_fullurl'] : false);
     unset($arguments['_fullurl']);
-    $https = ((isset($arguments['_https']) || $_SERVER['HTTPS'] != 'on') ? $arguments['_https'] : true);
+    $https = ((isset($arguments['_https']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'on')) ? $arguments['_https'] : true);
     unset($arguments['_https']);
 
     try {
