@@ -161,6 +161,52 @@ abstract class Event extends AbstractModelWithId implements Rating
 
 
     /**
+     * Get the event of a group for a specific beginning. In case there are multiple events in the group with the same
+     * beginning the behaviour of the dataset which will be returned is not specefied and any can be returned.
+     *
+     * @api
+     *
+     * @param int $group_id
+     * @param \DateTime $beginning
+     *
+     * @return array|false
+     */
+    public static function getByGroupAndBeginning($group_id, $beginning)
+    {
+        $stmt = self::createStatement(
+            "
+            SELECT
+                id,
+                description,
+                title,
+                beginning,
+                (beginning + \"length\") AS ending,
+                locality,
+                user_id,
+                group_id,
+                creation,
+                \"public\",
+                user_id,
+                tags,
+                repeat,
+                modify
+            FROM ".self::$TABLE."
+            WHERE
+                group_id=:group_id
+                AND beginning=:beginning
+                AND visible IS TRUE
+                AND disabled IS FALSE
+            LIMIT 1
+            "
+        );
+        $stmt->assignId('group_id', $group_id);
+        $stmt->assignDate('beginning', $beginning);
+
+        return $stmt->fetch();
+    } // function
+
+
+    /**
      * Get the event with the given uid from the database.
      *
      * @api
