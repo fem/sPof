@@ -119,11 +119,13 @@ abstract class MailUtil
      */
     public static function encodeMailAdress($adress)
     {
-        $to = explode('<', $adress);
-        for ($i = 0; $i < count($to); $i += 2) {
-            $to[$i] = mb_encode_mimeheader($to[$i]);
+        if (strpos($adress, '<') !== false) {
+            $to = explode('<', $adress);
+            for ($i = 0; $i < count($to); $i += 2) {
+                $to[$i] = mb_encode_mimeheader(trim($to[$i]));
+            }
+            $adress = implode(' <', $to);
         }
-        $adress = implode('<', $to);
         return $adress;
     } // function
 }// class
