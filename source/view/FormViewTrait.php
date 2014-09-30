@@ -52,13 +52,11 @@ trait FormViewTrait
      */
     protected function initializeForm($namespace = null)
     {
-        var_dump($namespace);
         if ($namespace !== null) {
             $classname = $namespace.'\\';
         } else {
             $classname = Application::$NAMESPACE.'form\\';
         }
-        var_dump($classname);
 
         $classname .= Router::getModule().'Form';
         $show = Request::getStrParam('show');
