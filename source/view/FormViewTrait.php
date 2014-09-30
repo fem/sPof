@@ -50,9 +50,17 @@ trait FormViewTrait
      *
      * @api
      */
-    protected function initializeForm()
+    protected function initializeForm($namespace = null)
     {
-        $classname = Application::$NAMESPACE.'form\\'.Router::getModule().'Form';
+        var_dump($namespace);
+        if ($namespace !== null) {
+            $classname = $namespace.'\\';
+        } else {
+            $classname = Application::$NAMESPACE.'form\\';
+        }
+        var_dump($classname);
+
+        $classname .= Router::getModule().'Form';
         $show = Request::getStrParam('show');
         $this->form = new $classname();
 
