@@ -479,7 +479,7 @@ abstract class AbstractHtmlView extends AbstractView
 
         // minify css
         $cssFile = template\CssTemplate::combine($this->cssFiles);
-        if ($jsFile !== false) {
+        if ($cssFile !== false) {
             $this->assign('customcssfile', [$cssFile]);
         } else {
             $this->assign('customcssfile', []);
