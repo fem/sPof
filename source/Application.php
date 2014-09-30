@@ -351,6 +351,19 @@ class Application
 
 
     /**
+     * Add an additional module to the current application. Will currently load additional routes, nothing more.
+     *
+     * @api
+     *
+     * @param string path directory relative to project file root
+     */
+    public function addModule($path)
+    {
+        Router::$additionalRoutes[] = $path;
+    } // function
+
+
+    /**
      * Set default Module name, which will be used if no or empty module name is used.
      *
      * @api

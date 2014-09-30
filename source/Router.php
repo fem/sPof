@@ -30,7 +30,7 @@ namespace FeM\sPof;
  * @author dangerground
  * @since 1.0
  */
-class Router
+abstract class Router
 {
     /**
      * Default config.
@@ -42,6 +42,15 @@ class Router
     private static $defaultConfig = [
         'file_perms' => 0644,
     ];
+
+    /**
+     * List of paths to additional routes.yml files.
+     *
+     * @internal
+     *
+     * @var array
+     */
+    public static $additionalRoutes = [];
 
 
     /**
@@ -133,7 +142,21 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
                 && filemtime($preset) < $target_time
                 && filemtime(__FILE__) < $target_time
             ) {
-                return;
+                if (empty(self::$additionalRoutes)) {
+                    return;
+                }
+
+                $outdated = false;
+                foreach (self::$additionalRoutes as $route) {
+                    if (filemtime(Application::$FILE_ROOT.$route.'/routes.yml') > $target_time) {
+                        $outdated = true;
+                    }
+                }
+                if ($outdated) {
+                    return;
+                }
+
+                return true;
             }
         }
 
@@ -386,8 +409,27 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
         try {
             $ret = yaml_parse_file(self::getSourceFile());
         } catch (\ErrorException $e) {
-            Logger::getInstance()->error('Syntax error in file "'.self::getSourceFile().'": '.$e->getMessage());
+            if (!file_exists(self::getSourceFile())) {
+                die('routes.yml file not found in Application root directory.');
+            } else {
+                Logger::getInstance()->error('Syntax error in file "'.self::getSourceFile().'": '.$e->getMessage());
+            }
             $ret = [];
+        }
+
+        // load additional routes
+        foreach (self::$additionalRoutes as $routes) {
+            $file = Application::$FILE_ROOT.$routes.'/routes.yml';
+
+            try {
+                $ret = array_merge($ret, yaml_parse_file($file));
+            } catch (\ErrorException $e) {
+                if (!file_exists($file)) {
+                    die('routes.yml file not found in '.$routes.' directory.');
+                } else {
+                    Logger::getInstance()->error('Syntax error in file "'.$routes.'": '.$e->getMessage());
+                }
+            }
         }
 
         // convert to "flat" routes
