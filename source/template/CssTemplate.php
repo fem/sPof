@@ -116,7 +116,6 @@ class CssTemplate
                         continue;
                     }
 
-                    var_dump($updated, filemtime($sourcePath.$filename));
                     if ($updated < filemtime($sourcePath.$filename)) {
                         $needUpdate = true;
                         break;
