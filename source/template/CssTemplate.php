@@ -50,7 +50,8 @@ class CssTemplate
         'syntax' => \SassFile::SCSS,
         'cache' => false,
         'debug' => true,
-        'file_perms' => 0644
+        'file_perms' => 0644,
+        'check_file_level' => false,
     ];
 
 
@@ -99,7 +100,35 @@ class CssTemplate
         // check if source has changed
         $updated = Cache::fetch('style.update');
         if ($updated !== false && $updated > filemtime($sourcePath)) {
-            return;
+
+            // check all files in the source folder for modifications
+            if (Config::getDetail('stylesheet', 'check_file_level', self::$defaultConfig)) {
+                $needUpdate = false;
+
+                $dir = new \DirectoryIterator($sourcePath);
+                foreach ($dir as $file) {
+                    /** @var \DirectoryIterator $file */
+
+                    $filename = $file->getFilename();
+
+                    // ignore dirs
+                    if ($file->isDot() || $file->isDir() || strpos($filename, '.#') === 0) {
+                        continue;
+                    }
+
+                    var_dump($updated, filemtime($sourcePath.$filename));
+                    if ($updated < filemtime($sourcePath.$filename)) {
+                        $needUpdate = true;
+                        break;
+                    }
+                } // foreach dir
+
+                if (!$needUpdate) {
+                    return;
+                }
+            } else {
+                return;
+            }
         }
 
         $dir = new \DirectoryIterator($sourcePath);
