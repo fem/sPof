@@ -314,37 +314,15 @@ abstract class User extends AbstractModelWithId
         }
 
         $stmt = self::createStatement(
-            "
-            SELECT
-                value,
-                label
-            FROM (
-                (SELECT
-                    name AS value,
-                    CONCAT(firstname, ' ''', name, ''' ', lastname) AS label,
-                    CASE WHEN similarity(name,:exact) IS NULL THEN 0 ELSE similarity(name,:exact) END AS similarity
-                FROM tbl_user
-                WHERE
-                    name ILIKE :exact
-                    OR name ILIKE :like
-                ORDER BY
-                    similarity DESC,
-                    name ASC
-                LIMIT 10)
-
-                UNION
-
-                (SELECT
-                    name AS value,
-                    CONCAT(firstname, ' ''', name, ''' ', lastname) AS label,
-                    CASE WHEN similarity(name,:exact) IS NULL THEN 0 ELSE similarity(name,:exact) END AS similarity
-                FROM tbl_user
-                WHERE CONCAT(firstname, ' ', lastname) ILIKE :like
-                ORDER BY
-                    similarity DESC,
-                    name ASC
-                LIMIT 10)
-                ) a
+            "SELECT
+                name AS value,
+                CONCAT(firstname, ' ''', name, ''' ', lastname) AS label,
+                CASE WHEN similarity(name,:exact) IS NULL THEN 0 ELSE similarity(name,:exact) END AS similarity
+            FROM tbl_user
+            WHERE
+                name % :exact
+                OR name % :like
+                OR CONCAT(firstname, ' ', lastname) % :like
             ORDER BY
                 similarity DESC,
                 label ASC
