@@ -138,6 +138,22 @@ abstract class AbstractFormGroup
         $this->addLabeled($label, new element\TextInput($field, $required, $maxLength));
     } // function
 
+    /**
+     * Add a label and a short one-line text input to a new row. Label is inserted before the input. The field content
+     * is not visibile in the browser and thus suitable for e.g. passwords.
+     *
+     * @api
+     *
+     * @param string $field
+     * @param string $label
+     * @param int $maxLength (optional)
+     * @param bool $required (optional)
+     */
+    final public function addHiddenText($field, $label, $required = true, $maxLength = 255)
+    {
+        $this->addLabeled($label, new element\PasswordInput($field, $required, $maxLength));
+    } // function
+
 
     /**
      * Add a label and a url input to a new row. Label is inserted before the input.
@@ -254,6 +270,20 @@ abstract class AbstractFormGroup
     final public function addPlain($text, $asLabel = false)
     {
         $this->addElement(new element\Plain($text, ($asLabel ? 'asLabel' : null)));
+    } // function
+
+
+    /**
+     * Add a plaintext element to the row.
+     *
+     * @api
+     *
+     * @param string $text
+     * @param bool $asLabel (optional)
+     */
+    final public function addHtml($text, $class = null)
+    {
+        $this->addElement(new element\Html($text, $class));
     } // function
 
 
