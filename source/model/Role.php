@@ -49,7 +49,7 @@ class Role extends AbstractModelWithId
     public static function validate(array $input)
     {
         self::getValidator($input)
-            ->isEmpty('name', 'name must not be empty')
+            ->isEmpty('name', _('name must not be empty'))
             ->validate();
     } // function
 

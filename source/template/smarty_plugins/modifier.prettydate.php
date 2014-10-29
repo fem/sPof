@@ -51,13 +51,13 @@ function smarty_modifier_prettydate($string, $default_date = '', $time = true)
 
     if ($pdate == date('Ymd')) {
         // Today
-        return '<strong>Heute</strong>'.($time ? ', '.date('H:i', $timestamp):'');
+        return '<strong>'._('Heute').'</strong>'.($time ? ', '.date('H:i', $timestamp):'');
     } elseif ($pdate == date('Ymd', strtotime('+1 day'))) {
         // Tomorrow
-        return 'Morgen'.($time?', '.date('H:i', $timestamp):'');
+        return _('Morgen').($time?', '.date('H:i', $timestamp):'');
     } elseif ($pdate == date('Ymd', strtotime('-1 day'))) {
         // Yesterday
-        return 'Gestern'.($time?', '.date('H:i', $timestamp):'');
+        return _('Gestern').($time?', '.date('H:i', $timestamp):'');
     } else {
         // any other day
         return date('d.m.Y'.($time ? ' H:i':''), $timestamp);

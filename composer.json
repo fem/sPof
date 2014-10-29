@@ -5,6 +5,23 @@
     "type": "library",
     "homepage": "http://spof.fem-net.de",
     "license": "proprietary",
+    "authors": [
+        {
+            "name": "Danny Götte",
+            "email": "danny.goette@fem.tu-ilmenau.de"
+        },
+        {
+            "name": "Peter Große",
+            "email": "pegro@fem-net.de"
+        },
+        {
+            "name": "Denny Bartelt",
+            "email": "denny@blackslash.de"
+        }
+    ],
+    "support": {
+        "issues": "https://jira.fem.tu-ilmenau.de/browse/SPOF"
+    },
     "autoload": {
         "psr-4": {"FeM\\sPof\\": "source/"}
     },
@@ -16,11 +33,13 @@
         "sebastian/phpdcd": "1.0.*@dev"
     },
     "require": {
-      "psr/log": "1.0.*@dev",
-      "smarty/smarty": "3.1.17",
-      "richthegeek/phpsass": "dev-master#5d254c7f2a485c5bcddb5ee5305c4ac0678ea8a5",
-      "leafo/scssphp": "dev-master",
-      "maximebf/debugbar": "1.*"
+        "psr/log": "1.0.*@dev",
+        "smarty/smarty": "3.1.17",
+        "richthegeek/phpsass": "dev-master#5d254c7f2a485c5bcddb5ee5305c4ac0678ea8a5",
+        "leafo/scssphp": "dev-master",
+        "maximebf/debugbar": "1.*",
+        "smarty-gettext/smarty-gettext": "1.*",
+        "symfony/yaml": "2.6.*@dev"
     },
     "suggest": {
         "tedivm/jshrink": "dev-master",

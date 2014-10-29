@@ -48,10 +48,10 @@ abstract class NotificationProtocol extends AbstractModel
     public static function validate(array $input)
     {
         self::getValidator($input)
-            ->isNoId('notification_id', 'Ungültige Notification id angegeben.')
-            ->isNoId('protocol_id', 'Ungültige Protokoll id angegeben.')
-            ->isNoId('user_id', 'Ungültige Benutzer id angegeben.')
-            ->isNotBool('used', 'Ungültige Benutzer id angegeben.')
+            ->isNoId('notification_id', _('Ungültige Notification id angegeben.'))
+            ->isNoId('protocol_id', _('Ungültige Protokoll id angegeben.'))
+            ->isNoId('user_id', _('Ungültige Benutzer id angegeben.'))
+            ->isNotBool('used', _('Ungültige Benutzer id angegeben.'))
             ->validate();
     } // function
 

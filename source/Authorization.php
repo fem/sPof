@@ -159,8 +159,8 @@ class Authorization
 
         if (!$this->hasPermission($permission, $context, true)) {
             throw new exception\NotAuthorizedException(
-                'Du hast nicht die benötigten Rechte, um die Funktion nutzen zu können.'
-                .(!$this->isLoggedIn ? '<br /> Vielleicht hast du vergessen dich einzuloggen?' : '')
+                _('Du hast nicht die benötigten Rechte, um die Funktion nutzen zu können.')
+                .(!$this->isLoggedIn ? '<br /> '._('Vielleicht hast du vergessen dich einzuloggen?') : '')
             );
         }
     } // function
@@ -222,7 +222,7 @@ class Authorization
 
         // get special case of 'just not being logged in'
         if ($throwing && $privacy === 'logged in' && $result === false) {
-            throw new exception\NotLoggedInException('Du musst eingeloggt sein, um diesen Bereich nutzen zu können.');
+            throw new exception\NotLoggedInException(_('Du musst eingeloggt sein, um diesen Bereich nutzen zu können.'));
         }
 
         return $result;

@@ -21,6 +21,8 @@
 
 namespace FeM\sPof;
 
+use Symfony\Component\Yaml\Yaml;
+
 /**
  * This class handles routing. It takes a YAML file as source and generates htaccess rules to get from a url to the
  * correct module / controller / view. It's also responsible to generate the URLs. You may use some preset htaccess
@@ -273,14 +275,14 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
         // if we have no name, so throw arguments of the
         if (empty($name)) {
             Logger::getInstance()->error(
-                'Missing URL Name, just got params: '.var_export($arguments, true)
+                _('Missing URL Name, just got params: ').var_export($arguments, true)
             );
         }
 
         // check for existing name
         if (!isset($routes[$name])) {
             Logger::getInstance()->error(
-                'Could not find URL with name: "'.$name.'" and params in '.var_export($arguments, true)
+                __('Could not find URL with name: "%s" and params in ', $name).var_export($arguments, true)
             );
             return '';
         }
@@ -322,9 +324,12 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
         // check for remaining unresolved params
         if (strpos($pattern, '<')) {
-            Logger::getInstance()->error(
-                'Could not resolve all params in "'.$name.'": "'.$pattern.'". Arguments='.var_export($arguments, true)
-            );
+            Logger::getInstance()->error(__(
+                    'Could not resolve all params in "%s": "%s". Arguments=%s',
+                    $name,
+                    $pattern,
+                    var_export($arguments, true)
+            ));
         }
 
         // check if all optional params are resolved, if not -> return normal path
@@ -407,12 +412,16 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
         }
 
         try {
-            $ret = yaml_parse_file(self::getSourceFile());
+            $ret = Yaml::parse(self::getSourceFile());
         } catch (\ErrorException $e) {
             if (!file_exists(self::getSourceFile())) {
-                die('routes.yml file not found in Application root directory.');
+                die(_('routes.yml file not found in Application root directory.'));
             } else {
-                Logger::getInstance()->error('Syntax error in file "'.self::getSourceFile().'": '.$e->getMessage());
+                Logger::getInstance()->error(__(
+                    'Syntax error in file "%s": %s',
+                    self::getSourceFile(),
+                    $e->getMessage()
+                ));
             }
             $ret = [];
         }
@@ -422,12 +431,16 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
             $file = Application::$FILE_ROOT.$routes.'/routes.yml';
 
             try {
-                $ret = array_merge($ret, yaml_parse_file($file));
+                $ret = array_merge($ret, Yaml::parse($file));
             } catch (\ErrorException $e) {
                 if (!file_exists($file)) {
-                    die('routes.yml file not found in '.$routes.' directory.');
+                    die(__('routes.yml file not found in %s directory.', $routes));
                 } else {
-                    Logger::getInstance()->error('Syntax error in file "'.$routes.'": '.$e->getMessage());
+                    Logger::getInstance()->error(__(
+                        'Syntax error in file "%s": %s',
+                        $routes,
+                        $e->getMessage()
+                    ));
                 }
             }
         }

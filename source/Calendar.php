@@ -426,7 +426,7 @@ class Calendar
             $name = str_replace('previous', '', $name);
             $modify = '-1';
         } else {
-            throw new exception\NotImplementedException('Calendar: Unbekannte Methode: '.$name);
+            throw new exception\NotImplementedException(_('Calendar: Unbekannte Methode: ').$name);
         }
 
         // name to format transition
@@ -439,7 +439,7 @@ class Calendar
 
         // get selected date value format (day, month or year)
         if (!isset($toFormat[$name])) {
-            throw new exception\NotImplementedException('Calendar: Unbekannte Methode: '.$name);
+            throw new exception\NotImplementedException(_('Calendar: Unbekannte Methode: ').$name);
         }
         $format = $toFormat[$name];
 

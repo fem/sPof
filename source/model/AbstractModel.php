@@ -82,7 +82,7 @@ abstract class AbstractModel
     protected static function validate(array $input)
     {
         // php forbids abstract static functions, so throw an exception instead
-        throw new AbstractMethodException('An abstract validate was called with '.var_export($input, true));
+        throw new AbstractMethodException(_('An abstract validate was called with ').var_export($input, true));
     } // function
 
 
@@ -100,7 +100,7 @@ abstract class AbstractModel
     protected static function getTable()
     {
         if (static::$TABLE === null) {
-            throw new NotImplementedException('Missing table definition in Model '.get_called_class());
+            throw new NotImplementedException(_('Missing table definition in Model ').get_called_class());
         }
 
         return static::$TABLE;
@@ -120,7 +120,7 @@ abstract class AbstractModel
      */
     public static function add(array $input)
     {
-        Logger::getInstance()->info('AbstractModelWithId->add to '.static::$TABLE);
+        Logger::getInstance()->info(_('AbstractModelWithId->add to ').static::$TABLE);
         static::validate($input);
 
         // Prepare statement and bind values
@@ -158,7 +158,7 @@ abstract class AbstractModel
      */
     public static function getByPk($primary_key, $visible_only = true)
     {
-        Logger::getInstance()->info('AbstractModelWithId->getByPk to '.static::$TABLE);
+        Logger::getInstance()->info(_('AbstractModelWithId->getByPk to ').static::$TABLE);
 
         $sql = "
             SELECT *
@@ -191,7 +191,7 @@ abstract class AbstractModel
      */
     public static function deleteByPk($primary_key)
     {
-        Logger::getInstance()->info('AbstractModelWithId->delete to '.static::$TABLE);
+        Logger::getInstance()->info(_('AbstractModelWithId->delete to ').static::$TABLE);
 
         $sql = "
             DELETE
@@ -222,7 +222,7 @@ abstract class AbstractModel
      */
     public static function updateByPk($primary_key, array $input)
     {
-        Logger::getInstance()->info('AbstractModelWithId->updateByPk to '.static::$TABLE);
+        Logger::getInstance()->info(_('AbstractModelWithId->updateByPk to ').static::$TABLE);
         static::validate($input);
 
         $sql = "
@@ -283,7 +283,7 @@ abstract class AbstractModel
     {
         if (!is_array($primary_key)) {
             throw new InvalidParameterException(
-                "Primary Key is no array, maybe you wanted to use AbstractModelWithId instead?"
+                _('Primary Key is no array, maybe you wanted to use AbstractModelWithId instead?')
             );
         }
 

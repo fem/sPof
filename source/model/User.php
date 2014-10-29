@@ -55,14 +55,14 @@ abstract class User extends AbstractModelWithId
     protected static function validate(array $input)
     {
         self::getValidator($input)
-            ->isNoId('user_id', 'Ungültige user id.')
-            ->isEmpty('name', 'Es wurde kein Name angegeben.')
-            ->isEmpty('email', 'E-Mail Adresse darf nicht leer sein.')
-            ->isNoEmail('email', 'Es wurde keine Email Adresse angegeben.')
+            ->isNoId('user_id', _('Ungültige user id.'))
+            ->isEmpty('name', _('Es wurde kein Name angegeben.'))
+            ->isEmpty('email', _('E-Mail Adresse darf nicht leer sein.'))
+            ->isNoEmail('email', _('Es wurde keine Email Adresse angegeben.'))
             ->byRegex(
                 'passphrase',
                 InvalidParameterCheck::REGEX_ACCEPTABLE_PASSWORD,
-                'Es wurde kein Passwort angegeben.'
+                _('Es wurde kein Passwort angegeben.')
             )
             ->validate();
     } // function
@@ -279,8 +279,8 @@ abstract class User extends AbstractModelWithId
     public static function updatePassword($user_id, $password)
     {
         self::getValidator(['user_id' => $user_id, 'password' => $password])
-            ->isNoId('user_id', 'Ungültige user id.')
-            ->byRegex('password', InvalidParameterCheck::REGEX_ACCEPTABLE_PASSWORD, 'Passwort darf nicht leer sein.')
+            ->isNoId('user_id', _('Ungültige user id.'))
+            ->byRegex('password', InvalidParameterCheck::REGEX_ACCEPTABLE_PASSWORD, _('Passwort darf nicht leer sein.'))
             ->validate();
 
         $stmt = self::createStatement(
@@ -482,10 +482,10 @@ abstract class User extends AbstractModelWithId
     public static function add(array $input)
     {
         self::getValidator($input)
-            ->isEmpty('name', 'Username has to be not empty!')
-            ->isEmpty('passphrase', 'Passphrase has to be not empty!')
-            ->isEmpty('email', 'Email has to be not empty!')
-            ->isEmpty('token', 'Token has to be not empty!')
+            ->isEmpty('name', _('Username has to be not empty!'))
+            ->isEmpty('passphrase', _('Passphrase has to be not empty!'))
+            ->isEmpty('email', _('Email has to be not empty!'))
+            ->isEmpty('token', _('Token has to be not empty!'))
             ->validate();
 
         $stmt = self::createStatement(
@@ -527,12 +527,12 @@ abstract class User extends AbstractModelWithId
     public static function getProfileFieldNames()
     {
         return [
-            'profile_homepage' => 'Homepage',
-            'profile_telephone' => 'Festnetz',
-            'profile_mobile' => 'Handy',
-            'profile_messenger_icq' => 'ICQ',
-            'profile_messenger_jabber' => 'Jabber',
-            'profile_public_email' => 'E-Mail',
+            'profile_homepage' => _('Homepage'),
+            'profile_telephone' => _('Festnetz'),
+            'profile_mobile' => _('Handy'),
+            'profile_messenger_icq' => _('ICQ'),
+            'profile_messenger_jabber' => _('Jabber'),
+            'profile_public_email' => _('E-Mail'),
             ];
     } // function
 }// class

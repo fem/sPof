@@ -131,8 +131,8 @@ abstract class AbstractController extends AbstractModule
 
             // call command
             if (method_exists($this, $cmd) === false) {
-                Logger::getInstance()->error('method '.get_class($this).'::'.$cmd.' does not exist.');
-                throw new exception\ControllerException('Die Aktion konnte nicht ausgeführt werden.');
+                Logger::getInstance()->error(__('method %s::%s does not exist.', get_class($this), $cmd));
+                throw new exception\ControllerException(_('Die Aktion konnte nicht ausgeführt werden.'));
             }
             $this->$cmd();
 
@@ -143,7 +143,7 @@ abstract class AbstractController extends AbstractModule
             $this->sendNotifications();
 
         } catch (exception\InvalidParameterException $e) {
-            $this->error('Die folgenden Angaben sind unvollständig:');
+            $this->error(_('Die folgenden Angaben sind unvollständig:'));
             foreach ($e->getParameters() as $param) {
                 $this->error($param['description'], $param['name']);
             }
@@ -159,11 +159,11 @@ abstract class AbstractController extends AbstractModule
             throw $e;
 
         } catch (exception\UnexpectedIntegrityConstraintViolationException $e) {
-            $this->error('Integritätsprüfung fehlgeschlagen.');
+            $this->error(_('Integritätsprüfung fehlgeschlagen.'));
 
         } catch (\Exception $e) {
             Logger::getInstance()->exception($e);
-            $this->error('Fehler beim ausführen der Aktion.: '.$e->getMessage());
+            $this->error(_('Fehler beim ausführen der Aktion.: ').$e->getMessage());
         }
 
         // by default, guess it failed and roll back the queries
@@ -208,7 +208,7 @@ abstract class AbstractController extends AbstractModule
     final protected function redirect($route, array $arguments = [])
     {
         if (empty($route)) {
-            throw new exception\ControllerException('Attempt to redirect to a unknown url');
+            throw new exception\ControllerException(_('Attempt to redirect to a unknown url'));
         }
 
         // close transaction, if present
@@ -334,7 +334,7 @@ abstract class AbstractController extends AbstractModule
             case 'user':
                 if (!isset($context['user_id'])) {
                     throw new exception\ControllerException(
-                        'Notification wurde ohne benötigten user_id Parameter aufgerufen.'
+                        _('Notification wurde ohne benötigten user_id Parameter aufgerufen.')
                     );
                 }
 
@@ -347,7 +347,7 @@ abstract class AbstractController extends AbstractModule
             case 'permission':
                 if (!isset($context['permission'])) {
                     throw new exception\ControllerException(
-                        'Notification wurde ohne benötigten permission Parameter aufgerufen.'
+                        _('Notification wurde ohne benötigten permission Parameter aufgerufen.')
                     );
                 }
 

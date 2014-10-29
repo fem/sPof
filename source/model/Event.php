@@ -52,16 +52,16 @@ abstract class Event extends AbstractModelWithId implements Rating
     protected static function validate(array $input)
     {
         self::getValidator($input)
-            ->isLengthGt('locality', 128, 'Der Ort ist zu lang.')
-            ->isLengthGt('title', 8192, 'Der Beschreibungstext ist zu lang.')
-            ->isLengthGt('description', 8192, 'Der Titel ist zu lang.')
-            ->isEmpty('title', 'Es wurde kein Titel angegeben.')
-            ->isEmpty('description', 'Es wurde keine Beschreibung angegeben.')
-            ->isLt('beginning', 0, 'Der Startzeitpunkt ist ungültig.')
-            ->isLt('ending', 0, 'Endzeitpunkt ist ungültig.')
-            ->isLt('ending', $input['beginning'], 'Ende darf nicht vor dem Beginn sein.')
-            ->isNoId('user_id', 'Benutzer id ist ungültig.')
-            ->isNoId('group_id', 'Gruppen ID ist ungültig.')
+            ->isLengthGt('locality', 128, _('Der Ort ist zu lang.'))
+            ->isLengthGt('title', 8192, _('Der Beschreibungstext ist zu lang.'))
+            ->isLengthGt('description', 8192, _('Der Titel ist zu lang.'))
+            ->isEmpty('title', _('Es wurde kein Titel angegeben.'))
+            ->isEmpty('description', _('Es wurde keine Beschreibung angegeben.'))
+            ->isLt('beginning', 0, _('Der Startzeitpunkt ist ungültig.'))
+            ->isLt('ending', 0, _('Endzeitpunkt ist ungültig.'))
+            ->isLt('ending', $input['beginning'], _('Ende darf nicht vor dem Beginn sein.'))
+            ->isNoId('user_id', _('Benutzer id ist ungültig.'))
+            ->isNoId('group_id', _('Gruppen ID ist ungültig.'))
             ->validate();
     } // function
 
@@ -489,9 +489,9 @@ abstract class Event extends AbstractModelWithId implements Rating
         ];
 
         self::getValidator($input)
-            ->isNoId('event_id', 'Veranstaltungs Id ist ungültig.')
-            ->isNoId('user_id', 'User Id ist ungültig.')
-            ->isTrue('rating_value', 'Es wurde eine ungültige Bewertung abgegeben.')
+            ->isNoId('event_id', _('Veranstaltungs Id ist ungültig.'))
+            ->isNoId('user_id', _('User Id ist ungültig.'))
+            ->isTrue('rating_value', _('Es wurde eine ungültige Bewertung abgegeben.'))
             ->validate();
 
         $stmt = self::createStatement(

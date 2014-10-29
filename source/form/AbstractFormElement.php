@@ -168,7 +168,7 @@ abstract class AbstractFormElement implements Renderable
     public function getValue($type = null)
     {
         if (!isset($this->attributes['name'])) {
-            throw new \InvalidArgumentException('Could not find a named form element: '.var_export($this, true));
+            throw new \InvalidArgumentException(_('Could not find a named form element: ').var_export($this, true));
         }
 
         // by default everything is a string

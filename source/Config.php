@@ -21,6 +21,8 @@
 
 namespace FeM\sPof;
 
+use Symfony\Component\Yaml\Yaml;
+
 /**
  * Class to read config.
  *
@@ -69,12 +71,12 @@ class Config
 
         // load installation global file
         if (file_exists($dir.'default.yml')) {
-            $this->config = yaml_parse_file($dir.'default.yml');
+            $this->config = Yaml::parse($dir.'default.yml');
         }
 
         // load installation local file
         if (file_exists($dir.'local.yml')) {
-            $this->config = array_merge($this->config, yaml_parse_file($dir.'local.yml'));
+            $this->config = array_merge($this->config, Yaml::parse($dir.'local.yml'));
         }
     } // function
 

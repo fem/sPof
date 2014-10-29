@@ -204,7 +204,10 @@ abstract class AbstractHtmlView extends AbstractView
             try {
                 $content = template\HtmlTemplate::getInstance()->fetch($templateFile);
             } catch (\SmartyException $e) {
-                Logger::getInstance()->info('Could not find template, next trying form. ('.$e->getMessage().')');
+                Logger::getInstance()->info(__(
+                    'Could not find template, next trying form. (%s)',
+                    $e->getMessage()
+                ));
             }
         }
 

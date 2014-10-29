@@ -62,9 +62,11 @@ abstract class AbstractView extends AbstractModule
             $show = Router::getShow($show);
         }
         if (!method_exists(get_called_class(), $show)) {
-            throw new \FeM\sPof\exception\NotImplementedException(
-                'Could not find the show method. "'.get_called_class().'::'.$show.'"'
-            );
+            throw new \FeM\sPof\exception\NotImplementedException(__(
+                'Could not find the show method. "%s::%s"',
+                get_called_class(),
+                $show
+            ));
         }
         return $this->$show();
     } // function

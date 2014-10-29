@@ -347,10 +347,11 @@ class Form extends AbstractFormGroup implements Renderable
     private function &getElement($name)
     {
         if (!isset($this->field[$name])) {
-            throw new \InvalidArgumentException(
-                'Konnte das Formularfeld "'.$name.'" nicht in den Einstellungen finden, aber es wurde versucht darauf '
-                .'zuzugreifen.'
-            );
+            throw new \InvalidArgumentException(__(
+                'Konnte das Formularfeld "%s" nicht in den Einstellungen finden, aber es wurde versucht darauf '
+                .'zuzugreifen.',
+                $name
+            ));
         }
 
         $field = $this->field[$name];

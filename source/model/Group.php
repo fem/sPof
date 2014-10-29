@@ -55,9 +55,9 @@ abstract class Group extends AbstractModelWithId
     protected static function validate(array $input)
     {
         self::getValidator($input)
-            ->isEmpty('name', 'Es wurde kein Name angegeben.')
-            ->isEmpty('shortname', 'Es wurde kein Kurzname angegeben.')
-            ->isLt('parent', 0, 'Es wurde eine ungültige Obergruppe angegeben.')
+            ->isEmpty('name', _('Es wurde kein Name angegeben.'))
+            ->isEmpty('shortname', _('Es wurde kein Kurzname angegeben.'))
+            ->isLt('parent', 0, _('Es wurde eine ungültige Obergruppe angegeben.'))
             ->validate();
     } // function
 
@@ -632,9 +632,9 @@ abstract class Group extends AbstractModelWithId
             'requested' => self::hasUserRequestedMembership($user_id, $group_id)
         ];
         self::getValidator($input)
-            ->isNoId('user_id', 'Benutzer Id ist ungültig.')
-            ->isNoId('group_id', 'Gruppen Id ist ungültig.')
-            ->isTrue('requested', 'Mitgliedschaft wurde bereits beantragt.')
+            ->isNoId('user_id', _('Benutzer Id ist ungültig.'))
+            ->isNoId('group_id', _('Gruppen Id ist ungültig.'))
+            ->isTrue('requested', _('Mitgliedschaft wurde bereits beantragt.'))
             ->validate();
 
         $stmt = self::createStatement(

@@ -25,6 +25,8 @@ use FeM\sPof\dav\CalendarHandler;
 use FeM\sPof\notification\NotificationHandler;
 use FeM\sPof\notification\NotificationTargetHandler;
 
+require_once __DIR__.'/_functions.php';
+
 /**
  * Class to control & run the application.
  *
@@ -149,7 +151,7 @@ class Application
 
         //var_dump(\FeM\sPof\model\DBConnection::getInstance());
         if (!\FeM\sPof\model\DBConnection::isOnline()) {
-            die('No Datebase connection.');
+            die(_('No Datebase connection.'));
         }
     } // function
 
@@ -292,17 +294,21 @@ class Application
 
                 // if file exists -> the class name does not match the filename
                 if (file_exists('view/'.$module.'View.php')) {
-                    throw new \FeM\sPof\exception\ClassNotFoundException(
-                        '"'.$module.'View" requested, but missing definition in file "view/'.$module.'View.php", '
-                        .'maybe a typo in the class name?'
-                    );
+                    throw new \FeM\sPof\exception\ClassNotFoundException(__(
+                        '"%sView" requested, but missing definition in file "view/%sView.php", maybe a typo in the '
+                        .'class name?',
+                        $module,
+                        $module
+                    ));
                 }
 
                 // file doesn't exist -> file probably need to get renamed
                 if (!file_exists('view/'.$module.'View.php')) {
-                    throw new \FeM\sPof\exception\ClassNotFoundException(
-                        '"'.$module.'View" requested, but could not find the associated file "view/'.$module.'View.php"'
-                    );
+                    throw new \FeM\sPof\exception\ClassNotFoundException(__(
+                        '"%sView" requested, but could not find the associated file "view/%sView.php"',
+                        $module,
+                        $module
+                    ));
                 }
             }
 
@@ -346,7 +352,7 @@ class Application
             echo $error['content']."\n";
         }
 
-        die("\nCould not find a suitable view component.".$viewName);
+        die(_("\nCould not find a suitable view component.").$viewName);
     } // function
 
 
@@ -373,6 +379,24 @@ class Application
     public function setDefaultModule($name)
     {
         $this->defaultModule = $name;
+    } // function
+
+
+    /**
+     * Set the locale for text translations.
+     *
+     * @api
+     *
+     * @param string $locale e.g. de_DE or en_US
+     */
+    public function setLocale($locale, $domain = 'spof')
+    {
+        putenv('LANG='.$locale);
+        setlocale(LC_ALL, $locale);
+
+        bindtextdomain($domain, self::$FILE_ROOT.'locale');
+        bind_textdomain_codeset($domain, 'UTF-8');
+        textdomain($domain);
     } // function
 
 
