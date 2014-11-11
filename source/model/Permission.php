@@ -343,4 +343,32 @@ abstract class Permission extends AbstractModelWithId
         }
         return $privacy;
     } // function
+
+
+    /**
+     * Get all emails of users which have the direct permission.
+     *
+     * @api
+     *
+     * @param string $permission
+     *
+     * @return array
+     */
+    public static function getEmailsByDirect($permission)
+    {
+        $stmt = self::createStatement(
+            "
+            SELECT u.email
+            FROM view_user_group_permission v
+            JOIN tbl_user u On u.id=user_id
+            WHERE
+                v.name = :permission
+                AND direct_permission IS TRUE
+            GROUP BY u.email
+            "
+        );
+        $stmt->assign('permission', $permission);
+
+        return $stmt->fetchAll();
+    } // function
 }// class
