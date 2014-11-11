@@ -198,13 +198,13 @@ abstract class Request
     {
         if (!self::isMethod($method)) {
             if (isset($_SERVER['REQUEST_METHOD'])) {
-                throw new exception\UnsupportedRequestMethod(__(
+                throw new exception\UnsupportedRequestMethod(_s(
                     'A %s request is required, but got a "%s" request instead',
                     $method,
                     $_SERVER['REQUEST_METHOD']
                 ));
             } else {
-                throw new exception\UnsupportedRequestMethod(__(
+                throw new exception\UnsupportedRequestMethod(_s(
                     'A %s request is required, but got something undefined instead.',
                     $method
                 ));

@@ -22,6 +22,8 @@
 /**
  * Function alias to sprintf for easier gettext integration
  *
+ * @api
+ *
  * @param string $string text to translate
  * @param $vargs
  *
@@ -29,4 +31,21 @@
  */
 function __() {
     return call_user_func_array("sprintf", func_get_args());
+}
+
+
+/**
+ * Function alias to sprintf for easier gettext integration. Specific to spof domain.
+ *
+ * @internal
+ *
+ * @param string $string text to translate
+ * @param $vargs
+ *
+ * @return string translated text
+ */
+function _s() {
+    $args = func_get_args();
+    $args[0] = dgettext('spof', $args[0]);
+    return call_user_func_array('sprintf', $args);
 }

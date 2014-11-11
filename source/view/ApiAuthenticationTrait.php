@@ -45,12 +45,12 @@ trait ApiAuthenticationTrait
     final public function authenticate()
     {
         if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])) {
-            throw new \FeM\sPof\exception\BasicAuthException(_('Missing authentication credentials'));
+            throw new \FeM\sPof\exception\BasicAuthException(_s('Missing authentication credentials'));
         }
 
         $user_id = User::getIdByCredentials($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
         if ($user_id === false) {
-            throw new \FeM\sPof\exception\BasicAuthException(_('Wrong user and/or password.'));
+            throw new \FeM\sPof\exception\BasicAuthException(_s('Wrong user and/or password.'));
         }
 
         return $user_id;

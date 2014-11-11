@@ -51,7 +51,7 @@ abstract class FileUtil
         umask($umask);
 
         if (!$success) {
-            user_error(__('can\'t create folder "%s".', $path));
+            user_error(_s('can\'t create folder "%s".', $path));
         }
         return $success;
     } // function makedir
@@ -121,12 +121,12 @@ abstract class FileUtil
     {
         $pathinfo = pathinfo($filename);
         if (empty($pathinfo['filename'])) {
-            throw new exception\ControllerException(_('Es wurde keine Datei zum Hochladen ausgewählt.'));
+            throw new exception\ControllerException(_s('Es wurde keine Datei zum Hochladen ausgewählt.'));
         }
 
         $extension = strtolower($pathinfo['extension']);
         if ($extension != 'jpeg' && $extension != 'jpg' && $extension != 'png') {
-            throw new exception\ControllerException(_('Die hochgeladene Vorschaudatei ist kein JPEG- oder PNG-Bild!'));
+            throw new exception\ControllerException(_s('Die hochgeladene Vorschaudatei ist kein JPEG- oder PNG-Bild!'));
         }
     } // function
 }// class

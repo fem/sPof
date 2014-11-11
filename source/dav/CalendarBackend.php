@@ -146,7 +146,7 @@ class CalendarBackend extends AbstractBackend
             'calendarUri' => $calendarUri,
             'properties' => $properties
         ]);
-        throw new ReportNotSupported(_('read-only support'));
+        throw new ReportNotSupported(_s('read-only support'));
     } // function
 
 
@@ -161,7 +161,7 @@ class CalendarBackend extends AbstractBackend
     {
         // calendars are always tied to the user account
         Logger::getInstance()->debug('Skipped', ['calendarId' => $calendarId]);
-        throw new ReportNotSupported(_('read-only support'));
+        throw new ReportNotSupported(_s('read-only support'));
     } // function
 
 
@@ -337,7 +337,7 @@ class CalendarBackend extends AbstractBackend
                 break;
 
             default:
-                throw new ReportNotSupported(_('This is a read-only calendar.'));
+                throw new ReportNotSupported(_s('This is a read-only calendar.'));
                 break;
         }
 
@@ -390,7 +390,7 @@ class CalendarBackend extends AbstractBackend
                 ]
             );
         } catch (ModelException $e) {
-            throw new ServiceUnavailable(_("Unknown Problem"));
+            throw new ServiceUnavailable(_s("Unknown Problem"));
         }
 
         DBConnection::getInstance()->commit();
@@ -430,7 +430,7 @@ class CalendarBackend extends AbstractBackend
                 break;
 
             default:
-                throw new ReportNotSupported(_('This is a read-only calendar.'));
+                throw new ReportNotSupported(_s('This is a read-only calendar.'));
                 break;
         }
 
@@ -438,7 +438,7 @@ class CalendarBackend extends AbstractBackend
 
         $old_event = self::getEventFromObjectUri($objectUri, true);
         if ($old_event['user_id'] !== $user_id) {
-            throw new PreconditionFailed(_("You're not the owner of the event, you're trying to edit."));
+            throw new PreconditionFailed(_s("You're not the owner of the event, you're trying to edit."));
         }
 
         $event = IcalUtil::readEventFromString($calendarData);
@@ -510,7 +510,7 @@ class CalendarBackend extends AbstractBackend
                 break;
 
             default:
-                throw new ReportNotSupported(_('This is a read-only calendar.'));
+                throw new ReportNotSupported(_s('This is a read-only calendar.'));
                 break;
         }
 
@@ -518,7 +518,7 @@ class CalendarBackend extends AbstractBackend
 
         $event = self::getEventFromObjectUri($objectUri, true);
         if ($event['user_id'] !== $user_id) {
-            throw new PreconditionFailed(_("You're not the owner of the event, you're trying to delete."));
+            throw new PreconditionFailed(_s("You're not the owner of the event, you're trying to delete."));
         }
         Event::updateByPk(
             $event['id'],
@@ -597,7 +597,7 @@ class CalendarBackend extends AbstractBackend
 
         // check if we really got an instance
         if ($event === false && $throwing === true) {
-            throw new NotFound(_("The referenced objectUri could not be found"));
+            throw new NotFound(_s("The referenced objectUri could not be found"));
         }
 
         return $event;

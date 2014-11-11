@@ -49,9 +49,9 @@ abstract class NotificationMessage extends \FeM\sPof\model\AbstractModelWithId
     public static function validate(array $input)
     {
         self::getValidator($input)
-            ->isNoId('notification_id', _('Ungültige Notification id angegeben.'))
-            ->isNoId('protocol_id', _('Ungültige Protokoll id angegeben.'))
-            ->isNoId('user_id', _('Ungültige Benutzer id angegeben.'))
+            ->isNoId('notification_id', _s('Ungültige Notification id angegeben.'))
+            ->isNoId('protocol_id', _s('Ungültige Protokoll id angegeben.'))
+            ->isNoId('user_id', _s('Ungültige Benutzer id angegeben.'))
             ->validate();
     } // function
 

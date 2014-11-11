@@ -394,8 +394,12 @@ class Application
         putenv('LANG='.$locale);
         setlocale(LC_ALL, $locale);
 
+        bindtextdomain('spof', __DIR__.'/locale');
+        bind_textdomain_codeset($domain, 'UTF-8');
+
         bindtextdomain($domain, self::$FILE_ROOT.'locale');
         bind_textdomain_codeset($domain, 'UTF-8');
+
         textdomain($domain);
     } // function
 

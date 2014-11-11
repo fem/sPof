@@ -97,7 +97,7 @@ abstract class IcalUtil
 
         $lines = explode("\n", $content);
         if (stristr($lines[0], 'BEGIN:VCALENDAR') === false) {
-            throw new \InvalidArgumentException(_('File does not start with BEGIN:VCALENDAR or is no proper ICS file.'));
+            throw new \InvalidArgumentException(_s('File does not start with BEGIN:VCALENDAR or is no proper ICS file.'));
         }
 
         foreach ($lines as $line) {

@@ -50,7 +50,7 @@ abstract class Permission extends AbstractModelWithId
     public static function validate(array $input)
     {
         self::getValidator($input)
-            ->isEmpty('name', _('Permission name war leer.'))
+            ->isEmpty('name', _s('Permission name war leer.'))
             ->validate();
     } // function
 

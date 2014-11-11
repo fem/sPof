@@ -147,7 +147,7 @@ class PrincipalBackend extends AbstractBackend
     public function updatePrincipal($path, $mutations)
     {
         Logger::getInstance()->debug(['path' => $path, 'mutations' => $mutations]);
-        throw new ReportNotSupported(_('read-only support'));
+        throw new ReportNotSupported(_s('read-only support'));
     } // function
 
 
@@ -182,7 +182,7 @@ class PrincipalBackend extends AbstractBackend
             'prefixPath' => $prefixPath,
             'searchPropertie' => $searchProperties
         ]);
-        throw new ReportNotSupported(_('read-only support'));
+        throw new ReportNotSupported(_s('read-only support'));
     } // function
 
 
@@ -198,7 +198,7 @@ class PrincipalBackend extends AbstractBackend
     public function getGroupMemberSet($principal)
     {
         Logger::getInstance()->debug('Skipped', ['principal' => $principal]);
-        throw new ReportNotSupported(_('read-only support'));
+        throw new ReportNotSupported(_s('read-only support'));
     } // function
 
 
@@ -215,7 +215,7 @@ class PrincipalBackend extends AbstractBackend
     {
         Logger::getInstance()->debug('Skipped', ['principal' => $principal]);
         return [];
-        throw new ReportNotSupported(_('read-only support'));
+        throw new ReportNotSupported(_s('read-only support'));
     } // function
 
 
@@ -234,6 +234,6 @@ class PrincipalBackend extends AbstractBackend
     public function setGroupMemberSet($principal, array $members)
     {
         Logger::getInstance()->debug('Skipped', ['principal' => $principal, 'members' => $members]);
-        throw new ReportNotSupported(_('read-only support'));
+        throw new ReportNotSupported(_s('read-only support'));
     } // function
 }// class

@@ -275,14 +275,14 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
         // if we have no name, so throw arguments of the
         if (empty($name)) {
             Logger::getInstance()->error(
-                _('Missing URL Name, just got params: ').var_export($arguments, true)
+                _s('Missing URL Name, just got params: ').var_export($arguments, true)
             );
         }
 
         // check for existing name
         if (!isset($routes[$name])) {
             Logger::getInstance()->error(
-                __('Could not find URL with name: "%s" and params in ', $name).var_export($arguments, true)
+                _s('Could not find URL with name: "%s" and params in ', $name).var_export($arguments, true)
             );
             return '';
         }
@@ -324,7 +324,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
         // check for remaining unresolved params
         if (strpos($pattern, '<')) {
-            Logger::getInstance()->error(__(
+            Logger::getInstance()->error(_s(
                     'Could not resolve all params in "%s": "%s". Arguments=%s',
                     $name,
                     $pattern,
@@ -415,9 +415,9 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
             $ret = Yaml::parse(self::getSourceFile());
         } catch (\ErrorException $e) {
             if (!file_exists(self::getSourceFile())) {
-                die(_('routes.yml file not found in Application root directory.'));
+                die(_s('routes.yml file not found in Application root directory.'));
             } else {
-                Logger::getInstance()->error(__(
+                Logger::getInstance()->error(_s(
                     'Syntax error in file "%s": %s',
                     self::getSourceFile(),
                     $e->getMessage()
@@ -434,9 +434,9 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
                 $ret = array_merge($ret, Yaml::parse($file));
             } catch (\ErrorException $e) {
                 if (!file_exists($file)) {
-                    die(__('routes.yml file not found in %s directory.', $routes));
+                    die(_s('routes.yml file not found in %s directory.', $routes));
                 } else {
-                    Logger::getInstance()->error(__(
+                    Logger::getInstance()->error(_s(
                         'Syntax error in file "%s": %s',
                         $routes,
                         $e->getMessage()

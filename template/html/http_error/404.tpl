@@ -1,10 +1,10 @@
 <html>
 <head>
-  <title>404 Not Found</title>
+  <title>404 {t domain='spof'}Not Found{/t}</title>
 </head>
 <body>
-  <h1>Not Found ;-p</h1>
-  <p>The requested URL {$smarty.server.REQUEST_URI|escape} was not found on this server.</p>
+  <h1>{t domain='spof'}Not Found{/t} ;-p</h1>
+  <p>{t domain='spof' 1=$smarty.server.REQUEST_URI|escape}The requested URL %1 was not found on this server.{/t}</p>
 <hr />
 <address>{$smarty.server.SERVER_SIGNATURE}</address>
 </body>

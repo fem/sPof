@@ -1,0 +1,460 @@
+# #-#-#-#-#  code.pot (PACKAGE VERSION)  #-#-#-#-#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-11-02 00:17+0100\n"
+"PO-Revision-Date: 2014-11-11 17:57+0100\n"
+"Last-Translator: Danny Götte <danny.goette@fem.tu-ilmenau.de>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"X-Generator: Poedit 1.6.10\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de\n"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/_functions.php:49
+msgid "spof"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/AbstractController.php:134
+#, fuzzy, php-format
+msgid "method %s::%s does not exist."
+msgstr "Methode %s::%s existiert nicht."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/AbstractController.php:135
+msgid "Die Aktion konnte nicht ausgeführt werden."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/AbstractController.php:146
+msgid "Die folgenden Angaben sind unvollständig:"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/AbstractController.php:162
+msgid "Integritätsprüfung fehlgeschlagen."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/AbstractController.php:166
+msgid "Fehler beim ausführen der Aktion.: "
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/AbstractController.php:211
+#, fuzzy
+msgid "Attempt to redirect to a unknown url"
+msgstr "Es wurde versucht auf eine unbekannt URL weiterzuleiten."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/AbstractController.php:337
+msgid "Notification wurde ohne benötigten user_id Parameter aufgerufen."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/AbstractController.php:350
+msgid "Notification wurde ohne benötigten permission Parameter aufgerufen."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Application.php:154
+#, fuzzy
+msgid "No Datebase connection."
+msgstr "Keine Datenbankverbindung"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Application.php:298
+#, fuzzy, php-format
+msgid ""
+"\"%sView\" requested, but missing definition in file \"view/%sView.php\", "
+"maybe a typo in the class name?"
+msgstr ""
+"Es wurde versucht \"%sView\" zu verwenden, aber die Klasse wurde nicht in "
+"der Dateie \"view/%sView.php\" definiert, eventuell handelt es sich hierbei "
+"um einen Tippfehler?"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Application.php:308
+#, fuzzy, php-format
+msgid ""
+"\"%sView\" requested, but could not find the associated file \"view/%sView."
+"php\""
+msgstr ""
+"Es wurde versucht \"%sView\" zu verwenden, aber die dazugehörige Datei "
+"\"view/%sView.php\" wurde nicht gefunden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Application.php:355
+msgid ""
+"\n"
+"Could not find a suitable view component."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Authorization.php:162
+msgid "Du hast nicht die benötigten Rechte, um die Funktion nutzen zu können."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Authorization.php:163
+msgid "Vielleicht hast du vergessen dich einzuloggen?"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Authorization.php:225
+msgid "Du musst eingeloggt sein, um diesen Bereich nutzen zu können."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Calendar.php:429
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Calendar.php:442
+msgid "Calendar: Unbekannte Methode: "
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/CalendarBackend.php:149
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/CalendarBackend.php:164
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/PrincipalBackend.php:150
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/PrincipalBackend.php:185
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/PrincipalBackend.php:201
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/PrincipalBackend.php:218
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/PrincipalBackend.php:237
+msgid "read-only support"
+msgstr "Nur lesezugriffe erlaubt"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/CalendarBackend.php:340
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/CalendarBackend.php:433
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/CalendarBackend.php:513
+msgid "This is a read-only calendar."
+msgstr "Der Kalender darf nur gelesen werden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/CalendarBackend.php:393
+#, fuzzy
+msgid "Unknown Problem"
+msgstr "Es wurde versucht auf eine unbekannt URL weiterzuleiten."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/CalendarBackend.php:441
+msgid "You're not the owner of the event, you're trying to edit."
+msgstr ""
+"Du bist nicht der Besitzer dieser Veranstaltung, welche du versuchst zu "
+"bearbeiten."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/CalendarBackend.php:521
+msgid "You're not the owner of the event, you're trying to delete."
+msgstr ""
+"Du bist nicht der Besitzer dieser Veranstaltung, welche du versuchst zu "
+"löschen."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/dav/CalendarBackend.php:600
+msgid "The referenced objectUri could not be found"
+msgstr "Die angegebene ObjectUri wurde nicht gefunden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/FileUtil.php:54
+#, php-format
+msgid "can't create folder \"%s\"."
+msgstr "Das Verzeichnis \"%s\" konnte nicht erstellt werden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/FileUtil.php:124
+msgid "Es wurde keine Datei zum Hochladen ausgewählt."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/FileUtil.php:129
+msgid "Die hochgeladene Vorschaudatei ist kein JPEG- oder PNG-Bild!"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/form/AbstractFormElement.php:171
+msgid "Could not find a named form element: "
+msgstr "Das benannte Formular-Element konnte nicht gefunden werden:"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/form/Form.php:351
+#, php-format
+msgid ""
+"Konnte das Formularfeld \"%s\" nicht in den Einstellungen finden, aber es "
+"wurde versucht darauf zuzugreifen."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/IcalUtil.php:100
+msgid "File does not start with BEGIN:VCALENDAR or is no proper ICS file."
+msgstr ""
+"Die Datei beginnt nicht mit BEGIN:VCALENDAR oder ist keine gültige ICS-Datei."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/AbstractModel.php:85
+msgid "An abstract validate was called with "
+msgstr "Eine abstracte validate-methode wurde aufgerufen:"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/AbstractModel.php:103
+msgid "Missing table definition in Model "
+msgstr "Es wurde keine Tabellendefinition in dem Model angegeben."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/AbstractModel.php:123
+msgid "AbstractModelWithId->add to "
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/AbstractModel.php:161
+msgid "AbstractModelWithId->getByPk to "
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/AbstractModel.php:194
+msgid "AbstractModelWithId->delete to "
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/AbstractModel.php:225
+msgid "AbstractModelWithId->updateByPk to "
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/AbstractModel.php:286
+msgid ""
+"Primary Key is no array, maybe you wanted to use AbstractModelWithId instead?"
+msgstr ""
+"Der Primärschlüssel ist kein array, eventuell wolltest du die Klasse "
+"AbstractModelWithId stattdessen verwenden?"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:55
+msgid "Der Ort ist zu lang."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:56
+msgid "Der Beschreibungstext ist zu lang."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:57
+msgid "Der Titel ist zu lang."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:58
+msgid "Es wurde kein Titel angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:59
+msgid "Es wurde keine Beschreibung angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:60
+msgid "Der Startzeitpunkt ist ungültig."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:61
+#, fuzzy
+msgid "Endzeitpunkt ist ungültig."
+msgstr "Wrong username or password."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:62
+msgid "Ende darf nicht vor dem Beginn sein."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:63
+msgid "Benutzer id ist ungültig."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:64
+msgid "Gruppen ID ist ungültig."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:492
+msgid "Veranstaltungs Id ist ungültig."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:493
+msgid "User Id ist ungültig."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Event.php:494
+msgid "Es wurde eine ungültige Bewertung abgegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Group.php:58
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:59
+msgid "Es wurde kein Name angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Group.php:59
+msgid "Es wurde kein Kurzname angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Group.php:60
+msgid "Es wurde eine ungültige Obergruppe angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Group.php:635
+msgid "Benutzer Id ist ungültig."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Group.php:636
+msgid "Gruppen Id ist ungültig."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Group.php:637
+msgid "Mitgliedschaft wurde bereits beantragt."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/NotificationMessage.php:52
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/NotificationProtocol.php:51
+msgid "Ungültige Notification id angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/NotificationMessage.php:53
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/NotificationProtocol.php:52
+msgid "Ungültige Protokoll id angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/NotificationMessage.php:54
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/NotificationProtocol.php:53
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/NotificationProtocol.php:54
+msgid "Ungültige Benutzer id angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Permission.php:53
+msgid "Permission name war leer."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/Role.php:52
+msgid "name must not be empty"
+msgstr "Der Name darf nicht leer sein."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:58
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:282
+msgid "Ungültige user id."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:60
+msgid "E-Mail Adresse darf nicht leer sein."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:61
+msgid "Es wurde keine Email Adresse angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:65
+msgid "Es wurde kein Passwort angegeben."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:283
+msgid "Passwort darf nicht leer sein."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:485
+msgid "Username has to be not empty!"
+msgstr "Es muss ein Nutzername angegeben werden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:486
+msgid "Passphrase has to be not empty!"
+msgstr "Es muss ein Passwort angegeben werden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:487
+msgid "Email has to be not empty!"
+msgstr "Es muss eine E-Mail-Adresse angegeben werden"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:488
+msgid "Token has to be not empty!"
+msgstr "Es muss ein Token angegeben werden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:530
+msgid "Homepage"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:531
+msgid "Festnetz"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:532
+msgid "Handy"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:533
+msgid "ICQ"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:534
+msgid "Jabber"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/model/User.php:535
+#, fuzzy
+msgid "E-Mail"
+msgstr "E-Mail-Address"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Request.php:202
+#, php-format
+msgid "A %s request is required, but got a \"%s\" request instead"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Request.php:208
+#, php-format
+msgid "A %s request is required, but got something undefined instead."
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Router.php:278
+msgid "Missing URL Name, just got params: "
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Router.php:285
+#, php-format
+msgid "Could not find URL with name: \"%s\" and params in "
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Router.php:328
+#, php-format
+msgid "Could not resolve all params in \"%s\": \"%s\". Arguments=%s"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Router.php:418
+msgid "routes.yml file not found in Application root directory."
+msgstr ""
+"routes.yml konnte nicht im Application-Wurzelverzeichnis gefunden werden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Router.php:421
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Router.php:440
+#, php-format
+msgid "Syntax error in file \"%s\": %s"
+msgstr "Syntaxfehler in Datei \"%s\": %s"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/Router.php:437
+#, php-format
+msgid "routes.yml file not found in %s directory."
+msgstr "routes.yml konnte nicht im Verzeichnis %s gefunden werden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/template/smarty_plugins/modifier.prettydate.php:54
+msgid "Heute"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/template/smarty_plugins/modifier.prettydate.php:57
+msgid "Morgen"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/template/smarty_plugins/modifier.prettydate.php:60
+msgid "Gestern"
+msgstr ""
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/view/AbstractHtmlView.php:208
+#, php-format
+msgid "Could not find template, next trying form. (%s)"
+msgstr ""
+"Das template konnte nicht gefunden, als nächstes wird Fomular gesucht (%s)."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/view/AbstractJsonView.php:62
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/view/AbstractView.php:66
+#, php-format
+msgid "Could not find the show method. \"%s::%s\""
+msgstr "Die Methode \"%s::%s\" konnte nicht gefunden werden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/view/ApiAuthenticationTrait.php:48
+msgid "Missing authentication credentials"
+msgstr "Fehlende Authorisierungszugangsdaten."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/source/view/ApiAuthenticationTrait.php:53
+msgid "Wrong user and/or password."
+msgstr "Falscher Nutzername und/oder Passwort."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/template/html/http_error/403.tpl:3
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/template/html/http_error/403.tpl:6
+msgid "Forbidden"
+msgstr "Unerlaubt"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/template/html/http_error/403.tpl:7
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/template/html/http_error/404.tpl:7
+msgid "The requested URL %1 was not found on this server."
+msgstr "Die Angefragte URL %1 wurde nicht auf dem Server gefunden."
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/template/html/http_error/404.tpl:3
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/template/html/http_error/404.tpl:6
+#, fuzzy
+msgid "Not Found"
+msgstr "Nicht gefunden"
+
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/template/html/http_error/500.tpl:3
+#: /Users/brain/PhpstormProjects/sPi/vendor/fem/spof/template/html/http_error/500.tpl:6
+msgid "Internal Server Error"
+msgstr "Interner Server Fehler"
