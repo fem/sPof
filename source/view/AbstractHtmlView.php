@@ -126,15 +126,6 @@ abstract class AbstractHtmlView extends AbstractView
      */
     public function __construct()
     {
-        // count visitor (only required here, because everything else is not visiting, but just leeching something)
-        $ip = Request::getIp();
-        Visitor::clear();
-        if (Visitor::isRegistered($ip) === false) {
-            Visitor::add(['ip' => $ip]);
-        } else {
-            Visitor::touch($ip);
-        }
-
         // update css-rules from stylesheet directory
         template\CssTemplate::update();
 

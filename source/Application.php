@@ -21,10 +21,6 @@
 
 namespace FeM\sPof;
 
-use FeM\sPof\dav\CalendarHandler;
-use FeM\sPof\notification\NotificationHandler;
-use FeM\sPof\notification\NotificationTargetHandler;
-
 require_once __DIR__.'/_functions.php';
 
 /**
@@ -89,29 +85,6 @@ class Application
      * @var array
      */
     private $authorizationHandler = [];
-
-    /**
-     * List of notification protocol handlers.
-     *
-     * @internal
-     *
-     * @var array
-     */
-    private $notificationHandler = [];
-
-    /**
-     * Lift of notification target group handlers.
-     *
-     * @var array
-     */
-    private $notificationTargetHandler = [];
-
-    /**
-     * List of calendar handlers.
-     *
-     * @var array
-     */
-    private $calendarHandler = [];
 
     /**
      * Name of the default module Name.
@@ -204,18 +177,6 @@ class Application
     {
         new self();
     }
-
-
-    /**
-     * Start a new notification dispatcher bot.
-     *
-     * @api
-     */
-    public function notificationDispatch()
-    {
-        require dirname(__DIR__).'bin/notificationBot.php';
-    } // function
-
 
     /**
      * Always throw an exception instead of an error.
@@ -429,81 +390,4 @@ class Application
         return self::$INSTANCE->authorizationHandler;
     } // function
 
-
-    /**
-     * Add a new notification protocol handler.
-     *
-     * @api
-     *
-     * @param NotificationHandler $handler
-     */
-    public function addNotificationHandler(NotificationHandler $handler)
-    {
-        $this->notificationHandler[] = $handler;
-    } // function
-
-
-    /**
-     * Return an array of notification protocol handlers.
-     *
-     * @api
-     *
-     * @return NotificationHandler[]
-     */
-    public static function getNotificationHandlers()
-    {
-        return self::$INSTANCE->notificationHandler;
-    } // function
-
-
-    /**
-     * Add a new notification target group handler.
-     *
-     * @api
-     *
-     * @param NotificationTargetHandler $handler
-     */
-    public function addNotificationTargetHandler(NotificationTargetHandler $handler)
-    {
-        $this->notificationTargetHandler[] = $handler;
-    } // function
-
-
-    /**
-     * Return an array of notification target group handlers.
-     *
-     * @api
-     *
-     * @return NotificationTargetHandler[]
-     */
-    public static function getNotificationTargetHandlers()
-    {
-        return self::$INSTANCE->notificationTargetHandler;
-    } // function
-
-
-    /**
-     * Add a new calendar handler.
-     *
-     * @api
-     *
-     * @param CalendarHandler $handler
-     */
-    public function addCalendarHandler(CalendarHandler $handler)
-    {
-        $this->calendarHandler[] = $handler;
-    } // function
-
-
-    /**
-     * Get an array of calendar handlers.
-     *
-     * @api
-     *
-     * @return CalendarHandler[]
-     */
-    public static function getCalendarHandlers()
-    {
-        return self::$INSTANCE->calendarHandler;
-    } // function
 }// class
