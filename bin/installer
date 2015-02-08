@@ -25,39 +25,53 @@
 
 echo "Are you sure you want to do this?  Type 'yes' to continue: ";
 $handle = fopen ("php://stdin","r");
-$line = fgets($handle);
-if(trim($line) != 'yes'){
+$line = trim(fgets($handle));
+if ($line != 'yes') {
     echo "ABORTING!\n";
     exit;
 }
 echo "\n";
 echo "Thank you, continuing...\n";
 
-exit;
+echo "Please specify the organisation name (alphanumeric characters only):\n";
+$line = trim(fgets($handle));
+if (empty($line)) {
+    echo "Missing organisation name, aborting.";
+    exit;
+}
+echo "\n";
+$vendor = $line;
 
+echo "Please specify the project name (alphanumeric characters only):\n";
+$line = trim(fgets($handle));
+if (empty($line)) {
+    echo "Missing project name, aborting.";
+    exit;
+}
+echo "\n";
+$project = $line;
 
 // project config
-$vendor = 'FeM';
-$project = 'example';
-$basedir = __DIR__;
+$basedir = getcwd();
 
 
 // define directory structure
 $folders = [
+    'application',
+    'application/www',
+    'application/www/controller',
+    'application/www/form',
+    'application/www/public',
+    'application/www/public/css',
+    'application/www/public/js',
+    'application/www/stylesheet',
+    'application/www/template',
+    'application/www/template/index',
+    'application/www/view',
     'bin',
     'config',
-    'controller',
-    'form',
     'model',
-    'public',
-    'public/css',
-    'public/js',
-    'stylesheet',
-    'template',
-    'template/index',
     'tmp',
-    'vendor',
-    'view'
 ];
 
 // define default files
@@ -103,12 +117,6 @@ $files['composer.json']=<<<COMPOSER
     "autoload": {
         "psr-4": {"$vendor\\\\$project\\\\": ""}
     },
-    "repositories": [
-        {
-            "type": "svn",
-            "url": "https://subversion.fem.tu-ilmenau.de/repository/spof"
-        }
-    ],
     "require": {
         "FeM/sPof": "@dev"
     }
@@ -117,7 +125,7 @@ $files['composer.json']=<<<COMPOSER
 COMPOSER;
 
 // dispatcher file
-$files['public/index.php']=<<<INDEX
+$files['application/www/public/index.php']=<<<INDEX
 <?php
 
 require_once dirname(__DIR__)."/vendor/autoload.php";
@@ -137,10 +145,10 @@ index:
 
 ROUTES;
 
-$files['view/IndexView.php']=<<<INDEX
+$files['application/www/view/IndexView.php']=<<<INDEX
 <?php
 
-namespace $vendor\\$project\\view;
+namespace $vendor\\$project\\application\\www\\view;
 
 class IndexView extends \\FeM\\sPof\\view\\AbstractHtmlView
 {
@@ -152,13 +160,13 @@ class IndexView extends \\FeM\\sPof\\view\\AbstractHtmlView
 
 INDEX;
 
-$files['template/index/hello.tpl']=<<<TPL
+$files['application/www/template/index/hello.tpl']=<<<TPL
 <h2>Hello</h2>
 {\$hello|escape}
 
 TPL;
 
-$files['template/layout.tpl']=<<<TPL
+$files['application/www/template/layout.tpl']=<<<TPL
 <!DOCTYPE html>
 <html>
 <head>
