@@ -21,9 +21,6 @@
 
 namespace FeM\sPof;
 
-use FeM\sPof\model\Notification;
-use FeM\sPof\model\NotificationMessage;
-use FeM\sPof\model\NotificationProtocol;
 use FeM\sPof\model\LogEvent;
 use FeM\sPof\model\Permission;
 use FeM\sPof\model\DBConnection;
@@ -54,15 +51,6 @@ abstract class AbstractController extends AbstractModule
      * @var string
      */
     private $command;
-
-    /**
-     * Hold notifications (user_id and associated message)
-     *
-     * @internal
-     *
-     * @var array
-     */
-    private $notifications = [];
 
     /**
      * Return action result as JSON if this is true.
@@ -140,8 +128,6 @@ abstract class AbstractController extends AbstractModule
                 DBConnection::getInstance()->commit();
             }
 
-            $this->sendNotifications();
-
         } catch (exception\InvalidParameterException $e) {
             $this->error(_s('Die folgenden Angaben sind unvollständig:'));
             foreach ($e->getParameters() as $param) {
@@ -216,7 +202,6 @@ abstract class AbstractController extends AbstractModule
             DBConnection::getInstance()->commit();
         }
 
-        $this->sendNotifications();
         Router::redirect($route, $arguments);
     } // function
 
@@ -311,98 +296,4 @@ abstract class AbstractController extends AbstractModule
         exit;
     } // function
 
-
-    /**
-     * Send notifications to users (as defined by the target behind the notification name and context)
-     *
-     * @api
-     *
-     * @throws exception\ControllerException
-     *
-     * @param string $notification
-     * @param array $context
-     * @param string $message
-     */
-    final protected function notify($notification, array $context, $message)
-    {
-        $target = Notification::getTarget($notification);
-        $notification_id = Notification::getIdByName($notification);
-        $user_ids = [];
-        switch ($target) {
-
-            // Send notification to the specified user.
-            case 'user':
-                if (!isset($context['user_id'])) {
-                    throw new exception\ControllerException(
-                        _s('Notification wurde ohne benötigten user_id Parameter aufgerufen.')
-                    );
-                }
-
-                $user_ids[] = $context['user_id'];
-                break;
-
-
-            // Send notification all users which have the specified permission assigned (and probably restricted to
-            // the given context).
-            case 'permission':
-                if (!isset($context['permission'])) {
-                    throw new exception\ControllerException(
-                        _s('Notification wurde ohne benötigten permission Parameter aufgerufen.')
-                    );
-                }
-
-                $holders = Permission::getByName($context['permission'], $context['group_id']);
-                foreach ($holders as $holder) {
-                    $user_ids[] = $holder['user_id'];
-                }
-                break;
-            default:
-                foreach (Application::getNotificationTargetHandlers() as $handler) {
-                    if ($handler->getTarget() === $target) {
-                        $user_ids += $handler->handleContext($context);
-                    }
-                }
-        } // switch $target
-
-        foreach ($user_ids as $user_id) {
-            $this->notifications[] = [
-                'id' => $notification_id,
-                'user_id' => $user_id,
-                'message' => $message
-            ];
-        }
-    } // function
-
-
-    /**
-     * Queue notifications.
-     *
-     * @internal
-     */
-    private function sendNotifications()
-    {
-        // add notifications to the queue after everything went fine (not part of the transaction to not disturb
-        // functionality)
-        foreach ($this->notifications as $notification) {
-
-            $protocols = NotificationProtocol::getByUserId($notification['id'], $notification['user_id']);
-            foreach ($protocols as $protocol) {
-
-                // only allowed and used protocols
-                if (!$protocol['allowed'] || !$protocol['used']) {
-                    continue;
-                }
-
-                NotificationMessage::add([
-                    'notification_id' => $notification['id'],
-                    'protocol_id' => $protocol['id'],
-                    'content' => $notification['message'],
-                    'user_id' => $notification['user_id'],
-                    'from_user_id' => Session::getUserId(),
-                    'disabled' => false,
-                    'visible' => true
-                ]);
-            } // foreach protocol
-        } // foreach notification
-    } // function
 }// class

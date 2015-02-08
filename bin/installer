@@ -127,16 +127,18 @@ COMPOSER;
 $files['application/www/public/index.php']=<<<INDEX
 <?php
 
-require_once dirname(__DIR__)."/vendor/autoload.php";
+require_once dirname(dirname(dirname(__DIR__)))."/vendor/autoload.php";
 
 // Run the application!
-\$app = new FeM\sPof\Application('\\\\$vendor\\\\$project\\\\');
+\$app = new FeM\sPof\Application('\\\\$vendor\\\\$project\\\\application\\\\www\\\\');
+FeM\\sPof\\Application::\$WEB_ROOT = __DIR__.'/';
+
 \$app->dispatch();
 
 INDEX;
 
 
-$files['config/routes.yml']=<<<ROUTES
+$files['application/www/routes.yml']=<<<ROUTES
 index:
   pattern:
   module: index
@@ -182,7 +184,7 @@ If you're seeing this page, you probably got your own sPof site to work.
 TPL;
 
 
-$files['config/htaccess']=<<<HTACCESS
+$files['application/www/htaccess_template']=<<<HTACCESS
 RewriteEngine On
 RewriteBase /
 

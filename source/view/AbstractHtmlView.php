@@ -420,19 +420,6 @@ abstract class AbstractHtmlView extends AbstractView
     } // function
 
     /**
-     * Add some required JavaScript libraries for notifications
-     *
-     * @api
-     */
-    final protected function useNotifications()
-    {
-        $this->addInternalJavascript('desktop-notify.js');
-        $this->addInternalJavascript('eventsource.js');
-        $this->addInternalJavascript('notification.js.tpl');
-    } // function
-
-
-    /**
      * include javascript and stylesheets for the debugbar.
      *
      * @api

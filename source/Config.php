@@ -71,12 +71,12 @@ class Config
 
         // load installation global file
         if (file_exists($dir.'default.yml')) {
-            $this->config = Yaml::parse($dir.'default.yml');
+            $this->config = Yaml::parse(file_get_contents($dir.'default.yml'));
         }
 
         // load installation local file
         if (file_exists($dir.'local.yml')) {
-            $this->config = array_merge($this->config, Yaml::parse($dir.'local.yml'));
+            $this->config = array_merge($this->config, Yaml::parse(file_get_contents($dir.'local.yml')));
         }
     } // function
 

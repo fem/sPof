@@ -47,8 +47,12 @@ abstract class FileUtil
             return true;
         }
         $umask = umask(0);
-        $success = mkdir($path, $permission, true);
-        umask($umask);
+        try {
+            $success = mkdir($path, $permission, true);
+            umask($umask);
+        } catch (\ErrorException $e) {
+            $success = false;
+        }
 
         if (!$success) {
             user_error(_s('can\'t create folder "%s".', $path));

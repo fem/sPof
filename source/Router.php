@@ -111,7 +111,11 @@ abstract class Router
             }
         }
 
-        $rules = fopen($target, 'w+');
+        try {
+            $rules = fopen($target, 'w+');
+        } catch (\ErrorException $e) {
+            Application::death(_("Failed to generic access rules. Missing directory permissions?"));
+        }
 
         ob_start();
 
@@ -119,7 +123,7 @@ abstract class Router
         require $preset;
         fwrite($rules, ob_get_clean());
         fclose($rules);
-error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
+        error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
         chmod($target, Config::getDetail('router', 'file_perms', self::$defaultConfig));
     } // function
@@ -393,6 +397,8 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
         Cache::delete('unfolded_routes');
         Logger::getInstance()->error('Could not find route with pattern "'.$path.'"');
+
+        return false;
     } // function
 
 
@@ -412,7 +418,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
         }
 
         try {
-            $ret = Yaml::parse(self::getSourceFile());
+            $ret = Yaml::parse(file_get_contents(self::getSourceFile()));
         } catch (\ErrorException $e) {
             if (!file_exists(self::getSourceFile())) {
                 die(_s('routes.yml file not found in Application root directory.'));
@@ -431,7 +437,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
             $file = Application::$FILE_ROOT.$routes.'/routes.yml';
 
             try {
-                $ret = array_merge($ret, Yaml::parse($file));
+                $ret = array_merge($ret, Yaml::parse(file_get_contents($file)));
             } catch (\ErrorException $e) {
                 if (!file_exists($file)) {
                     die(_s('routes.yml file not found in %s directory.', $routes));

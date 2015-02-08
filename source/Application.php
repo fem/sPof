@@ -243,6 +243,8 @@ class Application
     {
         // there will always be something to view (otherwise we should get a nice error message)
         $viewName = $this->getClassByModule($module);
+
+        /** @var \FeM\sPof\view\AbstractView $view */
         $view = null;
         try {
 
@@ -277,6 +279,7 @@ class Application
             $view = new $viewName();
             $view->executeShow();
         } catch (\Exception $e) {
+            Logger::getInstance()->warning(__("Could not instanciate class of type '%s'. Trying to find alternatives", $viewName));
 
             // try to call the static implementation, we need this workaround, because this method is called staticly,
             // directly on this class, so no late state binding, try to workaround by directly calling it and otherwise
@@ -308,12 +311,30 @@ class Application
             }
         }
 
+        if (empty($module)) {
+            self::death(_("\nNo module given, abort."));
+        } else {
+            self::death(__("\nCould not find a suitable view component for module '%s'.", $module));
+        }
+    } // function
+
+
+    /**
+     * In case there is an unrecoverable error, this method should be called. The application will be terminated and
+     * remaining error messages are flushed.
+     *
+     * @api
+     *
+     * @param string $message last message before application dies
+     */
+    public static function death($message = '') {
+
         // this code is not safe for use in different tabs
         foreach (Session::getErrorMsg() as $error) {
             echo $error['content']."\n";
         }
 
-        die(_("\nCould not find a suitable view component.").$viewName);
+        die($message);
     } // function
 
 

@@ -102,7 +102,6 @@ class HtmlTemplate extends \Smarty
         $this->setCompileDir($config['compile_dir']);
 
         // add classes for usage in templates
-        $this->registerClass('Event', 'FeM\\sPof\\model\\Event');
         $this->registerClass('Session', 'FeM\\sPof\\Session');
         $this->registerClass('Group', 'FeM\\sPof\\model\\Group');
         $this->registerClass('DBConnection', 'FeM\\sPof\\model\\DBConnection');
