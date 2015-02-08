@@ -29,8 +29,8 @@
         "phpunit/phpunit": "3.7.*",
         "squizlabs/php_codesniffer": "1.*",
         "phpmd/phpmd": "1.*",
-        "sebastian/phpcpd": "2.0.*@dev",
-        "sebastian/phpdcd": "1.0.*@dev"
+        "sebastian/phpcpd": "~2.0",
+        "sebastian/phpdcd": "~1.0"
     },
     "require": {
         "psr/log": "~1.0",
@@ -39,6 +39,6 @@
         "maximebf/debugbar": "1.*",
         "smarty-gettext/smarty-gettext": "1.*",
         "symfony/yaml": "~2.6",
-        "tedivm/jshrink": "dev-master"
+        "tedivm/jshrink": "~1.0"
     }
 }
