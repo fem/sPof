@@ -8,11 +8,13 @@
     "authors": [
         {
             "name": "Danny Götte",
-            "email": "danny.goette@fem.tu-ilmenau.de"
+            "email": "danny.goette@fem.tu-ilmenau.de",
+            "role": "Developer"
         },
         {
             "name": "Peter Große",
-            "email": "spi-develop@fem.tu-ilmenau.de"
+            "email": "spi-develop@fem.tu-ilmenau.de",
+            "role": "Developer"
         },
         {
             "name": "Denny Bartelt"
@@ -25,7 +27,6 @@
         "psr-4": {"FeM\\sPof\\": "source/"}
     },
     "require-dev": {
-        "php": ">=5.5",
         "phpunit/phpunit": "3.7.*",
         "squizlabs/php_codesniffer": "1.*",
         "phpmd/phpmd": "1.*",
@@ -33,9 +34,10 @@
         "sebastian/phpdcd": "~1.0"
     },
     "require": {
+        "php": ">=5.5",
         "psr/log": "~1.0",
         "smarty/smarty": "~3.1.17",
-        "richthegeek/phpsass": "dev-master",
+        "richthegeek/phpsass": "@dev",
         "maximebf/debugbar": "1.*",
         "smarty-gettext/smarty-gettext": "1.*",
         "symfony/yaml": "~2.6",
