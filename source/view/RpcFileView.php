@@ -168,7 +168,7 @@ class RpcFileView extends \FeM\sPof\view\AbstractRawView
             // update stat data if exists
             if (is_readable($this->path_sendfile)) {
                 $stat = stat($this->path_sendfile);
-                $file['modify'] = $stat['mtime'];
+                $file['modify'] = strftime('%a, %d %b %Y %H:%M:%S %z', $stat['mtime']);
                 $file['size'] = $stat['size'];
             } elseif (isset($this->processing) && method_exists($this, 'processCachefile')) { // check for processing
                 $file['cachefile'] = $path_cachefile;
