@@ -244,7 +244,7 @@ class CssTemplate
         if (file_exists($targetfile)) {
             $hashtime = filemtime($targetfile);
             foreach ($files as $file) {
-                if ($hashtime < filemtime($file['name'])) {
+                if ($hashtime < filemtime($file['name']) || !file_exists($file['name'])) {
                     $needUpdate = true;
                     break;
                 }
