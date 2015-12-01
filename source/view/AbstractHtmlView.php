@@ -136,7 +136,7 @@ abstract class AbstractHtmlView extends AbstractView
 
         $this->template = template\HtmlTemplate::getInstance();
 
-        $this->auth = Authorization::getInstance();
+        static::initializeAuthorization();
         $this->assignByRef('auth', $this->auth);
 
         // template default values
@@ -165,6 +165,17 @@ abstract class AbstractHtmlView extends AbstractView
     protected function initializeViewtype()
     {
         $this->initialize();
+    } // function
+
+    /**
+     * This method is used to initialize inheriting classes, by default the sPof Authorization class is initialized.
+     * Inheriting classes may initialize their own Authorization module.
+     *
+     * @api
+     */
+    protected function initializeAuthorization()
+    {
+        $this->auth = Authorization::getInstance();
     } // function
 
 

@@ -40,7 +40,7 @@ class Authorization
      *
      * @var bool
      */
-    private $isLoggedIn = false;
+    protected $isLoggedIn = false;
 
     /**
      * Holds the global context for the current instance, e.g. with owner user or owner group.
@@ -49,7 +49,7 @@ class Authorization
      *
      * @var array
      */
-    private $context = [];
+    protected $context = [];
 
     /**
      * Holds current global environment string.
@@ -58,8 +58,16 @@ class Authorization
      *
      * @var string
      */
-    private $environment = null;
+    protected $environment = null;
 
+    /**
+     * Holds global instances of this class
+     *
+     * @internal
+     *
+     * @var string
+     */
+    private static $instance = [];
 
     /**
      * Private constructor. Ensures there is always a owner group and user.
@@ -105,14 +113,16 @@ class Authorization
      */
     public static function getInstance($environment = '', array $context = [])
     {
-        static $instance = [];
-
         // serialize context and environment to get a "unique" instance
         $name = serialize($environment).serialize($context);
-        if (!isset($instance[$name])) {
-            $instance[$name] = new self($environment, $context);
+
+        // to support late static binding, make sure to return the correct class
+        $name .= get_called_class();
+
+        if (!isset(self::$instance[$name])) {
+            self::$instance[$name] = new static($environment, $context);
         }
-        return $instance[$name];
+        return self::$instance[$name];
     } // function
 
 
