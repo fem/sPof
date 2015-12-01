@@ -150,7 +150,7 @@ class Application
      *
      * @api
      */
-    public function dispatch()
+    public function dispatch($start_session = true)
     {
         # get current context from URL
         try {
@@ -164,8 +164,9 @@ class Application
         // from here we'll capture every output
         ob_start();
 
-        // we need the session this early, (feel free to remove the following line and get stuck with session problems)
-        Session::getInstance();
+        if($start_session) {
+            Session::getInstance();
+        }
 
         $module = Router::getModule();
         $action = Router::getAction();
