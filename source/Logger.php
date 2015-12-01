@@ -53,6 +53,15 @@ class Logger implements \Psr\Log\LoggerInterface
 
 
     /**
+     * Reference to file handle of the logfile.
+     *
+     * @internal
+     *
+     * @var resource
+     */
+    private $logfile_handle;
+
+    /**
      * Get a new instance.
      *
      * @return Logger
@@ -84,6 +93,12 @@ class Logger implements \Psr\Log\LoggerInterface
         $this->debugBar->addCollector(new Collector\MemoryCollector());
         $this->debugBar->addCollector(new Collector\PhpInfoCollector());
         $this->debugBar->addCollector(new Collector\ConfigCollector(Config::getAll()));
+
+        if(Application::$LOGFILE &&
+            (file_exists(Application::$LOGFILE) && is_writable(Application::$LOGFILE) ||
+            !file_exists(Application::$LOGFILE && is_writable(dirname(Application::$LOGFILE))))) {
+            $this->logfile_handle = fopen(Application::$LOGFILE,'a+');
+        }
     } // function
 
 
@@ -102,6 +117,11 @@ class Logger implements \Psr\Log\LoggerInterface
 
         if (in_array($severity, $levels)) {
             Session::addErrorMsg($message);
+        }
+
+        if(is_resource($this->logfile_handle)) {
+            $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), strtoupper($severity), $message);
+            fwrite($this->logfile_handle, $line."\n");
         }
     } // function
 
@@ -232,6 +252,11 @@ class Logger implements \Psr\Log\LoggerInterface
     public function traceStart($operation, $description = '')
     {
         $this->debugBar['time']->startMeasure($operation, $description);
+
+        if(is_resource($this->logfile_handle)) {
+            $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), 'TRACE', $operation . (!empty($description) ? ': '.$description : ''));
+            fwrite($this->logfile_handle, $line."\n");
+        }
     } // function
 
 
@@ -257,6 +282,11 @@ class Logger implements \Psr\Log\LoggerInterface
     {
         Session::addErrorMsg($exception->getMessage());
         $this->debugBar['exceptions']->addException($exception);
+
+        if(is_resource($this->logfile_handle)) {
+            $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), 'FATAL', get_class($exception). ': '.$exception->getMessage());
+            fwrite($this->logfile_handle, $line."\n");
+        }
     } // function
 
 

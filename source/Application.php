@@ -69,6 +69,15 @@ class Application
     public static $CACHE_ROOT;
 
     /**
+     * Reference to the global cache root folder
+     *
+     * @api
+     *
+     * @var string
+     */
+    public static $LOGFILE = '';
+
+    /**
      * Reference to thec currently used Application class instance.
      *
      * @api
