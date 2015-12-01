@@ -123,7 +123,6 @@ abstract class Router
         require $preset;
         fwrite($rules, ob_get_clean());
         fclose($rules);
-        error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
         chmod($target, Config::getDetail('router', 'file_perms', self::$defaultConfig));
     } // function
@@ -198,7 +197,6 @@ abstract class Router
             .'index.php?module=errors&show=show404&%{QUERY_STRING} [L,QSA]'."\n"
         );
         fclose($rules);
-error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
         chmod($target, Config::getDetail('router', 'file_perms', self::$defaultConfig));
     } // function
@@ -367,7 +365,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
      */
     public static function resolve($path)
     {
-        preg_match_all('#([a-z]+):([0-9a-z]+)#iU', $path, $optionals, PREG_SET_ORDER);
+        preg_match_all('#([a-z]+):([0-9a-z]+?)#iU', $path, $optionals, PREG_SET_ORDER);
         foreach ($optionals as $optional) {
             $path = str_replace($optional[0], '', $path);
             $_GET[$optional[1]] = $optional[2];
@@ -378,10 +376,10 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
         $unfolded = self::expandAndSort($routes);
         foreach ($unfolded as $route) {
             $route_pattern = $route['pattern'];
-            $route_pattern = '%^'.preg_replace('#<[^>/]+?>#', '(.*)', $route_pattern).'$%siU';
+            $route_pattern = '%^'.preg_replace('#\\\\<[^>/]+?\\\\>#', '(.*)', preg_quote($route_pattern)).'$%siU';
             if (preg_match($route_pattern, $path, $matches)) {
                 preg_match(
-                    '%^'.preg_replace('#<[^>/]+?>#', '<(.*)>', $route['pattern']).'$%siU',
+                    '%^'.preg_replace('#\\\\<[^>/]+?\\\\>#', '<(.*)>', preg_quote($route['pattern'])).'$%siU',
                     $route['pattern'],
                     $params
                 );
