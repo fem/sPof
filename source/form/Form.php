@@ -328,7 +328,12 @@ class Form extends AbstractFormGroup implements Renderable
     final public function setDefaults(array $context)
     {
         foreach ($context as $field => $default) {
-            $this->getElement($field)->setDefault($default);
+            try {
+                $this->getElement($field)->setDefault($default);
+            } catch(\InvalidArgumentException $e) {
+                // ignore
+            }
+
         }
     } // function
 
