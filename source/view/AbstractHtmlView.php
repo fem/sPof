@@ -297,6 +297,12 @@ abstract class AbstractHtmlView extends AbstractView
      */
     final protected function addJavascript($file, $relative = false)
     {
+        // only add a file once
+        foreach ($this->jsFiles as $jsFile) {
+            if ($jsFile['name'] == $file) {
+                return;
+            }
+        }
         $this->jsFiles[] = ['name' => $file, 'relative' => $relative];
     } // function
 
