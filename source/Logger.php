@@ -117,11 +117,11 @@ class Logger implements \Psr\Log\LoggerInterface
 
         if (in_array($severity, $levels)) {
             Session::addErrorMsg($message);
-        }
 
-        if(is_resource($this->logfile_handle)) {
-            $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), strtoupper($severity), $message);
-            fwrite($this->logfile_handle, $line."\n");
+            if(is_resource($this->logfile_handle)) {
+                $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), strtoupper($severity), $message);
+                fwrite($this->logfile_handle, $line."\n");
+            }
         }
     } // function
 
@@ -239,6 +239,7 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function log($level, $message, array $context = [])
     {
+        $this->sessionLog($message, $level);
         $this->debugBar['messages']->log($level, $message, $context);
     } // function
 
@@ -253,10 +254,7 @@ class Logger implements \Psr\Log\LoggerInterface
     {
         $this->debugBar['time']->startMeasure($operation, $description);
 
-        if(is_resource($this->logfile_handle)) {
-            $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), 'TRACE', $operation . (!empty($description) ? ': '.$description : ''));
-            fwrite($this->logfile_handle, $line."\n");
-        }
+        $this->sessionLog($operation . (!empty($description) ? ': '.$description : ''), 'trace');
     } // function
 
 
