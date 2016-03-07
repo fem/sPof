@@ -371,6 +371,16 @@ abstract class Router
             $_GET[$optional[1]] = $optional[2];
         }
 
+        // optional query string
+        $pos = strpos($path, '?');
+        if($pos !== false) {
+            preg_match_all('#([a-z_-]+)=([0-9a-zA-Z_]+?)&?#iU', substr($path, $pos + 1), $optionals, PREG_SET_ORDER);
+            foreach ($optionals as $optional) {
+                $_GET[$optional[1]] = $optional[2];
+            }
+            $path = substr($path, 0, $pos);
+        }
+
         $path = trim($path, '/');
         $routes = self::getRoutes();
         $unfolded = self::expandAndSort($routes);
