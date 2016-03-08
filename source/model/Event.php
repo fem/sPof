@@ -324,7 +324,7 @@ abstract class Event extends AbstractModelWithId implements Rating
             "
             SELECT count(*)
             FROM ".self::$TABLE."
-            WHERE user_id = :user_id" . ($public_only ? " AND private IS FALSE" : "")
+            WHERE user_id = :user_id" . (!$public_only ? " AND public IS TRUE" : "")
         );
         $stmt->assignId('user_id', $user_id);
 
@@ -349,7 +349,7 @@ abstract class Event extends AbstractModelWithId implements Rating
             "
             UPDATE ".self::$TABLE."
             SET user_id = :replacing_user_id
-            WHERE user_id = :user_id" . ($public_only ? " AND private IS FALSE" : "")
+            WHERE user_id = :user_id" . (!$public_only ? " AND public IS TRUE" : "")
         );
         $stmt->assignId('user_id', $user_id);
         $stmt->assignId('replacing_user_id', $replacing_user_id);
