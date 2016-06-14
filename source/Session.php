@@ -322,17 +322,23 @@ class Session
     /**
      * Get parameter stored in session storage
      */
-    public static function set($name, $value = null)
+    public static function set($name, $value = null, $detail = null)
     {
         Session::getInstance();
         if(!isset($_SESSION['data'])) {
             $_SESSION['data'] = [];
         }
 
-        if($value === null) {
-            unset($_SESSION['data'][$name]);
+        if($detail == null) {
+            if($value === null) {
+                unset($_SESSION['data'][$name]);
+            } else {
+                $_SESSION['data'][$name] = $value;
+            }
+        } elseif(isset($_SESSION['data'][$name][$detail]) && $value === null) {
+            unset($_SESSION['data'][$name][$detail]);
         } else {
-            $_SESSION['data'][$name] = $value;
+            $_SESSION['data'][$name][$detail] = $value;
         }
 
         return true;
