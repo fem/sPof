@@ -154,6 +154,22 @@ abstract class AbstractFormGroup
         $this->addLabeled($label, new element\PasswordInput($field, $required, $maxLength));
     } // function
 
+    /**
+     * Add a label and a one-line text input set as disabled (immutable) to a new row. Label is inserted before the input.
+     *
+     * @api
+     *
+     * @param string $field
+     * @param string $label
+     * @param int $maxLength (optional)
+     * @param bool $required (optional)
+     */
+    final public function addImmutableText($field, $label, $required = true, $maxLength = 255)
+    {
+        $input = new element\TextInput($field, $required, $maxLength);
+        $input->addAttribute('disabled','disabled');
+        $this->addLabeled($label, $input);
+    } // function
 
     /**
      * Add a label and a url input to a new row. Label is inserted before the input.
