@@ -149,6 +149,7 @@ class CssTemplate
                 continue;
             }
 
+            // files beginning with underscore are sub blocks, don't add them to the file list
             if (strpos($filename, '_') === 0) {
                 $lastDependencyUpdate = max($lastDependencyUpdate, filemtime($sourcePath.$filename));
             } else {
@@ -168,22 +169,7 @@ class CssTemplate
             }
 
             // save and set file permissions
-
-            /*require_once "vendor/leafo/scssphp/scss.inc.php";
-            $scss = new \scssc();
-            $scss->addImportPath(function ($path) {
-                if (!file_exists('stylesheet/'.$path)) {
-                    return null;
-                }
-                return 'stylesheet/'.$path;
-            });
-*/
-
             try {
-                // will import `stylesheets/vanilla.css'
-  //              file_put_contents($savefile, $scss->compile('@import "'.$filename.'"'));
-
-
                 file_put_contents($savefile, self::getParser()->toCss(file_get_contents($sourcePath.$filename), false));
                 chmod($savefile, Config::getDetail('stylesheet', 'file_perms', self::$defaultConfig));
             } catch (\Exception $exception) {
@@ -244,7 +230,7 @@ class CssTemplate
         if (file_exists($targetfile)) {
             $hashtime = filemtime($targetfile);
             foreach ($files as $file) {
-                if ($hashtime < filemtime($file['name']) || !file_exists($file['name'])) {
+                if (!file_exists($file['name']) || $hashtime < filemtime($file['name'])) {
                     $needUpdate = true;
                     break;
                 }
@@ -263,6 +249,10 @@ class CssTemplate
         // combine file contents
         $handle = fopen($targetfile, 'w+');
         foreach ($files as $file) {
+            if(!file_exists($file['name'])) {
+                Logger::getInstance()->debug('CSS file '.$file['name']. ' is missing.');
+                continue;
+            }
             $content = file_get_contents($file['name']);
             if ($file['fixpaths']) {
                 preg_match_all('/url\(([^)]+)\)/', $content, $matches, PREG_SET_ORDER);
