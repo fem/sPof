@@ -51,6 +51,7 @@ class DBConnection extends \PDO
         'host' => 'localhost',
         'port' => 5432,
         'debug' => false,
+        'check_alive_time' => 120
     ];
 
 
@@ -63,19 +64,27 @@ class DBConnection extends \PDO
      */
     public static function getInstance()
     {
+        static $time_last_use;
         static $instance;
         if (!isset($instance)) {
             static $connection_try;
             if (!$connection_try) {
-                // does not work with
-                #if (Config::get('debug', 'database')) {
-                #    $instance = new TraceablePDO(new DBConnection());
-                #    Logger::getInstance()->debugBar->addCollector(new PDOCollector($instance));
-                #} else {
-                    $instance = new self();
-                #}
+                $instance = new self();
                 $connection_try = true;
+                $time_last_use = time();
             }
+        } else {
+            // if database handle wasn't used for some time, check if connection is still alive
+            if($time_last_use < time() - self::$defaultConfig['check_alive_time']) {
+                try {
+                    $instance->query('SELECT 1');
+                } catch(\PDOException $e) {
+                    Logger::getInstance()->info('Database connection got lost. Try reconnecting...');
+
+                    $instance = new self();
+                }
+            }
+            $time_last_use = time();
         }
         return $instance;
     } // function
