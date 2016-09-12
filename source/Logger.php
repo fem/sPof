@@ -121,6 +121,8 @@ class Logger implements \Psr\Log\LoggerInterface
             if(is_resource($this->logfile_handle)) {
                 $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), strtoupper($severity), $message);
                 fwrite($this->logfile_handle, $line."\n");
+            } elseif (php_sapi_name() == "cli") {
+                echo sprintf('[%1$s] %2$s: %3$s', strftime('%c'), strtoupper($severity), $message)."\n";
             }
         }
     } // function
