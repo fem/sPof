@@ -116,7 +116,9 @@ class Logger implements \Psr\Log\LoggerInterface
         }
 
         if (in_array($severity, $levels)) {
-            Session::addErrorMsg($message);
+            if(!in_array($severity, ['debug', 'dump'])) {
+                Session::addErrorMsg($message);
+            }
 
             if(is_resource($this->logfile_handle)) {
                 $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), strtoupper($severity), $message);
