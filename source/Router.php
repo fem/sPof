@@ -296,6 +296,7 @@ abstract class Router
         $patternSufOptional = rtrim($pattern.$suffix, '/');
         $patternPreOptional = rtrim($prefix.$pattern, '/');
         $pattern = rtrim($pattern, '/');
+        $arguments_unused = array_flip(array_keys($arguments));
 
         // replace placeholder with their value from arguments, use optional params as base, as it contains all params
         if (preg_match_all('/<([^>]+)>/S', $patternOptional, $matches, PREG_SET_ORDER)) {
@@ -321,6 +322,7 @@ abstract class Router
                     StringUtil::reduce($arguments[$match[1]]),
                     $patternPreOptional
                 );
+                unset($arguments_unused[$match[1]]);
             }
         }
 
@@ -334,22 +336,39 @@ abstract class Router
             ));
         }
 
+        // assemble suffix
+        $suffix = '';
+
+        // append unused arguments as query string
+        if(!empty($arguments_unused)) {
+            $parts = [];
+            foreach (array_keys($arguments_unused) as $argument) {
+                $parts[] = StringUtil::reduce($argument) . '=' . StringUtil::reduce($arguments[$argument]);
+            }
+
+            $suffix .= '?' . implode('&',$parts);
+        }
+
+        if(isset($arguments['_anchor'])) {
+            $suffix .= '#' . $arguments['_anchor'];
+        }
+
         // check if all optional params are resolved, if not -> return normal path
         if (strpos($patternOptional, '<') === false) {
 
             // optional params are resolved, so return full path
-            return $patternOptional.(isset($arguments['_anchor']) ? '#'.$arguments['_anchor'] : '');
+            return $patternOptional.$suffix;
         } elseif (strpos($patternPreOptional, '<') === false) {
 
-            return $patternPreOptional.(isset($arguments['_anchor']) ? '#'.$arguments['_anchor'] : '');
+            return $patternPreOptional.$suffix;
         } elseif (strpos($patternSufOptional, '<') === false) {
 
             // optional params are resolved, so return full path
-            return $patternSufOptional.(isset($arguments['_anchor']) ? '#'.$arguments['_anchor'] : '');
+            return $patternSufOptional.$suffix;
         } else {
 
             // join parts together
-            return $pattern.(isset($arguments['_anchor']) ? '#'.$arguments['_anchor'] : '');
+            return $pattern.$suffix;
         }
     } // function
 
