@@ -91,6 +91,7 @@ class Session
         ini_set('session.name', self::getConfig('name'));
         ini_set('session.use_only_cookies', true);
         ini_set('session.use_trans_sid', false);
+        ini_set('session.cookie_path', Config::getDetail('server','path'));
         $expire = session_cache_expire();
         if (session_id() == "") {
             session_start();
@@ -131,6 +132,7 @@ class Session
         }
         $_SESSION = [];
         $expire = session_cache_expire();
+        ini_set('session.cookie_path', Config::getDetail('server','path'));
         session_start();
         session_regenerate_id(true);
         $_SESSION['expire'] = $expire;
