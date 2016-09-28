@@ -116,7 +116,7 @@ class Application
         // we want our own error handler
         set_error_handler(__CLASS__.'::errorHandler');
 
-        self::$NAMESPACE = $namespace;
+        self::$NAMESPACE = rtrim($namespace,'\\') . '\\';
 
         if ($file_root === null) {
 
