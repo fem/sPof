@@ -22,6 +22,8 @@
 namespace FeM\sPof;
 
 use DebugBar\DataCollector as Collector;
+use Psr\Log\AbstractLogger;
+use Psr\Log\LogLevel;
 
 /**
  * Logger interface.
@@ -30,7 +32,7 @@ use DebugBar\DataCollector as Collector;
  * @author dangerground
  * @since 1.0
  */
-class Logger implements \Psr\Log\LoggerInterface
+class Logger extends AbstractLogger
 {
 
     /**
@@ -83,156 +85,12 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     private function __construct()
     {
-        $this->debugBar = new \DebugBar\DebugBar();
-        $this->debugBar->addCollector(new Collector\MessagesCollector());
-        $this->debugBar->addCollector(new Collector\MessagesCollector('dumps'));
-        $this->debugBar->addCollector(new Collector\MessagesCollector('auth'));
-        $this->debugBar->addCollector(new Collector\ExceptionsCollector());
-        $this->debugBar->addCollector(new Collector\TimeDataCollector());
-        $this->debugBar->addCollector(new Collector\RequestDataCollector());
-        $this->debugBar->addCollector(new Collector\MemoryCollector());
-        $this->debugBar->addCollector(new Collector\PhpInfoCollector());
-        $this->debugBar->addCollector(new Collector\ConfigCollector(Config::getAll()));
-
         if(Application::$LOGFILE &&
             (file_exists(Application::$LOGFILE) && is_writable(Application::$LOGFILE) ||
             !file_exists(Application::$LOGFILE && is_writable(dirname(Application::$LOGFILE))))) {
             $this->logfile_handle = fopen(Application::$LOGFILE,'a+');
         }
     } // function
-
-
-    /**
-     * log message to the session.
-     *
-     * @param string $message
-     * @param string $severity
-     */
-    private function sessionLog($message, $severity)
-    {
-        static $levels;
-        if (!isset($levels)) {
-            $levels = Config::get('log_level', self::$defaultConfig);
-        }
-
-        if (in_array($severity, $levels)) {
-            if(!in_array($severity, ['debug', 'dump'])) {
-                Session::addErrorMsg($message);
-            }
-
-            if(is_resource($this->logfile_handle)) {
-                $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), strtoupper($severity), $message);
-                fwrite($this->logfile_handle, $line."\n");
-            } elseif (php_sapi_name() == "cli") {
-                echo sprintf('[%1$s] %2$s: %3$s', strftime('%c'), strtoupper($severity), $message)."\n";
-            }
-        }
-    } // function
-
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function emergency($message, array $context = [])
-    {
-        $this->sessionLog($message, 'emergency');
-        $this->debugBar['messages']->emergency($message, $context);
-    } // function
-
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function alert($message, array $context = [])
-    {
-        $this->sessionLog($message, 'alert');
-        $this->debugBar['messages']->alert($message, $context);
-    } // function
-
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function critical($message, array $context = [])
-    {
-        $this->sessionLog($message, 'critical');
-        $this->debugBar['messages']->critical($message, $context);
-    } // function
-
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function error($message, array $context = [])
-    {
-        $this->sessionLog($message, 'error');
-        $this->debugBar['messages']->error($message, $context);
-    } // function
-
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function warning($message, array $context = [])
-    {
-        $this->sessionLog($message, 'warning');
-        $this->debugBar['messages']->warning($message, $context);
-    } // function
-
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function notice($message, array $context = [])
-    {
-        $this->sessionLog($message, 'notice');
-        $this->debugBar['messages']->notice($message, $context);
-    } // function
-
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function info($message, array $context = [])
-    {
-        $this->sessionLog($message, 'info');
-        $this->debugBar['messages']->info($message, $context);
-    } // function
-
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $message
-     * @param array $context
-     */
-    public function debug($message, array $context = [])
-    {
-        $this->sessionLog($message, 'debug');
-        $this->debugBar['messages']->debug($message, $context);
-    } // function
-
 
     /**
      * {@inheritdoc}
@@ -243,8 +101,50 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function log($level, $message, array $context = [])
     {
-        $this->sessionLog($message, $level);
-        $this->debugBar['messages']->log($level, $message, $context);
+        static $levels;
+        if (!isset($levels)) {
+            $levels = Config::get('log_level', self::$defaultConfig);
+        }
+
+        // message seen by the user
+        $user_message = $message;
+
+        if($level == 'exception') {
+            $level = LogLevel::CRITICAL;
+            $exception = $context;
+            $context = [];
+
+            // add class name to log (not user)
+            $message = get_class($exception). ': '.$exception->getMessage();
+
+            if($this->debugBar) {
+                $this->debugBar['exceptions']->addException($exception);
+            }
+        }
+
+        if (in_array($level, $levels)) {
+            // don't show debug as user message
+            if(!in_array($level, ['debug', 'dump'])) {
+                Session::addErrorMsg($user_message);
+            }
+
+            $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), strtoupper($level), $message);
+            if(is_resource($this->logfile_handle)) {
+                fwrite($this->logfile_handle, $line."\n");
+            } elseif (php_sapi_name() == "cli") {
+                echo $line . "\n";
+            }
+        }
+
+        if($this->debugBar) {
+            if($level == 'auth') {
+                $this->debugBar['auth']->log(LogLevel::DEBUG, $message, $context);
+            } elseif($level == 'dump') {
+                $this->debugBar['dumps']->log(LogLevel::DEBUG, $message, $context);
+            } else {
+                $this->debugBar['messages']->log($level, $message, $context);
+            }
+        }
     } // function
 
 
@@ -256,9 +156,11 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function traceStart($operation, $description = '')
     {
-        $this->debugBar['time']->startMeasure($operation, $description);
+        if($this->debugBar) {
+            $this->debugBar['time']->startMeasure($operation, $description);
+        }
 
-        $this->sessionLog($operation . (!empty($description) ? ': '.$description : ''), 'trace');
+        $this->log('trace', $operation . (!empty($description) ? ': '.$description : ''));
     } // function
 
 
@@ -269,6 +171,9 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function traceStop($operation)
     {
+        if(!$this->debugBar) {
+            return;
+        }
         $this->debugBar['time']->stopMeasure($operation);
     } // function
 
@@ -282,13 +187,7 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function exception(\Exception $exception)
     {
-        Session::addErrorMsg($exception->getMessage());
-        $this->debugBar['exceptions']->addException($exception);
-
-        if(is_resource($this->logfile_handle)) {
-            $line = sprintf('[%1$s] %2$s: %3$s', strftime('%c'), 'FATAL', get_class($exception). ': '.$exception->getMessage());
-            fwrite($this->logfile_handle, $line."\n");
-        }
+        $this->log('exception', $exception->getMessage(), $exception);
     } // function
 
 
@@ -298,8 +197,7 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function dump($variable)
     {
-        $this->sessionLog(var_export($variable, true), 'dump');
-        $this->debugBar['dumps']->debug(var_export($variable, true));
+        $this->log('dump', var_export($variable, true));
     } // function
 
 
@@ -309,10 +207,27 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function auth($message)
     {
-        $this->sessionLog($message, 'auth');
-        $this->debugBar['auth']->debug($message);
+        $this->log('auth', $message);
     } // function
 
+    /**
+     * Enables debugBar and initializes data collectors
+     */
+    public function enableDebugbar()
+    {
+        if(!$this->debugBar) {
+            $this->debugBar = new \DebugBar\DebugBar();
+            $this->debugBar->addCollector(new Collector\MessagesCollector());
+            $this->debugBar->addCollector(new Collector\MessagesCollector('dumps'));
+            $this->debugBar->addCollector(new Collector\MessagesCollector('auth'));
+            $this->debugBar->addCollector(new Collector\ExceptionsCollector());
+            $this->debugBar->addCollector(new Collector\TimeDataCollector());
+            $this->debugBar->addCollector(new Collector\RequestDataCollector());
+            $this->debugBar->addCollector(new Collector\MemoryCollector());
+            $this->debugBar->addCollector(new Collector\PhpInfoCollector());
+            $this->debugBar->addCollector(new Collector\ConfigCollector(Config::getAll()));
+        }
+    }
 
     /**
      * Get JavaScript renderer.
@@ -321,6 +236,9 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function getRenderer()
     {
+        if(!$this->debugBar) {
+            return null;
+        }
         return $this->debugBar->getJavascriptRenderer();
     } // function
 
@@ -330,6 +248,9 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function stackData()
     {
+        if(!$this->debugBar) {
+            return;
+        }
         return $this->debugBar->stackData();
     } // function
 
@@ -339,6 +260,10 @@ class Logger implements \Psr\Log\LoggerInterface
      */
     public function addSmarty()
     {
+        if(!$this->debugBar) {
+            return;
+        }
+
         $vars = template\HtmlTemplate::getInstance()->getTemplateVars();
         foreach ($vars as &$var) {
             if ($var === '') {
