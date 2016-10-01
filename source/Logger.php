@@ -111,8 +111,14 @@ class Logger extends AbstractLogger
 
         if($level == 'exception') {
             $level = LogLevel::CRITICAL;
-            $exception = $context;
-            $context = [];
+
+            // get exception from context
+            if(!isset($context['exception'])) {
+                // no exception?!?!
+                return;
+            }
+            $exception = $context['exception'];
+            unset($context['exception']);
 
             // add class name to log (not user)
             $message = get_class($exception). ': '.$exception->getMessage();
@@ -187,7 +193,7 @@ class Logger extends AbstractLogger
      */
     public function exception(\Exception $exception)
     {
-        $this->log('exception', $exception->getMessage(), $exception);
+        $this->log('exception', $exception->getMessage(), ['exception' => $exception]);
     } // function
 
 
