@@ -422,7 +422,6 @@ abstract class Router
             }
         }
 
-        Cache::delete('unfolded_routes');
         Logger::getInstance()->error('Could not find route with pattern "'.$path.'"');
 
         return false;
@@ -439,24 +438,34 @@ abstract class Router
      */
     public static function getRoutes()
     {
+        // two stage caching!
+
+        // first stage: static variable for all calls of this request
         static $flat;
         if (!empty($flat)) {
             return $flat;
         }
 
+        // second stage: APC cache
+        //   will get invalidated, if routes source file has changed
+
+        // first check file, otherwise we can't check file age
+        $srcFile = self::getSourceFile();
+        if (!file_exists($srcFile)) {
+            die(_s('routes.yml file not found in Application root directory.'));
+        }
+
+        // check cache and return, if nothing has changed
+        $flat = Cache::fetch('routing_flat', filemtime($srcFile));
+        if($flat) {
+            return $flat;
+        }
+
+        // cache miss! parse source file
         try {
-            $ret = Yaml::parse(file_get_contents(self::getSourceFile()));
+            $ret = Yaml::parse(file_get_contents($srcFile));
         } catch (\ErrorException $e) {
-            if (!file_exists(self::getSourceFile())) {
-                die(_s('routes.yml file not found in Application root directory.'));
-            } else {
-                Logger::getInstance()->error(_s(
-                    'Syntax error in file "%s": %s',
-                    self::getSourceFile(),
-                    $e->getMessage()
-                ));
-            }
-            $ret = [];
+            die(_s('Syntax error in file "%s": %s', $srcFile, $e->getMessage()));
         }
 
         // load additional routes
@@ -529,6 +538,8 @@ abstract class Router
                 }
             } // if show
         } // foreach route
+
+        Cache::store('routing_flat', $flat);
 
         return $flat;
     } // function
