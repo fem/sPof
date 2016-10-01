@@ -165,8 +165,6 @@ class Logger extends AbstractLogger
         if($this->debugBar) {
             $this->debugBar['time']->startMeasure($operation, $description);
         }
-
-        $this->log('trace', $operation . (!empty($description) ? ': '.$description : ''));
     } // function
 
 
@@ -177,10 +175,9 @@ class Logger extends AbstractLogger
      */
     public function traceStop($operation)
     {
-        if(!$this->debugBar) {
-            return;
+        if($this->debugBar) {
+            $this->debugBar['time']->stopMeasure($operation);
         }
-        $this->debugBar['time']->stopMeasure($operation);
     } // function
 
 
