@@ -93,6 +93,11 @@ class CssTemplate
         $sourcePath = self::getSourcePath();
         $targetPath = self::getTargetPath();
 
+        if (!is_dir($sourcePath)) {
+            // nothing to do
+            return;
+        }
+
         if (!is_dir($targetPath)) {
             FileUtil::makedir($targetPath);
         }
