@@ -64,7 +64,7 @@ class Cache
         static $prefix;
 
         if ($prefix === null) {
-            $prefix = trim(str_replace('/', '.', __DIR__), '.').'.';
+            $prefix = substr(md5(__DIR__), 0, 5) . '.' . trim(str_replace('\\', '.', Application::$NAMESPACE), '.').'.';
         }
 
         return $prefix;
