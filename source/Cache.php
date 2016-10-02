@@ -31,6 +31,28 @@ namespace FeM\sPof;
 class Cache
 {
     /**
+     * @var internal cache structure when APC is not available or disabled
+     */
+    private $data = [];
+
+    /**
+     * Get the instance.
+     *
+     * @api
+     *
+     * @return Cache
+     */
+    private static function getInstance()
+    {
+        static $instance;
+        if (!isset($instance)) {
+            $instance = new self();
+        }
+
+        return $instance;
+    }
+
+    /**
      * Generate a prefix for the current cache.
      *
      * @internal
@@ -55,12 +77,25 @@ class Cache
      * @see apc_fetch
      *
      * @param string $name
+     * @param int $timestamp invalidate cache, if cache is older then given timestamp
      *
      * @return mixed
      */
-    public static function fetch($name)
+    public static function fetch($name, $timestamp = null)
     {
-        return apc_fetch(self::getPrefix().$name);
+        // use APC cache if available and useful (not on CLI)
+        if(function_exists('apc_fetch') && php_sapi_name() != 'cli') {
+            $cache = apc_fetch(self::getPrefix() . $name);
+        } else {
+            $cache = self::getInstance()->getEntry(self::getPrefix() . $name);
+        }
+
+        // invalidate cache, if it is older than given timestamp
+        if($timestamp && isset($cache['timestamp']) && $timestamp > $cache['timestamp']) {
+            return false;
+        }
+
+        return isset($cache['data']) ? $cache['data'] : false;
     } // function
 
 
@@ -77,8 +112,15 @@ class Cache
      */
     public static function store($name, $value, $ttl = 0)
     {
-        self::delete(self::getPrefix().$name);
-        return apc_store(self::getPrefix().$name, $value, $ttl);
+        // store timestamp, since APC doesn't provide API to get age of an entry
+        $entry = [ 'timestamp' => time(), 'data' => $value ];
+
+        // use APC cache if available and useful (not on CLI)
+        if(function_exists('apc_store') && php_sapi_name() != 'cli') {
+            return apc_store(self::getPrefix() . $name, $entry, $ttl);
+        } else {
+            return self::getInstance()->setEntry(self::getPrefix() . $name, $entry);
+        }
     } // function
 
 
@@ -95,44 +137,45 @@ class Cache
      */
     public static function delete($name)
     {
-        return (bool) apc_delete(self::getPrefix().$name);
+        // use APC cache if available and useful (not on CLI)
+        if(function_exists('apc_delete') && php_sapi_name() != 'cli') {
+            return (bool) apc_delete(self::getPrefix() . $name);
+        } else {
+            return self::getInstance()->deleteEntry(self::getPrefix() . $name);
+        }
     } // function
-
 
     /**
-     * Tries to decrease the number by $step. If no value is set for the name, guess it was a 0.
-     *
-     * @api
-     *
-     * @param string  $name
-     * @param int $step (optional)
-     *
-     * @return bool true on success
+     * @param $name cache key
+     * @return bool|mixed cache value, or false if not set
      */
-    public static function dec($name, $step = 1)
+    private function getEntry($name)
     {
-        if (apc_dec(self::getPrefix().$name, $step)) {
-            return true;
+        if(!isset($this->data[$name])) {
+            return false;
         }
-        return apc_store(self::getPrefix().$name, 0 - $step);
-    } // function
-
+        return $this->data[$name];
+    }
 
     /**
-     * Tries to increase the number by $step. If no value is set for the name, guess it was a 0.
-     *
-     * @api
-     *
-     * @param string  $name
-     * @param int $step (optional)
-     *
-     * @return bool true on success
+     * @param $name cache key
+     * @param $value cache value
      */
-    public static function inc($name, $step = 1)
+    private function setEntry($name, $value)
     {
-        if (apc_dec(self::getPrefix().$name, $step)) {
-            return true;
+        $this->data[$name] = $value;
+    }
+
+    /**
+     * @param $name cache key
+     * @param bool
+     */
+    private function deleteEntry($name)
+    {
+        if(!isset($this->data[$name])) {
+            return false;
         }
-        return apc_store(self::getPrefix().$name, $step);
-    } // function
+
+        unset($this->data[$name]);
+    }
 }// class
