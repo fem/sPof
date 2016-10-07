@@ -234,9 +234,10 @@ class Application
      */
     private function getClassByModule($module)
     {
-       // if (empty($module)) {
-       //     $module = $this->defaultModule;
-       // }
+        // don't modify empty or full qualified class names
+        if(empty($module) || $module[0] == '\\') {
+            return $module;
+        }
         return self::$NAMESPACE.'view\\'.$module.'View';
     } // function
 
@@ -256,6 +257,14 @@ class Application
      */
     private function handleRequest($module, $action)
     {
+        // early check, whether we were able to resolve a route
+        if (empty($module)) {
+            $viewName = $this->getClassByModule($this->defaultModule);
+            if (method_exists($viewName, 'handleNoViewFound')) {
+                return $viewName::handleNoViewFound();
+            }
+        }
+
         // there will always be something to view (otherwise we should get a nice error message)
         $viewName = $this->getClassByModule($module);
 
