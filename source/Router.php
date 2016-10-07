@@ -262,7 +262,7 @@ abstract class Router
      *
      * @return string
      */
-    public static function reverse($name, array $arguments = [])
+    public static function reverse($name, array $arguments = [], $full_url = false)
     {
         static $routes;
         if ($routes === null) {
@@ -353,22 +353,27 @@ abstract class Router
             $suffix .= '#' . $arguments['_anchor'];
         }
 
+        $prefix = '';
+        if($full_url) {
+            $prefix = (Request::isSecure() ? 'https' : 'http') . '://'.$_SERVER['SERVER_NAME'] . Application::getBasePath();
+        }
+
         // check if all optional params are resolved, if not -> return normal path
         if (strpos($patternOptional, '<') === false) {
 
             // optional params are resolved, so return full path
-            return $patternOptional.$suffix;
+            return $prefix . $patternOptional . $suffix;
         } elseif (strpos($patternPreOptional, '<') === false) {
 
-            return $patternPreOptional.$suffix;
+            return $prefix . $patternPreOptional . $suffix;
         } elseif (strpos($patternSufOptional, '<') === false) {
 
             // optional params are resolved, so return full path
-            return $patternSufOptional.$suffix;
+            return $prefix . $patternSufOptional . $suffix;
         } else {
 
             // join parts together
-            return $pattern.$suffix;
+            return $prefix . $pattern . $suffix;
         }
     } // function
 
@@ -614,8 +619,7 @@ abstract class Router
      */
     public static function redirect($route, array $arguments)
     {
-        $server = Config::get('server');
-        self::urlRedirect('//'.$_SERVER['SERVER_NAME'].$server['path'].self::reverse($route, $arguments));
+        self::urlRedirect(self::reverse($route, $arguments, true));
     } // function
 
 
