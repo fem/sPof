@@ -21,6 +21,7 @@
 
 namespace FeM\sPof;
 
+use FeM\sPof\exception\NotFoundException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -427,9 +428,7 @@ abstract class Router
             }
         }
 
-        Logger::getInstance()->error('Could not find route with pattern "'.$path.'"');
-
-        return false;
+        throw new NotFoundException('Could not find route with pattern "'.$path.'"');
     } // function
 
 
