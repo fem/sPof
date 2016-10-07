@@ -31,6 +31,25 @@ namespace FeM\sPof;
 abstract class AbstractModule
 {
     /**
+     * HTTP Response codes
+     */
+    const HTTP_CODE_OK = 200;
+    const HTTP_CODE_CREATED = 201;
+
+    const HTTP_CODE_MOVED_TEMPORARILY = 302;
+    const HTTP_CODE_NOT_MODIFIED = 304;
+
+    const HTTP_CODE_BAD_REQUEST = 400;
+    const HTTP_CODE_UNAUTHORIZED = 401;
+    const HTTP_CODE_FORBIDDEN = 403;
+    const HTTP_CODE_NOT_FOUND = 404;
+    const HTTP_CODE_METHOD_NOT_ALLOWED = 405;
+    const HTTP_CODE_UNPROCESSABLE = 422;
+
+    const HTTP_CODE_INTERNAL_ERROR = 500;
+    const HTTP_CODE_NOT_IMPLEMENTED = 501;
+
+    /**
      * Answers the current request with a HTTP Satus Code 201: "Created". The request is then redirected to the given
      * route and further execution of the script is stopped
      *
@@ -41,7 +60,7 @@ abstract class AbstractModule
      */
     public static function sendCreated($route, array $routeContext = [])
     {
-        http_response_code(201);
+        http_response_code(self::HTTP_CODE_CREATED);
         Router::redirect($route, $routeContext);
         exit;
     } // function
@@ -54,7 +73,7 @@ abstract class AbstractModule
      */
     public static function sendBadRequest()
     {
-        http_response_code(400);
+        http_response_code(self::HTTP_CODE_BAD_REQUEST);
         exit;
     } // function
 
@@ -67,7 +86,7 @@ abstract class AbstractModule
      */
     public static function sendForbidden()
     {
-        http_response_code(403);
+        http_response_code(self::HTTP_CODE_FORBIDDEN);
         exit;
     } // function
 
@@ -79,7 +98,7 @@ abstract class AbstractModule
      */
     public static function sendNotFound()
     {
-        http_response_code(404);
+        http_response_code(self::HTTP_CODE_NOT_FOUND);
         exit;
     } // function
 
@@ -94,7 +113,7 @@ abstract class AbstractModule
     public static function sendMethodNotAllowed(array $allowed = [])
     {
         header('Allow: '.implode(', ', $allowed));
-        http_response_code(405);
+        http_response_code(self::HTTP_CODE_METHOD_NOT_ALLOWED);
         exit;
     } // function
 
@@ -108,7 +127,7 @@ abstract class AbstractModule
     {
         ob_flush();
         //flush();
-        http_response_code(500);
+        http_response_code(self::HTTP_CODE_INTERNAL_ERROR);
         exit;
     } // function
 }// class
