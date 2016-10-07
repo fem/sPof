@@ -21,6 +21,7 @@
 
 namespace FeM\sPof\view;
 
+use FeM\sPof\Application;
 use FeM\sPof\Authorization;
 use FeM\sPof\Router;
 use FeM\sPof\Session;
@@ -143,6 +144,7 @@ abstract class AbstractHtmlView extends AbstractView
         $this->assign('success', []);
         $this->assign('errors', []);
         $this->assign('content', '');
+        $this->assign('basedir', Application::getBasePath());
 
         // call initializer
         $this->initializeViewtype();

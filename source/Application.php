@@ -78,6 +78,13 @@ class Application
     public static $LOGFILE = '';
 
     /**
+     * Base path used for creating URLs
+     *
+     * @var string
+     */
+    public static $BASE_PATH = '';
+
+    /**
      * Reference to thec currently used Application class instance.
      *
      * @api
@@ -417,6 +424,23 @@ class Application
     public static function getAuthorizationHandlers()
     {
         return self::$INSTANCE->authorizationHandler;
+    } // function
+
+
+    /**
+     * Get base path, which will be used for creating URLs.
+     *
+     * @api
+     *
+     * @param string $name
+     */
+    public static function getBasePath()
+    {
+        // late assignment, since in our constructor no other classes should be called
+        if(empty(self::$BASE_PATH)) {
+            self::$BASE_PATH = Config::getDetail('server','path');
+        }
+        return self::$BASE_PATH;
     } // function
 
 }// class
