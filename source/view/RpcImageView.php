@@ -75,13 +75,13 @@ class RpcImageView extends RpcFileView
 
         $this->processing = true;
         $this->stats_disable = true;
-        $this->path_sendfile = sprintf(
+        $this->path_sendfile = FileUtil::realpath(sprintf(
             Application::$CACHE_ROOT.'thumb/%s/%s_%sx%s.thumb',
             $this->sid[0],
             $this->sid,
             $this->width,
             $this->height
-        );
+        ));
         $this->download();
     } // function
 
