@@ -80,8 +80,8 @@ class HtmlTemplate extends \Smarty
     {
         parent::__construct();
 
-        self::$defaultConfig['compile_dir'] = Application::$FILE_ROOT.'tmp/smarty_compile';
-        self::$defaultConfig['cache_dir'] = Application::$FILE_ROOT.'tmp/smarty_cache';
+        self::$defaultConfig['compile_dir'] = Application::$CACHE_ROOT.'smarty/compile';
+        self::$defaultConfig['cache_dir'] = Application::$CACHE_ROOT.'smarty/cache';
 
         $config = Config::get('smarty', self::$defaultConfig);
 
