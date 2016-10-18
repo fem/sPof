@@ -344,6 +344,9 @@ abstract class Router
         if(!empty($arguments_unused)) {
             $parts = [];
             foreach (array_keys($arguments_unused) as $argument) {
+                if($arguments[$argument] == null) {
+                    continue;
+                }
                 $parts[] = StringUtil::reduce($argument) . '=' . StringUtil::reduce($arguments[$argument]);
             }
 
