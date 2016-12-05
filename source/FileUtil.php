@@ -88,8 +88,8 @@ abstract class FileUtil
         }
 
         // get mimetype
-        $finfo = new \finfo(FILEINFO_MIME);
-        if (!$finfo) {
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        if ($finfo) {
             $file['mimetype'] = $finfo->file($fileobject['tmp_name']);
         } else {
             $file['mimetype'] = $fileobject['type'];
