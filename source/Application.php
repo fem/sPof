@@ -304,8 +304,6 @@ class Application
             $view = new $viewName();
             $view->executeShow();
         } catch (\Exception $e) {
-            Logger::getInstance()->warning(__("Could not instanciate class of type '%s'. Trying to find alternatives", $viewName));
-
             // try to call the static implementation, we need this workaround, because this method is called staticly,
             // directly on this class, so no late state binding, try to workaround by directly calling it and otherwise
             // use local fallback
@@ -315,6 +313,8 @@ class Application
                 $viewName = $this->getClassByModule($this->defaultModule);
                 if (method_exists($viewName, 'handleException')) {
                     $viewName::handleException($e);
+                } else {
+                    Logger::getInstance()->exception($e);
                 }
             }
         }
