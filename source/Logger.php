@@ -130,7 +130,7 @@ class Logger extends AbstractLogger
 
         if (in_array($level, $levels)) {
             // don't show debug as user message
-            if(!in_array($level, ['debug', 'dump'])) {
+            if(!in_array($level, ['debug', 'dump']) && php_sapi_name() != "cli") {
                 Session::addErrorMsg($user_message);
             }
 

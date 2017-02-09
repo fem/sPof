@@ -151,7 +151,7 @@ class Application
             Router::updateHtaccess();
             #Router::updateRules();
         } catch (\Exception $e) {
-            Session::addErrorMsg($e->getMessage());
+            Logger::getInstance()->exception($e);
         }
 
         // from here we'll capture every output
@@ -163,13 +163,12 @@ class Application
         $module = Router::getModule();
         $action = Router::getAction();
 
-
         $view = $this->handleRequest($module, $action);
 
         // threat all unwanted output as error output
         $errors = ob_get_clean();
         if (trim($errors) !== '') {
-            Session::addErrorMsg($errors);
+            Logger::getInstance()->warning($e);
         }
 
         // finally deliver page
