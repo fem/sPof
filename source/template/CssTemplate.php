@@ -276,16 +276,15 @@ class CssTemplate
             }
             $content = file_get_contents($file['name']);
             if ($file['fixpaths']) {
-                preg_match_all('/url\(([^)]+)\)/', $content, $matches, PREG_SET_ORDER);
+                preg_match_all('/url\(\'?([^\?)]+)(\?[^\')]+)?\'?\)/', $content, $matches, PREG_SET_ORDER);
                 $replaces = [];
                 $copy = [];
                 foreach ($matches as $match) {
                     if (strpos($match[1], 'data') === 0) {
                         continue;
                     }
-
-                    $filename = 'gen__'.md5($file['name'].'-'.$match[1]).preg_replace('/^[^.]+\.(.+)$/', '.$1', $match[1]);
-                    $replaces[$match[0]] = 'url(../img/'.$filename.')';
+                    $filename = 'gen__'.md5($file['name'].'-'.$match[1]).preg_replace('/.*\.([^.]+)$/', '.$1', $match[1]);
+                    $replaces[$match[0]] = 'url(../img/' . $filename . (isset($match[2]) ? $match[2] : '') . ')';
                     $copy[dirname($file['name']).'/'.$match[1]] = Application::$WEB_ROOT.'img/'.$filename;
                 }
 
