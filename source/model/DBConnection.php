@@ -86,6 +86,9 @@ class DBConnection extends \PDO
             }
             $time_last_use = time();
         }
+        if(!$instance) {
+            die(_('No Datebase connection.'));
+        }
         return $instance;
     } // function
 
