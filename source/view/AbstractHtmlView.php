@@ -340,9 +340,11 @@ abstract class AbstractHtmlView extends AbstractView
      *
      * @param string $file filename without css based on the public/css folder and without '.css' suffix.
      */
-    final protected function addStylesheet($file)
+    final protected function addStylesheet($file, $allow_combine = true)
     {
-        if (strpos($file, '.css') === false) {
+        if(!$allow_combine) {
+            $this->cssFiles[] = ['name' => $file, 'combine' => false];
+        } elseif (strpos($file, '.css') === false) {
             $this->cssFiles[] = ['name' => \FeM\sPof\Application::$WEB_ROOT.'css/'.$file.'.css', 'fixpaths' => false];
         } else {
             $this->cssFiles[] = ['name' => $file, 'fixpaths' => true];
@@ -478,12 +480,7 @@ abstract class AbstractHtmlView extends AbstractView
         }
 
         // minify css
-        $cssFile = template\CssTemplate::combine($this->cssFiles);
-        if ($cssFile !== false) {
-            $this->assign('customcssfile', [$cssFile]);
-        } else {
-            $this->assign('customcssfile', []);
-        }
+        $this->assign('customcssfile', template\CssTemplate::combine($this->cssFiles));
 
         // this code is not safe for use in different tabs
         foreach (Session::getErrorMsg() as $error) {

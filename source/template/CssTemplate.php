@@ -215,15 +215,36 @@ class CssTemplate
     public static function combine(array $files)
     {
         if (empty($files)) {
-            return false;
+            return [];
         }
 
+        $cssFiles = [];
+        $combineFiles = [];
+
+        // first separate files
+        foreach ($files as $file) {
+            if(isset($file['combine']) && !$file['combine']) {
+                $cssFiles[] = $file['name'];
+            } else {
+                $combineFiles[] = $file;
+            }
+        }
+
+        // nothing to combine, so return
+        if(empty($combineFiles)) {
+            return $cssFiles;
+        }
+
+        // combine magic
         $target = self::getTargetPath();
         $source = self::getSourcePath();
 
         // identify file combinations by hash
         $cssHash = md5(serialize($files));
         $targetfile = $target.$cssHash.'.css';
+
+        // add combined file to list
+        $cssFiles[] =  'css/' . $cssHash .'.css';
 
         // check if any source file was modified
         $needUpdate = false;
@@ -243,12 +264,12 @@ class CssTemplate
 
         // we can abort if no update is required
         if ($needUpdate === false) {
-            return $cssHash;
+            return $cssFiles;
         }
 
         // combine file contents
         $handle = fopen($targetfile, 'w+');
-        foreach ($files as $file) {
+        foreach ($combineFiles as $file) {
             if(!file_exists($file['name'])) {
                 Logger::getInstance()->debug('CSS file '.$file['name']. ' is missing.');
                 continue;
@@ -285,7 +306,7 @@ class CssTemplate
         // adjust file permissions for webserver
         chmod($targetfile, Config::getDetail('stylesheet', 'file_perms', self::$defaultConfig));
 
-        return $cssHash;
+        return $cssFiles;
     } // function
 
 
