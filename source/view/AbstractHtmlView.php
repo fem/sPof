@@ -447,17 +447,16 @@ abstract class AbstractHtmlView extends AbstractView
      */
     final protected function useDebugBar()
     {
-        $this->useJquery();
+        $renderer = Logger::getInstance()->getRenderer();
 
-        $path = dirname(dirname(dirname(dirname(__DIR__)))).'/maximebf/debugbar/src/DebugBar/Resources/';
+        list($cssFiles, $jsFiles) = $renderer->getAssets(null, 'path');
 
-        $this->addJavascript($path.'debugbar.js');
-        $this->addJavascript($path.'openhandler.js');
-        $this->addJavascript($path.'widgets.js');
-
-        $this->addStylesheet($path.'debugbar.css');
-        $this->addStylesheet($path.'openhandler.css');
-        $this->addStylesheet($path.'widgets.css');
+        foreach ($cssFiles as $cssFile) {
+            $this->addStylesheet($cssFile);
+        }
+        foreach ($jsFiles as $jsFile) {
+            $this->addJavascript($jsFile);
+        }
 
         $this->assign('debugbar', Logger::getInstance()->getRenderer());
     } // function
