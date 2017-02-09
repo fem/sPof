@@ -86,6 +86,9 @@ abstract class AbstractJsonView extends AbstractView
         } elseif ($exception instanceof \FeM\sPof\exception\BadRequestException) {
             echo StringUtil::jsonEncode(['error' => $exception->getMessage()]);
             static::sendBadRequest();
+        } elseif ($exception instanceof \FeM\sPof\exception\ClassNotFoundException) {
+            echo StringUtil::jsonEncode(['error' => $exception->getMessage()]);
+            static::sendNotFound();
         }
 
         echo StringUtil::jsonEncode(['msg' => $exception->getMessage(), 'exception' => $exception]);
