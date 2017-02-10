@@ -40,7 +40,7 @@ abstract class AbstractFormGroup
      *
      * @return AbstractFormElement
      */
-    abstract public function addElement(\FeM\sPof\form\AbstractFormElement &$element);
+    abstract public function addElement(\FeM\sPof\form\AbstractFormElement $element);
 
 
     /**
@@ -65,7 +65,7 @@ abstract class AbstractFormGroup
      *
      * @return AbstractFormElement
      */
-    public function &addLabeled($label, \FeM\sPof\form\AbstractFormElement &$element)
+    public function &addLabeled($label, \FeM\sPof\form\AbstractFormElement $element)
     {
         $row = $this->addRow();
         $row->addElement(new element\Label($element->getName(), $label, $element->isRequired()));

@@ -67,7 +67,7 @@ class FormRow extends AbstractFormGroup
      * @param Form $form
      * @param string $class (optional)
      */
-    public function __construct(&$form, $class = null)
+    public function __construct($form, $class = null)
     {
         $this->form = &$form;
         $this->class = $class;
@@ -83,7 +83,7 @@ class FormRow extends AbstractFormGroup
      *
      * @return AbstractFormElement
      */
-    public function &addElement(\FeM\sPof\form\AbstractFormElement &$element)
+    public function &addElement(\FeM\sPof\form\AbstractFormElement $element)
     {
         $this->elements[] = $element;
         $this->form->addField($element, count($this->elements)-1);
