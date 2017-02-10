@@ -448,6 +448,9 @@ abstract class AbstractHtmlView extends AbstractView
     final protected function useDebugBar()
     {
         $renderer = Logger::getInstance()->getRenderer();
+        if(!$renderer) {
+            return;
+        }
 
         list($cssFiles, $jsFiles) = $renderer->getAssets(null, 'path');
 
@@ -458,7 +461,7 @@ abstract class AbstractHtmlView extends AbstractView
             $this->addJavascript($jsFile);
         }
 
-        $this->assign('debugbar', Logger::getInstance()->getRenderer());
+        $this->assign('debugbar', $renderer);
     } // function
 
 
