@@ -74,7 +74,7 @@ class Cache
     /**
      * Fetch a setting from cache. If not exists false is returned.
      *
-     * @see apc_fetch
+     * @see apcu_fetch
      *
      * @param string $name
      * @param int $timestamp invalidate cache, if cache is older then given timestamp
@@ -84,8 +84,8 @@ class Cache
     public static function fetch($name, $timestamp = null)
     {
         // use APC cache if available and useful (not on CLI)
-        if(function_exists('apc_fetch') && php_sapi_name() != 'cli') {
-            $cache = apc_fetch(self::getPrefix() . $name);
+        if(function_exists('apcu_fetch') && php_sapi_name() != 'cli') {
+            $cache = apcu_fetch(self::getPrefix() . $name);
         } else {
             $cache = self::getInstance()->getEntry(self::getPrefix() . $name);
         }
@@ -102,7 +102,7 @@ class Cache
     /**
      * Store a new setting in the cache.
      *
-     * @see apc_store
+     * @see apcu_store
      *
      * @param string $name
      * @param mixed $value
@@ -116,8 +116,8 @@ class Cache
         $entry = [ 'timestamp' => time(), 'data' => $value ];
 
         // use APC cache if available and useful (not on CLI)
-        if(function_exists('apc_store') && php_sapi_name() != 'cli') {
-            return apc_store(self::getPrefix() . $name, $entry, $ttl);
+        if(function_exists('apcu_store') && php_sapi_name() != 'cli') {
+            return apcu_store(self::getPrefix() . $name, $entry, $ttl);
         } else {
             return self::getInstance()->setEntry(self::getPrefix() . $name, $entry);
         }
@@ -129,7 +129,7 @@ class Cache
      *
      * @api
      *
-     * @see apc_delete
+     * @see apcu_delete
      *
      * @param string  $name
      *
@@ -138,8 +138,8 @@ class Cache
     public static function delete($name)
     {
         // use APC cache if available and useful (not on CLI)
-        if(function_exists('apc_delete') && php_sapi_name() != 'cli') {
-            return (bool) apc_delete(self::getPrefix() . $name);
+        if(function_exists('apcu_delete') && php_sapi_name() != 'cli') {
+            return (bool) apcu_delete(self::getPrefix() . $name);
         } else {
             return self::getInstance()->deleteEntry(self::getPrefix() . $name);
         }
