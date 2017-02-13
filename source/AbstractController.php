@@ -61,6 +61,16 @@ abstract class AbstractController extends AbstractModule
      */
     protected $isJSON = false;
 
+    /**
+     * Default configuration for this class.
+     *
+     * @api
+     *
+     * @var array
+     */
+    private static $defaultConfig = [
+        'tracking' => [ 'event' => true ]
+    ];
 
     /**
      * Dummy constructor, so deffered classes can always call parent.
@@ -290,6 +300,10 @@ abstract class AbstractController extends AbstractModule
      */
     final protected function logEvent(array $reference, $description = null, $success = false)
     {
+        if(!Config::getDetail('tracking', 'event', self::$defaultConfig['tracking'])) {
+            return;
+        }
+
         LogEvent::add([
             'event' => Router::getModule().'.'.$this->command.'.'.($success?'Success':'Fail'),
             'user_id' => Session::getUserId(),
