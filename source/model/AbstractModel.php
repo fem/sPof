@@ -120,7 +120,6 @@ abstract class AbstractModel
      */
     public static function add(array $input)
     {
-        Logger::getInstance()->info(_s('AbstractModelWithId->add to ').static::$TABLE);
         static::validate($input);
 
         // Prepare statement and bind values
@@ -158,8 +157,6 @@ abstract class AbstractModel
      */
     public static function getByPk($primary_key, $visible_only = true)
     {
-        Logger::getInstance()->info(_s('AbstractModelWithId->getByPk to ').static::$TABLE);
-
         $sql = "
             SELECT *
             FROM ".static::getTable()."
@@ -191,8 +188,6 @@ abstract class AbstractModel
      */
     public static function deleteByPk($primary_key)
     {
-        Logger::getInstance()->info(_s('AbstractModelWithId->delete to ').static::$TABLE);
-
         $sql = "
             DELETE
             FROM ".static::getTable()."
@@ -222,7 +217,6 @@ abstract class AbstractModel
      */
     public static function updateByPk($primary_key, array $input)
     {
-        Logger::getInstance()->info(_s('AbstractModelWithId->updateByPk to ').static::$TABLE);
         static::validate($input);
 
         $sql = "
