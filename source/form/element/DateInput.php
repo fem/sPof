@@ -42,4 +42,20 @@ class DateInput extends \FeM\sPof\form\AbstractInputElement
         $this->addAttribute('maxlength', '10');
         $this->appendAttribute('class', 'date');
     } // constructor
+
+    /**
+     * Set the value attribute.
+     *
+     * @api
+     *
+     * @param string $text
+     */
+    public function setValue($value)
+    {
+        if($value instanceof \DateTime) {
+            $value = $value->format('d.m.Y');
+        }
+
+        $this->addAttribute('value', $value);
+    } // function
 }// class

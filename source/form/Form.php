@@ -109,7 +109,7 @@ class Form extends AbstractFormGroup implements Renderable
      *
      * @return AbstractFormElement
      */
-    public function &addElement(\FeM\sPof\form\AbstractFormElement &$element)
+    public function &addElement(\FeM\sPof\form\AbstractFormElement $element)
     {
         $row = $this->addRow();
         $row->addElement($element);
@@ -142,7 +142,7 @@ class Form extends AbstractFormGroup implements Renderable
      * @param AbstractFormElement $element
      * @param int $elementIndex index of the element in the current row
      */
-    final public function addField(\FeM\sPof\form\AbstractFormElement &$element, $elementIndex)
+    final public function addField(\FeM\sPof\form\AbstractFormElement $element, $elementIndex)
     {
         $name = $element->getName();
         if (!empty($name)) {
@@ -328,7 +328,12 @@ class Form extends AbstractFormGroup implements Renderable
     final public function setDefaults(array $context)
     {
         foreach ($context as $field => $default) {
-            $this->getElement($field)->setDefault($default);
+            try {
+                $this->getElement($field)->setDefault($default);
+            } catch(\InvalidArgumentException $e) {
+                // ignore
+            }
+
         }
     } // function
 

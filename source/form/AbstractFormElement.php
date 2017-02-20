@@ -133,7 +133,11 @@ abstract class AbstractFormElement implements Renderable
      */
     protected function appendAttribute($attribute, $value)
     {
-        $this->attributes[$attribute] .= ' '.$value;
+        if(!isset($this->attributes[$attribute])) {
+            $this->attributes[$attribute] = $value;
+        } else {
+            $this->attributes[$attribute] .= ' '.$value;
+        }
     } // function
 
 

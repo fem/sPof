@@ -43,4 +43,20 @@ class TimeInput extends \FeM\sPof\form\AbstractInputElement
         $this->addAttribute('maxlength', 5);
         $this->appendAttribute('class', 'time');
     } // constructor
+
+    /**
+     * Set the value attribute.
+     *
+     * @api
+     *
+     * @param string $text
+     */
+    public function setValue($value)
+    {
+        if($value instanceof \DateTime) {
+            $value = $value->format('H:i');
+        }
+
+        $this->addAttribute('value', $value);
+    } // function
 }// class

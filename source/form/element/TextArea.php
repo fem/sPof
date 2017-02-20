@@ -63,7 +63,6 @@ class TextArea extends \FeM\sPof\form\AbstractFormElement
     public function __construct($field, $required = true, $maxlength = 65535)
     {
         $this->internal = new TextAreaInternal($field, $required, $maxlength);
-        $this->innerHtml = $this->internal->render();
         $this->escapeInnerHtml = false;
         $this->addAttribute('class', 'fillLabel');
         $this->field = $field;
@@ -87,5 +86,36 @@ class TextArea extends \FeM\sPof\form\AbstractFormElement
      */
     public function getValue($type = null) {
         return $this->internal->getValue();
+    }
+
+    /**
+     * Wrapper for internal setValue.
+     *
+     * @param string $type (optional) ignored for this wrapper
+     */
+    public function setValue($value) {
+        return $this->internal->setValue($value);
+    }
+
+    /**
+     * Prepare everything for rendering, so that you'll later just need to start the rendering. This method assigned
+     * everything which is normally required, to the template.
+     *
+     * @api
+     */
+    public function renderPrepare()
+    {
+        $this->innerHtml = $this->internal->render();
+
+        return parent::renderPrepare();
+    }
+
+    /**
+     * Wrapper for internal setDefault.
+     *
+     * @param string $default
+     */
+    public function setDefault($default) {
+        return $this->internal->setDefault($default);
     }
 }// class
