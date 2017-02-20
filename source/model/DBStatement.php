@@ -360,6 +360,9 @@ class DBStatement extends \PDOStatement
      */
     public function assignDate($name, \DateTime $value)
     {
+        if(empty($value->getTimezone()->getLocation())) {
+            $value->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+        }
         $this->assign($name, $value->format(\DateTime::ISO8601));
     } // function
 }// class

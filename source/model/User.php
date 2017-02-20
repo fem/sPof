@@ -470,54 +470,6 @@ abstract class User extends AbstractModelWithId
 
 
     /**
-     * Create a new user.
-     *
-     * @api
-     * @deprecated 1.0.0 instead use parent::add, updatePassword and generateToken.
-     *
-     * @param array $input
-     *
-     * @return int
-     */
-    public static function add(array $input)
-    {
-        self::getValidator($input)
-            ->isEmpty('name', _s('Username has to be not empty!'))
-            ->isEmpty('passphrase', _s('Passphrase has to be not empty!'))
-            ->isEmpty('email', _s('Email has to be not empty!'))
-            ->isEmpty('token', _s('Token has to be not empty!'))
-            ->validate();
-
-        $stmt = self::createStatement(
-            "
-            INSERT INTO tbl_user (name, passphrase, email, token, tokenexpiry, firstname, lastname, disabled,
-                                  visible)
-            VALUES (
-                :name,
-                crypt(MD5(:passphrase),gen_salt('bf',5)),
-                :email,
-                :token,
-                NOW() + '1 day',
-                :firstname,
-                :lastname,
-                TRUE,
-                FALSE
-            )
-            RETURNING id
-            "
-        );
-        $stmt->assign('name', $input['name']);
-        $stmt->assign('passphrase', $input['passphrase']);
-        $stmt->assign('email', $input['email']);
-        $stmt->assign('token', $input['token']);
-        $stmt->assign('firstname', $input['firstname']);
-        $stmt->assign('lastname', $input['lastname']);
-
-        return $stmt->fetchColumn();
-    } // function
-
-
-    /**
      * Get database profile field names with description.
      *
      * @api

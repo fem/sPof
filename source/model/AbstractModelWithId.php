@@ -62,8 +62,8 @@ abstract class AbstractModelWithId extends AbstractModel
     {
         // it's only one column
         return [
-            'sql' => self::$PRIMARY_KEY_NAME." = :".self::$PRIMARY_KEY_NAME." ",
-            'params' => [self::$PRIMARY_KEY_NAME => $primary_key]
+            'sql' => static::$PRIMARY_KEY_NAME." = :".static::$PRIMARY_KEY_NAME." ",
+            'params' => [static::$PRIMARY_KEY_NAME => $primary_key]
         ];
     } // function
 }// class

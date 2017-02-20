@@ -124,7 +124,7 @@ abstract class AbstractController extends AbstractModule
             }
             $this->$cmd();
 
-            if ($this->atomic) {
+            if ($this->atomic && DBConnection::getInstance()->inTransaction()) {
                 DBConnection::getInstance()->commit();
             }
 
@@ -198,7 +198,7 @@ abstract class AbstractController extends AbstractModule
         }
 
         // close transaction, if present
-        if ($this->atomic) {
+        if ($this->atomic && DBConnection::getInstance()->inTransaction()) {
             DBConnection::getInstance()->commit();
         }
 
@@ -284,7 +284,7 @@ abstract class AbstractController extends AbstractModule
     private function sendJson($success, $message)
     {
         // close transaction, if present
-        if ($this->atomic) {
+        if ($this->atomic && DBConnection::getInstance()->inTransaction()) {
             DBConnection::getInstance()->commit();
         }
 
