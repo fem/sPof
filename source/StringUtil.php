@@ -252,4 +252,17 @@ abstract class StringUtil
 
         return $out;
     } // function
+
+    /**
+     * Like json_encode with more options, usable for JSON APIs
+     *
+     * @api
+     *
+     * @param $data mixed
+     * @return string
+     */
+    public static function jsonEncode($data)
+    {
+        return json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+    } // function
 }// class

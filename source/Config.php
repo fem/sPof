@@ -69,15 +69,35 @@ class Config
     {
         $dir = Application::$FILE_ROOT.'config/';
 
-        // load installation global file
-        if (file_exists($dir.'default.yml')) {
-            $this->config = Yaml::parse(file_get_contents($dir.'default.yml'));
+        // files to check
+        $files = [
+            $dir.'default.yml',
+            $dir.'local.yml'
+        ];
+
+        // check file existance and age
+        $file_lastchange = 0;
+        foreach ($files as $idx => $file) {
+            // remove non-existant files from list
+            if(!file_exists($file)) {
+                unset($files[$idx]);
+            }
+            $file_lastchange = max(filemtime($file), $file_lastchange);
         }
 
-        // load installation local file
-        if (file_exists($dir.'local.yml')) {
-            $this->config = array_merge($this->config, Yaml::parse(file_get_contents($dir.'local.yml')));
+        // check cache and return, if nothing has changed
+        $cache = Cache::fetch('config_parsed', $file_lastchange);
+        if($cache) {
+            $this->config = $cache;
+            return $this->config;
         }
+
+        // parse files
+        foreach ($files as $file) {
+            $this->config = array_replace_recursive($this->config, Yaml::parse(file_get_contents($file)));
+        }
+
+        Cache::store('config_parsed', $this->config);
     } // function
 
 

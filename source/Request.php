@@ -212,6 +212,16 @@ abstract class Request
         }
     } // function
 
+    /**
+     * Returns true if the current request is HTTPS secured, returns false otherwise
+     *
+     * @api
+     */
+    public static function isSecure()
+    {
+        return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on';
+    } // function
+
 
     /**
      * Returns true if the current request is GET, returns false otherwise

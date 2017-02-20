@@ -78,6 +78,13 @@ class Application
     public static $LOGFILE = '';
 
     /**
+     * Base path used for creating URLs
+     *
+     * @var string
+     */
+    public static $BASE_PATH = '';
+
+    /**
      * Reference to thec currently used Application class instance.
      *
      * @api
@@ -116,7 +123,7 @@ class Application
         // we want our own error handler
         set_error_handler(__CLASS__.'::errorHandler');
 
-        self::$NAMESPACE = $namespace;
+        self::$NAMESPACE = rtrim($namespace,'\\') . '\\';
 
         if ($file_root === null) {
 
@@ -143,7 +150,7 @@ class Application
      *
      * @api
      */
-    public function dispatch()
+    public function dispatch($start_session = true)
     {
         # get current context from URL
         try {
@@ -157,8 +164,9 @@ class Application
         // from here we'll capture every output
         ob_start();
 
-        // we need the session this early, (feel free to remove the following line and get stuck with session problems)
-        Session::getInstance();
+        if($start_session) {
+            Session::getInstance();
+        }
 
         $module = Router::getModule();
         $action = Router::getAction();
@@ -227,9 +235,10 @@ class Application
      */
     private function getClassByModule($module)
     {
-       // if (empty($module)) {
-       //     $module = $this->defaultModule;
-       // }
+        // don't modify empty or full qualified class names
+        if(empty($module) || $module[0] == '\\') {
+            return $module;
+        }
         return self::$NAMESPACE.'view\\'.$module.'View';
     } // function
 
@@ -249,6 +258,14 @@ class Application
      */
     private function handleRequest($module, $action)
     {
+        // early check, whether we were able to resolve a route
+        if (empty($module)) {
+            $viewName = $this->getClassByModule($this->defaultModule);
+            if (method_exists($viewName, 'handleNoViewFound')) {
+                return $viewName::handleNoViewFound();
+            }
+        }
+
         // there will always be something to view (otherwise we should get a nice error message)
         $viewName = $this->getClassByModule($module);
 
@@ -287,8 +304,6 @@ class Application
             $view = new $viewName();
             $view->executeShow();
         } catch (\Exception $e) {
-            Logger::getInstance()->warning(__("Could not instanciate class of type '%s'. Trying to find alternatives", $viewName));
-
             // try to call the static implementation, we need this workaround, because this method is called staticly,
             // directly on this class, so no late state binding, try to workaround by directly calling it and otherwise
             // use local fallback
@@ -298,6 +313,8 @@ class Application
                 $viewName = $this->getClassByModule($this->defaultModule);
                 if (method_exists($viewName, 'handleException')) {
                     $viewName::handleException($e);
+                } else {
+                    Logger::getInstance()->exception($e);
                 }
             }
         }
@@ -417,6 +434,23 @@ class Application
     public static function getAuthorizationHandlers()
     {
         return self::$INSTANCE->authorizationHandler;
+    } // function
+
+
+    /**
+     * Get base path, which will be used for creating URLs.
+     *
+     * @api
+     *
+     * @param string $name
+     */
+    public static function getBasePath()
+    {
+        // late assignment, since in our constructor no other classes should be called
+        if(empty(self::$BASE_PATH)) {
+            self::$BASE_PATH = Config::getDetail('server','path');
+        }
+        return self::$BASE_PATH;
     } // function
 
 }// class

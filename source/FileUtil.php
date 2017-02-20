@@ -88,8 +88,8 @@ abstract class FileUtil
         }
 
         // get mimetype
-        $finfo = new \finfo(FILEINFO_MIME);
-        if (!$finfo) {
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        if ($finfo) {
             $file['mimetype'] = $finfo->file($fileobject['tmp_name']);
         } else {
             $file['mimetype'] = $fileobject['type'];
@@ -133,4 +133,33 @@ abstract class FileUtil
             throw new exception\ControllerException(_s('Die hochgeladene Vorschaudatei ist kein JPEG- oder PNG-Bild!'));
         }
     } // function
+
+
+    /**
+     * Realpath implementation that works with non-existing files
+     *
+     * @api
+     *
+     * @see http://php.net/manual/de/function.realpath.php#84012
+     *
+     * @param string $filename
+     *
+     * @return string $filepath
+     */
+    public static function realpath($path)
+    {
+        $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+        $absolutes = array();
+        foreach ($parts as $part) {
+            if ('.' == $part) continue;
+            if ('..' == $part) {
+                array_pop($absolutes);
+            } else {
+                $absolutes[] = $part;
+            }
+        }
+        return (($path[0] == DIRECTORY_SEPARATOR) ? DIRECTORY_SEPARATOR : '') . implode(DIRECTORY_SEPARATOR, $absolutes);
+    } // function
+
 }// class

@@ -21,6 +21,7 @@
 
 namespace FeM\sPof\view;
 
+use FeM\sPof\Application;
 use FeM\sPof\Authorization;
 use FeM\sPof\Router;
 use FeM\sPof\Session;
@@ -135,7 +136,7 @@ abstract class AbstractHtmlView extends AbstractView
 
         $this->template = template\HtmlTemplate::getInstance();
 
-        $this->auth = Authorization::getInstance();
+        static::initializeAuthorization();
         $this->assignByRef('auth', $this->auth);
 
         // template default values
@@ -143,6 +144,7 @@ abstract class AbstractHtmlView extends AbstractView
         $this->assign('success', []);
         $this->assign('errors', []);
         $this->assign('content', '');
+        $this->assign('basedir', Application::getBasePath());
 
         // call initializer
         $this->initializeViewtype();
@@ -163,6 +165,17 @@ abstract class AbstractHtmlView extends AbstractView
     protected function initializeViewtype()
     {
         $this->initialize();
+    } // function
+
+    /**
+     * This method is used to initialize inheriting classes, by default the sPof Authorization class is initialized.
+     * Inheriting classes may initialize their own Authorization module.
+     *
+     * @api
+     */
+    protected function initializeAuthorization()
+    {
+        $this->auth = Authorization::getInstance();
     } // function
 
 

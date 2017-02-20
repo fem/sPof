@@ -20,6 +20,7 @@
  */
 
 namespace FeM\sPof\view;
+use FeM\sPof\StringUtil;
 
 /**
  * This view is suited for every view which returns JSON formatted content. Advantage of these operations is the
@@ -77,18 +78,17 @@ abstract class AbstractJsonView extends AbstractView
      */
     public static function handleException(\Exception $exception)
     {
+        header('Content-type: application/json');
         if ($exception instanceof \FeM\sPof\exception\NotAuthorizedException) {
             static::sendForbidden();
         } elseif ($exception instanceof \FeM\sPof\exception\UnsupportedRequestMethod) {
             static::sendMethodNotAllowed($exception->getAllowed());
         } elseif ($exception instanceof \FeM\sPof\exception\BadRequestException) {
-            header('Content-type: application/json');
-            echo json_encode(['error' => $exception->getMessage()]);
+            echo StringUtil::jsonEncode(['error' => $exception->getMessage()]);
             static::sendBadRequest();
         }
 
-        header('Content-type: application/json');
-        echo json_encode(['msg' => $exception->getMessage(), 'exception' => $exception]);
+        echo StringUtil::jsonEncode(['msg' => $exception->getMessage(), 'exception' => $exception]);
         static::sendInternalError();
     } // function
 
@@ -102,10 +102,11 @@ abstract class AbstractJsonView extends AbstractView
     {
         header('Content-type: application/json');
         if ($this->resultSet !== null) {
-            echo json_encode($this->resultSet);
+            echo StringUtil::jsonEncode($this->resultSet);
         }
         ob_end_flush();
         flush();
         exit;
     } // function
+
 }// class

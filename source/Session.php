@@ -91,6 +91,7 @@ class Session
         ini_set('session.name', self::getConfig('name'));
         ini_set('session.use_only_cookies', true);
         ini_set('session.use_trans_sid', false);
+        ini_set('session.cookie_path', Config::getDetail('server','path'));
         $expire = session_cache_expire();
         if (session_id() == "") {
             session_start();
@@ -131,6 +132,7 @@ class Session
         }
         $_SESSION = [];
         $expire = session_cache_expire();
+        ini_set('session.cookie_path', Config::getDetail('server','path'));
         session_start();
         session_regenerate_id(true);
         $_SESSION['expire'] = $expire;
@@ -301,5 +303,46 @@ class Session
     {
         Session::getInstance();
         unset($_SESSION['messages']['success']);
+    } // function
+
+    /**
+     * Get parameter stored in session storage
+     */
+    public static function get($name, $detail = null)
+    {
+        Session::getInstance();
+        if(isset($_SESSION['data']) && isset($_SESSION['data'][$name])) {
+            if($detail == null) {
+                return $_SESSION['data'][$name];
+            } elseif(isset($_SESSION['data'][$name][$detail])) {
+                return $_SESSION['data'][$name][$detail];
+            }
+        }
+        return null;
+    } // function
+
+    /**
+     * Get parameter stored in session storage
+     */
+    public static function set($name, $value = null, $detail = null)
+    {
+        Session::getInstance();
+        if(!isset($_SESSION['data'])) {
+            $_SESSION['data'] = [];
+        }
+
+        if($detail == null) {
+            if($value === null) {
+                unset($_SESSION['data'][$name]);
+            } else {
+                $_SESSION['data'][$name] = $value;
+            }
+        } elseif(isset($_SESSION['data'][$name][$detail]) && $value === null) {
+            unset($_SESSION['data'][$name][$detail]);
+        } else {
+            $_SESSION['data'][$name][$detail] = $value;
+        }
+
+        return true;
     } // function
 }// class
