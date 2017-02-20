@@ -21,6 +21,7 @@
 
 namespace FeM\sPof;
 
+use FeM\sPof\exception\NotFoundException;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -123,7 +124,6 @@ abstract class Router
         require $preset;
         fwrite($rules, ob_get_clean());
         fclose($rules);
-        error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
         chmod($target, Config::getDetail('router', 'file_perms', self::$defaultConfig));
     } // function
@@ -198,7 +198,6 @@ abstract class Router
             .'index.php?module=errors&show=show404&%{QUERY_STRING} [L,QSA]'."\n"
         );
         fclose($rules);
-error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
 
         chmod($target, Config::getDetail('router', 'file_perms', self::$defaultConfig));
     } // function
@@ -264,7 +263,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
      *
      * @return string
      */
-    public static function reverse($name, array $arguments = [])
+    public static function reverse($name, array $arguments = [], $full_url = false)
     {
         static $routes;
         if ($routes === null) {
@@ -298,6 +297,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
         $patternSufOptional = rtrim($pattern.$suffix, '/');
         $patternPreOptional = rtrim($prefix.$pattern, '/');
         $pattern = rtrim($pattern, '/');
+        $arguments_unused = array_flip(array_keys($arguments));
 
         // replace placeholder with their value from arguments, use optional params as base, as it contains all params
         if (preg_match_all('/<([^>]+)>/S', $patternOptional, $matches, PREG_SET_ORDER)) {
@@ -323,6 +323,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
                     StringUtil::reduce($arguments[$match[1]]),
                     $patternPreOptional
                 );
+                unset($arguments_unused[$match[1]]);
             }
         }
 
@@ -336,22 +337,47 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
             ));
         }
 
+        // assemble suffix
+        $suffix = '';
+
+        // append unused arguments as query string
+        if(!empty($arguments_unused)) {
+            $parts = [];
+            foreach (array_keys($arguments_unused) as $argument) {
+                if($arguments[$argument] == null) {
+                    continue;
+                }
+                $parts[] = StringUtil::reduce($argument) . '=' . StringUtil::reduce($arguments[$argument]);
+            }
+
+            $suffix .= '?' . implode('&',$parts);
+        }
+
+        if(isset($arguments['_anchor'])) {
+            $suffix .= '#' . $arguments['_anchor'];
+        }
+
+        $prefix = '';
+        if($full_url) {
+            $prefix = (Request::isSecure() ? 'https' : 'http') . '://'.$_SERVER['SERVER_NAME'] . Application::getBasePath();
+        }
+
         // check if all optional params are resolved, if not -> return normal path
         if (strpos($patternOptional, '<') === false) {
 
             // optional params are resolved, so return full path
-            return $patternOptional.(isset($arguments['_anchor']) ? '#'.$arguments['_anchor'] : '');
+            return $prefix . $patternOptional . $suffix;
         } elseif (strpos($patternPreOptional, '<') === false) {
 
-            return $patternPreOptional.(isset($arguments['_anchor']) ? '#'.$arguments['_anchor'] : '');
+            return $prefix . $patternPreOptional . $suffix;
         } elseif (strpos($patternSufOptional, '<') === false) {
 
             // optional params are resolved, so return full path
-            return $patternSufOptional.(isset($arguments['_anchor']) ? '#'.$arguments['_anchor'] : '');
+            return $prefix . $patternSufOptional . $suffix;
         } else {
 
             // join parts together
-            return $pattern.(isset($arguments['_anchor']) ? '#'.$arguments['_anchor'] : '');
+            return $prefix . $pattern . $suffix;
         }
     } // function
 
@@ -367,10 +393,20 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
      */
     public static function resolve($path)
     {
-        preg_match_all('#([a-z]+):([0-9a-z]+)#iU', $path, $optionals, PREG_SET_ORDER);
+        preg_match_all('#([a-z]+):([0-9a-z]+?)#iU', $path, $optionals, PREG_SET_ORDER);
         foreach ($optionals as $optional) {
             $path = str_replace($optional[0], '', $path);
             $_GET[$optional[1]] = $optional[2];
+        }
+
+        // optional query string
+        $pos = strpos($path, '?');
+        if($pos !== false) {
+            preg_match_all('#([a-z_-]+)=([0-9a-zA-Z_]+?)&?#iU', substr($path, $pos + 1), $optionals, PREG_SET_ORDER);
+            foreach ($optionals as $optional) {
+                $_GET[$optional[1]] = $optional[2];
+            }
+            $path = substr($path, 0, $pos);
         }
 
         $path = trim($path, '/');
@@ -378,10 +414,10 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
         $unfolded = self::expandAndSort($routes);
         foreach ($unfolded as $route) {
             $route_pattern = $route['pattern'];
-            $route_pattern = '%^'.preg_replace('#<[^>/]+?>#', '(.*)', $route_pattern).'$%siU';
+            $route_pattern = '%^'.preg_replace('#\\\\<[^>/]+?\\\\>#', '(.*)', preg_quote($route_pattern)).'$%siU';
             if (preg_match($route_pattern, $path, $matches)) {
                 preg_match(
-                    '%^'.preg_replace('#<[^>/]+?>#', '<(.*)>', $route['pattern']).'$%siU',
+                    '%^'.preg_replace('#\\\\<[^>/]+?\\\\>#', '<(.*)>', preg_quote($route['pattern'])).'$%siU',
                     $route['pattern'],
                     $params
                 );
@@ -395,10 +431,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
             }
         }
 
-        Cache::delete('unfolded_routes');
-        Logger::getInstance()->error('Could not find route with pattern "'.$path.'"');
-
-        return false;
+        throw new NotFoundException('Could not find route with pattern "'.$path.'"');
     } // function
 
 
@@ -412,24 +445,34 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
      */
     public static function getRoutes()
     {
+        // two stage caching!
+
+        // first stage: static variable for all calls of this request
         static $flat;
         if (!empty($flat)) {
             return $flat;
         }
 
+        // second stage: APC cache
+        //   will get invalidated, if routes source file has changed
+
+        // first check file, otherwise we can't check file age
+        $srcFile = self::getSourceFile();
+        if (!file_exists($srcFile)) {
+            die(_s('routes.yml file not found in Application root directory.'));
+        }
+
+        // check cache and return, if nothing has changed
+        $flat = Cache::fetch('routing_flat', filemtime($srcFile));
+        if($flat) {
+            return $flat;
+        }
+
+        // cache miss! parse source file
         try {
-            $ret = Yaml::parse(file_get_contents(self::getSourceFile()));
+            $ret = Yaml::parse(file_get_contents($srcFile));
         } catch (\ErrorException $e) {
-            if (!file_exists(self::getSourceFile())) {
-                die(_s('routes.yml file not found in Application root directory.'));
-            } else {
-                Logger::getInstance()->error(_s(
-                    'Syntax error in file "%s": %s',
-                    self::getSourceFile(),
-                    $e->getMessage()
-                ));
-            }
-            $ret = [];
+            die(_s('Syntax error in file "%s": %s', $srcFile, $e->getMessage()));
         }
 
         // load additional routes
@@ -502,6 +545,8 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
                 }
             } // if show
         } // foreach route
+
+        Cache::store('routing_flat', $flat);
 
         return $flat;
     } // function
@@ -576,8 +621,7 @@ error_log('@@'.Config::getDetail('router', 'file_perms', self::$defaultConfig));
      */
     public static function redirect($route, array $arguments)
     {
-        $server = Config::get('server');
-        self::urlRedirect('//'.$_SERVER['SERVER_NAME'].$server['path'].self::reverse($route, $arguments));
+        self::urlRedirect(self::reverse($route, $arguments, true));
     } // function
 
 
