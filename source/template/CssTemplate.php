@@ -46,10 +46,6 @@ class CssTemplate
      * @var array
      */
     private static $defaultConfig = [
-        'style' => \SassRenderer::STYLE_NESTED, // CSS output style, might be: nested / compressed / compact / expanded
-        'syntax' => \SassFile::SCSS,
-        'cache' => false,
-        'debug' => true,
         'file_perms' => 0644,
         'check_file_level' => false,
     ];
@@ -93,7 +89,8 @@ class CssTemplate
         $sourcePath = self::getSourcePath();
         $targetPath = self::getTargetPath();
 
-        if (!is_dir($sourcePath)) {
+        // skip rendering CSS files, if no stylesheets exist or phpsass is not installed (optional dependency)
+        if (!is_dir($sourcePath) || !class_exists('SassParser')) {
             // nothing to do
             return;
         }
@@ -198,7 +195,14 @@ class CssTemplate
     {
         static $parser;
         if (!isset($parser)) {
-            $options = Config::get('stylesheet', self::$defaultConfig);
+            $sassDefaultConfig = [
+                'style' => \SassRenderer::STYLE_NESTED, // CSS output style, might be: nested / compressed / compact / expanded
+                'syntax' => \SassFile::SCSS,
+                'cache' => false,
+                'debug' => true,
+            ];
+
+            $options = Config::get('stylesheet',$sassDefaultConfig);
             $options['load_paths'] = [self::getSourcePath()];
 
             $parser = new \SassParser($options);
