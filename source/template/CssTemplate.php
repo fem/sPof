@@ -309,6 +309,9 @@ class CssTemplate
                 $content = str_replace(array_keys($replaces), $replaces, $content);
                 foreach ($copy as $source => $target) {
                     try {
+                        if(!is_dir(dirname($target))) {
+                            FileUtil::makedir(dirname($target));
+                        }
                         copy($source, $target);
                     } catch(\ErrorException $e) {
                         Logger::getInstance()->exception($e);
