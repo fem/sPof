@@ -90,7 +90,7 @@ class CssTemplate
         $targetPath = self::getTargetPath();
 
         // skip rendering CSS files, if no stylesheets exist or phpsass is not installed (optional dependency)
-        if (!is_dir($sourcePath) || !class_exists('SassParser')) {
+        if (!is_dir($sourcePath)) {
             // nothing to do
             return;
         }
@@ -134,6 +134,9 @@ class CssTemplate
 
         $dir = new \DirectoryIterator($sourcePath);
 
+        // get instance of SASS parser (if available)
+        $parser = self::getParser();
+
         // remember last update (begin with this file as dependency)
         $lastDependencyUpdate = filemtime(__FILE__);
 
@@ -172,7 +175,12 @@ class CssTemplate
 
             // save and set file permissions
             try {
-                file_put_contents($savefile, self::getParser()->toCss(file_get_contents($sourcePath.$filename), false));
+                if ($parser) {
+                    file_put_contents($savefile, $parser->toCss(file_get_contents($sourcePath.$filename), false));
+                } else {
+                    copy($sourcePath.$filename, $savefile);
+                }
+
                 chmod($savefile, Config::getDetail('stylesheet', 'file_perms', self::$defaultConfig));
             } catch (\Exception $exception) {
                 Logger::getInstance()->exception($exception);
@@ -194,7 +202,7 @@ class CssTemplate
     private static function getParser()
     {
         static $parser;
-        if (!isset($parser)) {
+        if (!isset($parser) && class_exists('SassParser')) {
             $sassDefaultConfig = [
                 'style' => \SassRenderer::STYLE_NESTED, // CSS output style, might be: nested / compressed / compact / expanded
                 'syntax' => \SassFile::SCSS,
