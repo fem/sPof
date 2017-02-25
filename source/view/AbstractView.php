@@ -22,6 +22,8 @@
 namespace FeM\sPof\view;
 
 use FeM\sPof\AbstractModule;
+use FeM\sPof\Config;
+use FeM\sPof\model\LogSession;
 use FeM\sPof\Router;
 
 /**
@@ -34,6 +36,17 @@ use FeM\sPof\Router;
  */
 abstract class AbstractView extends AbstractModule
 {
+
+    /**
+     * Default configuration for this class.
+     *
+     * @api
+     *
+     * @var array
+     */
+    private static $defaultConfig = [
+        'tracking' => [ 'session' => true ]
+    ];
 
     /**
      * By default use a wrapper to call
@@ -120,6 +133,9 @@ abstract class AbstractView extends AbstractModule
      */
     final protected function trackStandardSession()
     {
+        if(!Config::getDetail('tracking', 'session', self::$defaultConfig['tracking'])) {
+            return;
+        }
         $parameters = $_GET;
         $reference = [];
         unset($parameters['module']);
@@ -143,7 +159,10 @@ abstract class AbstractView extends AbstractModule
      */
     final protected function trackSession(array $reference, array $parameters)
     {
-        \FeM\sPof\model\LogSession::add([
+        if(!Config::getDetail('tracking', 'session', self::$defaultConfig['tracking'])) {
+            return;
+        }
+        LogSession::add([
             'session_id' => session_id(),
             'view' => Router::getModule(),
             'reference_parameters' => serialize($reference),

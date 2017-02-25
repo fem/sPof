@@ -46,10 +46,6 @@ class CssTemplate
      * @var array
      */
     private static $defaultConfig = [
-        'style' => \SassRenderer::STYLE_NESTED, // CSS output style, might be: nested / compressed / compact / expanded
-        'syntax' => \SassFile::SCSS,
-        'cache' => false,
-        'debug' => true,
         'file_perms' => 0644,
         'check_file_level' => false,
     ];
@@ -92,6 +88,12 @@ class CssTemplate
     {
         $sourcePath = self::getSourcePath();
         $targetPath = self::getTargetPath();
+
+        // skip rendering CSS files, if no stylesheets exist or phpsass is not installed (optional dependency)
+        if (!is_dir($sourcePath) || !class_exists('SassParser')) {
+            // nothing to do
+            return;
+        }
 
         if (!is_dir($targetPath)) {
             FileUtil::makedir($targetPath);
@@ -149,6 +151,7 @@ class CssTemplate
                 continue;
             }
 
+            // files beginning with underscore are sub blocks, don't add them to the file list
             if (strpos($filename, '_') === 0) {
                 $lastDependencyUpdate = max($lastDependencyUpdate, filemtime($sourcePath.$filename));
             } else {
@@ -168,22 +171,7 @@ class CssTemplate
             }
 
             // save and set file permissions
-
-            /*require_once "vendor/leafo/scssphp/scss.inc.php";
-            $scss = new \scssc();
-            $scss->addImportPath(function ($path) {
-                if (!file_exists('stylesheet/'.$path)) {
-                    return null;
-                }
-                return 'stylesheet/'.$path;
-            });
-*/
-
             try {
-                // will import `stylesheets/vanilla.css'
-  //              file_put_contents($savefile, $scss->compile('@import "'.$filename.'"'));
-
-
                 file_put_contents($savefile, self::getParser()->toCss(file_get_contents($sourcePath.$filename), false));
                 chmod($savefile, Config::getDetail('stylesheet', 'file_perms', self::$defaultConfig));
             } catch (\Exception $exception) {
@@ -207,7 +195,14 @@ class CssTemplate
     {
         static $parser;
         if (!isset($parser)) {
-            $options = Config::get('stylesheet', self::$defaultConfig);
+            $sassDefaultConfig = [
+                'style' => \SassRenderer::STYLE_NESTED, // CSS output style, might be: nested / compressed / compact / expanded
+                'syntax' => \SassFile::SCSS,
+                'cache' => false,
+                'debug' => true,
+            ];
+
+            $options = Config::get('stylesheet',$sassDefaultConfig);
             $options['load_paths'] = [self::getSourcePath()];
 
             $parser = new \SassParser($options);
@@ -229,9 +224,27 @@ class CssTemplate
     public static function combine(array $files)
     {
         if (empty($files)) {
-            return false;
+            return [];
         }
 
+        $cssFiles = [];
+        $combineFiles = [];
+
+        // first separate files
+        foreach ($files as $file) {
+            if(isset($file['combine']) && !$file['combine']) {
+                $cssFiles[] = $file['name'];
+            } else {
+                $combineFiles[] = $file;
+            }
+        }
+
+        // nothing to combine, so return
+        if(empty($combineFiles)) {
+            return $cssFiles;
+        }
+
+        // combine magic
         $target = self::getTargetPath();
         $source = self::getSourcePath();
 
@@ -239,12 +252,15 @@ class CssTemplate
         $cssHash = md5(serialize($files));
         $targetfile = $target.$cssHash.'.css';
 
+        // add combined file to list
+        $cssFiles[] =  'css/' . $cssHash .'.css';
+
         // check if any source file was modified
         $needUpdate = false;
         if (file_exists($targetfile)) {
             $hashtime = filemtime($targetfile);
             foreach ($files as $file) {
-                if ($hashtime < filemtime($file['name'])) {
+                if (!file_exists($file['name']) || $hashtime < filemtime($file['name'])) {
                     $needUpdate = true;
                     break;
                 }
@@ -257,24 +273,27 @@ class CssTemplate
 
         // we can abort if no update is required
         if ($needUpdate === false) {
-            return $cssHash;
+            return $cssFiles;
         }
 
         // combine file contents
         $handle = fopen($targetfile, 'w+');
-        foreach ($files as $file) {
+        foreach ($combineFiles as $file) {
+            if(!file_exists($file['name'])) {
+                Logger::getInstance()->debug('CSS file '.$file['name']. ' is missing.');
+                continue;
+            }
             $content = file_get_contents($file['name']);
             if ($file['fixpaths']) {
-                preg_match_all('/url\(([^)]+)\)/', $content, $matches, PREG_SET_ORDER);
+                preg_match_all('/url\(\'?([^\?)]+)(\?[^\')]+)?\'?\)/', $content, $matches, PREG_SET_ORDER);
                 $replaces = [];
                 $copy = [];
                 foreach ($matches as $match) {
                     if (strpos($match[1], 'data') === 0) {
                         continue;
                     }
-
-                    $filename = 'gen__'.md5($file['name'].'-'.$match[1]).preg_replace('/^[^.]+\.(.+)$/', '.$1', $match[1]);
-                    $replaces[$match[0]] = 'url(../img/'.$filename.')';
+                    $filename = 'gen__'.md5($file['name'].'-'.$match[1]).preg_replace('/.*\.([^.]+)$/', '.$1', $match[1]);
+                    $replaces[$match[0]] = 'url(../img/' . $filename . (isset($match[2]) ? $match[2] : '') . ')';
                     $copy[dirname($file['name']).'/'.$match[1]] = Application::$WEB_ROOT.'img/'.$filename;
                 }
 
@@ -295,7 +314,7 @@ class CssTemplate
         // adjust file permissions for webserver
         chmod($targetfile, Config::getDetail('stylesheet', 'file_perms', self::$defaultConfig));
 
-        return $cssHash;
+        return $cssFiles;
     } // function
 
 

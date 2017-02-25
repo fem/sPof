@@ -1,5 +1,4 @@
-Stylesheets werden nach [[http://sass-lang.com/|SCSS]]-Verarbeitet, dabei wird eine auf PHP-basierte Implementierung
-verwendet, statt der Original Ruby-Implementierung.
+Stylesheets können als CSS oder [[http://sass-lang.com/|SCSS]] abgelegt werden.
 
 ==== Dateinamen ====
 Der Dateiname ist frei wählbar und wird so übernommen wie gegeben. Soll eine Datei nicht übernommen werden, weil sie
@@ -7,7 +6,9 @@ zum Beispiel nur als import für eine andere Datei dient, so muss der Dateiname 
 bei der erzeugung wird die Datei dann übersprungen.
 
 ==== Internes Handling ====
-Gerendert wird das SCSS zu CSS via [[https://github.com/richthegeek/phpsass|phpsass]].
+Um SCSS-Dateien verwenden zu können, wird ein Renderer benötigt. sPof verwendet dafür
+[[https://github.com/richthegeek/phpsass|phpsass]], eine auf PHP-basierte Implementierung.
+Dazu muss "richthegeek/phpsass": "@dev" zu den Abhängigkeiten in der composer.json hinzugefügt werden.
 
 Dabei wird bei jedem aufruf der index.php geprüft, ob es ein Update erfolgt ist und daraufhin werden alle CSS-Dateien
 neu erstellt.

@@ -80,8 +80,8 @@ class HtmlTemplate extends \Smarty
     {
         parent::__construct();
 
-        self::$defaultConfig['compile_dir'] = Application::$FILE_ROOT.'tmp/smarty_compile';
-        self::$defaultConfig['cache_dir'] = Application::$FILE_ROOT.'tmp/smarty_cache';
+        self::$defaultConfig['compile_dir'] = Application::$CACHE_ROOT.'smarty/compile';
+        self::$defaultConfig['cache_dir'] = Application::$CACHE_ROOT.'smarty/cache';
 
         $config = Config::get('smarty', self::$defaultConfig);
 
@@ -155,11 +155,12 @@ class HtmlTemplate extends \Smarty
         } catch (\ErrorException $e) {
             if (strpos($e->getFile(), '.tpl.php') > 0) {
                 $file = HtmlTemplate::getTemplateByCompilePath($e->getFile());
-                $error_msg = str_replace(
-                    'Undefined index: ',
-                    'Unassigned variable: $',
+                $error_msg = preg_replace(
+                    ['/^Undefined index: /' , '/--+.*/'],
+                    ['Unassigned variable: $', ''],
                     $e->getMessage()
-                ) . ' in File: '.$file.' in Compiled file '.$e->getFile().':'.$e->getLine();
+                ) . ' in File: ' . str_replace(Application::$FILE_ROOT , '', $file) .
+                    ' in Compiled file '.str_replace($this->getCompileDir(),'',$e->getFile()).':'.$e->getLine();
                 $e = new SmartyTemplateException($error_msg, $file, $e);
             }
             throw $e;
@@ -179,7 +180,7 @@ class HtmlTemplate extends \Smarty
     {
         $data = file_get_contents($path, false, null, - 1, 200);
         $data = str_replace('<', '', $data);
-        return preg_replace('/^.*compiled from "(.+)".*$/s', '$1', $data);
+        return preg_replace('/^.*from "(.+)".*$/s', '$1', $data);
     } // function
 
 

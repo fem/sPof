@@ -21,7 +21,6 @@
 
 namespace FeM\sPof;
 
-use DebugBar\DataCollector as Collector;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 
@@ -218,17 +217,17 @@ class Logger extends AbstractLogger
      */
     public function enableDebugbar()
     {
-        if(!$this->debugBar) {
+        if(!$this->debugBar && class_exists('\DebugBar\DebugBar')) {
             $this->debugBar = new \DebugBar\DebugBar();
-            $this->debugBar->addCollector(new Collector\MessagesCollector());
-            $this->debugBar->addCollector(new Collector\MessagesCollector('dumps'));
-            $this->debugBar->addCollector(new Collector\MessagesCollector('auth'));
-            $this->debugBar->addCollector(new Collector\ExceptionsCollector());
-            $this->debugBar->addCollector(new Collector\TimeDataCollector());
-            $this->debugBar->addCollector(new Collector\RequestDataCollector());
-            $this->debugBar->addCollector(new Collector\MemoryCollector());
-            $this->debugBar->addCollector(new Collector\PhpInfoCollector());
-            $this->debugBar->addCollector(new Collector\ConfigCollector(Config::getAll()));
+            $this->debugBar->addCollector(new \DebugBar\DataCollector\MessagesCollector());
+            $this->debugBar->addCollector(new \DebugBar\DataCollector\MessagesCollector('dumps'));
+            $this->debugBar->addCollector(new \DebugBar\DataCollector\MessagesCollector('auth'));
+            $this->debugBar->addCollector(new \DebugBar\DataCollector\ExceptionsCollector());
+            $this->debugBar->addCollector(new \DebugBar\DataCollector\TimeDataCollector());
+            $this->debugBar->addCollector(new \DebugBar\DataCollector\RequestDataCollector());
+            $this->debugBar->addCollector(new \DebugBar\DataCollector\MemoryCollector());
+            $this->debugBar->addCollector(new \DebugBar\DataCollector\PhpInfoCollector());
+            $this->debugBar->addCollector(new \DebugBar\DataCollector\ConfigCollector(Config::getAll()));
         }
     }
 

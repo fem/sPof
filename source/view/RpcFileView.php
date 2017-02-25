@@ -137,7 +137,6 @@ class RpcFileView extends \FeM\sPof\view\AbstractRawView
         // set path to unprocessed cache file
         $path_cachefile = sprintf(Application::$CACHE_ROOT.'files/%s/%s.file', $this->sid[0], $this->sid);
 
-
         // load file from database if cache file doesn't exist
         $handle = false;
         if (file_exists($path_cachefile) === false) {
@@ -177,7 +176,7 @@ class RpcFileView extends \FeM\sPof\view\AbstractRawView
                 self::sendNotFound();
             }
         } else {
-            $this->path_sendfile = $path_cachefile;
+            $this->path_sendfile = FileUtil::realpath($path_cachefile);
         }
 
         if (!is_readable($this->path_sendfile) && !is_resource($handle)) {
@@ -295,7 +294,6 @@ class RpcFileView extends \FeM\sPof\view\AbstractRawView
         }
 
         if (is_resource($handle)) {
-
             // write to output buffer in small chunks to bypass memory limit of large files (which fpassthru would
             // exceed)
             while (!feof($handle) && connection_status() == CONNECTION_NORMAL) {
@@ -311,8 +309,14 @@ class RpcFileView extends \FeM\sPof\view\AbstractRawView
                 ob_flush();
             } // while
             fclose($handle);
-        } elseif (Config::get('use_sendfile') && in_array('mod_xsendfile', apache_get_modules())) {
-            header('X-Sendfile: '.$this->path_sendfile);
+        } elseif (Config::getDetail('server', 'use_sendfile')) {
+            if(function_exists('apache_get_modules') && in_array('mod_xsendfile', apache_get_modules())) {
+                header('X-Sendfile: ' . $this->path_sendfile);
+            } else {
+                // X-Accel supported by nginx
+                $prefix = realpath(dirname(Application::$CACHE_ROOT)) . '/';
+                header('X-Accel-Redirect: ' . str_replace($prefix, Application::getBasePath(), $this->path_sendfile));
+            }
         } else {
             readfile($this->path_sendfile);
             exit;

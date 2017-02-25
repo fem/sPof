@@ -61,6 +61,16 @@ abstract class AbstractController extends AbstractModule
      */
     protected $isJSON = false;
 
+    /**
+     * Default configuration for this class.
+     *
+     * @api
+     *
+     * @var array
+     */
+    private static $defaultConfig = [
+        'tracking' => [ 'event' => true ]
+    ];
 
     /**
      * Dummy constructor, so deffered classes can always call parent.
@@ -87,6 +97,9 @@ abstract class AbstractController extends AbstractModule
     {
         $ctrlName = Application::$NAMESPACE.'controller\\'.$module.'Controller';
         /** @var AbstractController $ctrl */
+        if(!class_exists($ctrlName)) {
+            throw new \ErrorException('class '.$ctrlName.' not found');
+        }
         $ctrl = new $ctrlName(Request::getBoolParam('resultAsJSON'));
         $ctrl->executeCommand($action);
     } // function
@@ -97,13 +110,15 @@ abstract class AbstractController extends AbstractModule
      * bypass form re-submit of data. Specific actions are defined in handleCommand. Use class property 'atomic' to
      * disable cmd wide transactions
      *
+     * @todo make final again, after merging logic of now external abstract controllers (e.g. AbstractApiController)
+     *
      * @internal
      *
      * @param string $cmd
      *
      * @throws exception\ControllerException|\Exception|exception\NotAuthorizedException
      */
-    final protected function executeCommand($cmd)
+    protected function executeCommand($cmd)
     {
         $this->command = $cmd;
 
@@ -116,7 +131,6 @@ abstract class AbstractController extends AbstractModule
             if ($this->atomic) {
                 DBConnection::getInstance()->beginTransaction();
             }
-
             // call command
             if (method_exists($this, $cmd) === false) {
                 Logger::getInstance()->error(_s('method %s::%s does not exist.', get_class($this), $cmd));
@@ -190,8 +204,11 @@ abstract class AbstractController extends AbstractModule
      *
      * @param string $route
      * @param array $arguments (optional)
+     * @param bool $terminate_processing if set to false, Location header is set, but processing will continue
+     *                                   (required for API processing where views need to be rendered also on action
+     *                                    requests). default is true
      */
-    final protected function redirect($route, array $arguments = [])
+    final protected function redirect($route, array $arguments = [], $terminate_processing = true)
     {
         if (empty($route)) {
             throw new exception\ControllerException(_s('Attempt to redirect to a unknown url'));
@@ -202,7 +219,12 @@ abstract class AbstractController extends AbstractModule
             DBConnection::getInstance()->commit();
         }
 
-        Router::redirect($route, $arguments);
+        if($terminate_processing) {
+            Router::redirect($route, $arguments);
+        } else {
+            // don't end request processing, just set the Location header
+            header('Location: '. Router::reverse($route, $arguments, true));
+        }
     } // function
 
 
@@ -210,17 +232,15 @@ abstract class AbstractController extends AbstractModule
      * Mark a request as error and log the message, go on with the associated view. This function is recoverable, if
      * you want to stop the further execution you have to throw an exception instead, which also be logged.
      *
+     * @todo make final again, after merging logic of now external abstract controllers (e.g. AbstractApiController)
+     *
      * @api
      *
      * @param string $message
      * @param array $param   (optional)
      */
-    final protected function error($message, $param = null)
+    protected function error($message, $param = null)
     {
-        if ($this->isJSON) {
-            $this->sendJson(false, $message);
-        }
-
         if ($param === null) {
             Session::addErrorMsg($message);
         } else {
@@ -229,11 +249,20 @@ abstract class AbstractController extends AbstractModule
         Logger::getInstance()->info(
             'AbstractController->error(): '.$message . (!empty($param) ? 'param: '.var_export($param, true) : '')
         );
+
+        if ($this->isJSON) {
+            if(http_response_code() < self::HTTP_CODE_BAD_REQUEST) {
+                http_response_code(self::HTTP_CODE_UNPROCESSABLE);
+            }
+            $this->sendJson($message);
+        }
     } // function
 
 
     /**
      * Mark a request as success and redirect the user to the given route.
+     *
+     * @todo make final again, after merging logic of now external abstract controllers (e.g. AbstractApiController)
      *
      * @api
      *
@@ -242,15 +271,22 @@ abstract class AbstractController extends AbstractModule
      * @param string $name (optional)
      * @param array $redirectParameters (optional)
      */
-    final protected function success($message, array $reference, $name = null, array $redirectParameters = [])
+    protected function success($message, array $reference, $name = null, array $redirectParameters = [])
     {
         $this->logEvent($reference, $message, true);
-        if ($this->isJSON) {
-            $this->sendJson(true, $message);
-        }
 
         Session::addSuccessMsg($message);
-        $this->redirect($name, $redirectParameters);
+
+        if(empty($name)) {
+            return;
+        }
+
+        if ($this->isJSON) {
+            $this->redirect($name, $redirectParameters, false);
+            $this->sendJson();
+        } else {
+            $this->redirect($name, $redirectParameters);
+        }
     } // function
 
 
@@ -264,6 +300,10 @@ abstract class AbstractController extends AbstractModule
      */
     final protected function logEvent(array $reference, $description = null, $success = false)
     {
+        if(!Config::getDetail('tracking', 'event', self::$defaultConfig['tracking'])) {
+            return;
+        }
+
         LogEvent::add([
             'event' => Router::getModule().'.'.$this->command.'.'.($success?'Success':'Fail'),
             'user_id' => Session::getUserId(),
@@ -281,19 +321,21 @@ abstract class AbstractController extends AbstractModule
      * @param bool $success action was executed
      * @param string $message
      */
-    private function sendJson($success, $message)
+    private function sendJson($message = null)
     {
         // close transaction, if present
         if ($this->atomic && DBConnection::getInstance()->inTransaction()) {
             DBConnection::getInstance()->commit();
         }
 
-        Logger::getInstance()->stackData();
+        header('Content-type: application/json');
 
-        // @codingStandardsIgnoreStart
-        echo json_encode(['success' => $success, 'message' => $message]);
-        // @codingStandardsIgnoreEnd
-        exit;
+        if($message !== null) {
+            // @codingStandardsIgnoreStart
+            echo StringUtil::jsonEncode(['error' => $message]);
+            // @codingStandardsIgnoreEnd
+        }
+        //exit;
     } // function
 
 }// class
