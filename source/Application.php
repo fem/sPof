@@ -147,11 +147,14 @@ class Application
      */
     public function dispatch($start_session = true)
     {
-        # get current context from URL
+        // get current context from URL
         try {
             Router::resolve(isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/');
-            Router::updateHtaccess();
-            #Router::updateRules();
+
+            // update mod_rewrite rules in .htaccess file, if enabled
+            if (Config::getDetail('server', 'use_rewrite', false)) {
+                Router::updateHtaccess();
+            }
         } catch (\Exception $e) {
             Logger::getInstance()->exception($e);
         }
