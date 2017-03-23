@@ -157,6 +157,7 @@ class Application
             }
         } catch (\Exception $e) {
             Logger::getInstance()->exception($e);
+            http_response_code(AbstractModule::HTTP_CODE_NOT_FOUND);
         }
 
         // from here we'll capture every output
@@ -313,6 +314,7 @@ class Application
                     $viewName::handleException($e);
                 } else {
                     Logger::getInstance()->exception($e);
+                    http_response_code(AbstractModule::HTTP_CODE_NOT_FOUND);
                 }
             }
         }
