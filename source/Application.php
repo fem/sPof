@@ -175,7 +175,7 @@ class Application
         // threat all unwanted output as error output
         $errors = ob_get_clean();
         if (trim($errors) !== '') {
-            Logger::getInstance()->warning($e);
+            Logger::getInstance()->warning($errors);
         }
 
         // finally deliver page
