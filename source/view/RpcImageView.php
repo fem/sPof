@@ -63,6 +63,15 @@ class RpcImageView extends RpcFileView
     protected $cropimage = false;
 
     /**
+     * Auto crop image before scaling.
+     *
+     * @internal
+     *
+     * @var bool
+     */
+    protected $autocrop = false;
+
+    /**
      * Make a thumb image.
      *
      * @internal
@@ -72,15 +81,17 @@ class RpcImageView extends RpcFileView
         $this->width = Request::getIntParam('width', 100);
         $this->height = Request::getIntParam('height', 100);
         $this->cropimage = Request::getBoolParam('cropimage', false);
+        $this->autocrop = Request::getBoolParam('autocrop', false);
 
         $this->processing = true;
         $this->stats_disable = true;
         $this->path_sendfile = FileUtil::realpath(sprintf(
-            Application::$CACHE_ROOT.'thumb/%s/%s_%sx%s.thumb',
+            Application::$CACHE_ROOT.'thumb/%s/%s_%sx%s%s.thumb',
             $this->sid[0],
             $this->sid,
             $this->width,
-            $this->height
+            $this->height,
+            ($this->autocrop ? '.autocrop' : '')
         ));
         $this->download();
     } // function
@@ -113,7 +124,8 @@ class RpcImageView extends RpcFileView
             $this->path_sendfile,
             $this->width,
             $this->height,
-            $this->cropimage
+            $this->cropimage,
+            $this->autocrop
         )) {
             self::sendInternalError();
         }
