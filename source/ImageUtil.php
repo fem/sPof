@@ -81,7 +81,7 @@ abstract class ImageUtil
      *
      * @return bool
      */
-    public static function resize($in_filename, $out_filename, $maxW = 100, $maxH = 100, $cropimage = false)
+    public static function resize($in_filename, $out_filename, $maxW = 100, $maxH = 100, $cropimage = false, $autocrop = false)
     {
         if (!file_exists($in_filename) || filesize($in_filename) <= 0 || $maxW <= 0 || $maxH <= 0) {
             return false;
@@ -106,6 +106,15 @@ abstract class ImageUtil
             } catch (\ErrorException $e) {
                 Logger::getInstance()->debug('Could not load image as PNG: '. $e->getMessage());
                 return false;
+            }
+        }
+
+        // Auto crop
+        if($autocrop) {
+            $cropped = imagecropauto($in_image, IMG_CROP_DEFAULT);
+            if ($cropped !== false) {       // in case a new image resource was returned
+                imagedestroy($in_image);    // we destroy the original image
+                $in_image = $cropped;       // and assign the cropped image to $im
             }
         }
 
