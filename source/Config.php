@@ -81,6 +81,7 @@ class Config
             // remove non-existant files from list
             if(!file_exists($file)) {
                 unset($files[$idx]);
+                continue;
             }
             $file_lastchange = max(filemtime($file), $file_lastchange);
         }
