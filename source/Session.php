@@ -252,8 +252,9 @@ class Session
      */
     public static function addSuccessMsg($content)
     {
-//        Session::getInstance();
-        $_SESSION['messages']['success'][] = $content;
+        if (strlen($content)) {
+            $_SESSION['messages']['success'][] = $content;
+        }
     } // function
 
 
