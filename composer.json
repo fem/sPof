@@ -1,7 +1,7 @@
 {
     "name": "fem/spof",
     "description": "Framework behind sPi",
-    "version": "2.0.0",
+    "version": "2.1.0-dev",
     "type": "library",
     "homepage": "http://spof.fem-net.de",
     "license": "Apache-2",
@@ -28,14 +28,10 @@
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
-        "squizlabs/php_codesniffer": "1.*",
-        "phpmd/phpmd": "1.*",
         "maximebf/debugbar": "1.*",
-        "sebastian/phpcpd": "~2.0",
-        "sebastian/phpdcd": "~1.0"
     },
     "require": {
-        "php": ">=5.5",
+        "php": ">=7.0",
         "psr/log": "~1.0",
         "smarty/smarty": "~3.1.17",
         "smarty-gettext/smarty-gettext": "1.*",
