@@ -164,17 +164,21 @@ class RpcFileView extends \FeM\sPof\view\AbstractRawView
 
         // check wether path_sendfile is set explicitly
         if (!empty($this->path_sendfile)) {
-            // update stat data if exists
-            if (is_readable($this->path_sendfile)) {
-                $stat = stat($this->path_sendfile);
-                $file['modify'] = strftime('%a, %d %b %Y %H:%M:%S %z', $stat['mtime']);
-                $file['size'] = $stat['size'];
-            } elseif (isset($this->processing) && method_exists($this, 'processCachefile')) { // check for processing
+            // process file, if file doesn't exist (yet) and processing is enabled
+            if(!file_exists($this->path_sendfile) && isset($this->processing) && method_exists($this, 'processCachefile')) { // check for processing
                 $file['cachefile'] = $path_cachefile;
                 $this->processCachefile($file);
-            } else {
+            }
+
+            // check whether we have a file now
+            if (!is_readable($this->path_sendfile)) {
                 self::sendNotFound();
             }
+
+            // update stat data
+            $stat = stat($this->path_sendfile);
+            $file['modify'] = strftime('%a, %d %b %Y %H:%M:%S %z', $stat['mtime']);
+            $file['size'] = $stat['size'];
         } else {
             $this->path_sendfile = FileUtil::realpath($path_cachefile);
         }
