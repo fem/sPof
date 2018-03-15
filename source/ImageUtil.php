@@ -92,8 +92,6 @@ abstract class ImageUtil
             $in_image = imagecreatefromjpeg($in_filename);
             $mimetype = 'image/jpeg';
         } catch (\ErrorException $e) {
-            Logger::getInstance()->debug('Could not load image as JPEG: ' . $e->getMessage());
-
             // seems no jpeg, try png instead
             try {
                 $in_image = imagecreatefrompng($in_filename);
