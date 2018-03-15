@@ -21,6 +21,7 @@
 
 namespace FeM\sPof\model;
 
+use FeM\sPof\exception\ModelException;
 use FeM\sPof\exception\NotImplementedException;
 use FeM\sPof\exception\AbstractMethodException;
 use FeM\sPof\exception\InvalidParameterException;
@@ -117,6 +118,8 @@ abstract class AbstractModel
      * @param array $input
      *
      * @return int The id of the newly inserted object.
+     *
+     * @throws ModelException thrown by self::execute() on error
      */
     public static function add(array $input)
     {
