@@ -259,7 +259,7 @@ abstract class AbstractModel
     {
         $result = [];
         foreach ($source as $row) {
-            $result[] = $row.$column_char.$row;
+            $result[] = '"'.$row.'"'.$column_char.$row;
         }
         return implode($row_char, $result);
     } // function
