@@ -123,7 +123,7 @@ class Logger extends AbstractLogger
             $message = get_class($exception). ': '.$exception->getMessage();
 
             if($this->debugBar) {
-                $this->debugBar['exceptions']->addException($exception);
+                $this->debugBar['exceptions']->addThrowable($exception);
             }
         }
 
@@ -183,11 +183,11 @@ class Logger extends AbstractLogger
     /**
      * Gather error info from exception and add as message.
      *
-     * @param \Exception $exception
+     * @param \Throwable $exception
      *
-     * @throws \Exception
+     * @throws \Throwable
      */
-    public function exception(\Exception $exception)
+    public function exception(\Throwable $exception)
     {
         $this->log('exception', $exception->getMessage(), ['exception' => $exception]);
     } // function
