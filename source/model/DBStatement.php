@@ -254,6 +254,8 @@ class DBStatement extends \PDOStatement
             $this->assignBool($name, $value);
         } elseif ($value instanceof \DateTime) {
             $this->assignDate($name, $value);
+        } elseif ($value === null) {
+            $this->bindValue($name, $value, \PDO::PARAM_NULL);
         } else {
             $this->assign($name, $value);
         }
