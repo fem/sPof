@@ -180,7 +180,7 @@ class HtmlTemplate extends \Smarty
     {
         $data = file_get_contents($path, false, null, - 1, 200);
         $data = str_replace('<', '', $data);
-        return preg_replace('/^.*from "(.+)".*$/s', '$1', $data);
+        return preg_replace('/^.*from \'(.+)\'.*$/s', '$1', $data);
     } // function
 
 
